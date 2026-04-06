@@ -10,7 +10,7 @@ HTML = '''
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Image Tool</title>
+<title> PIXORA</title>
 
 <style>
 body {
@@ -77,7 +77,7 @@ img {
 <body>
 
 <div class="navbar">
-    <div>🔥 Image Tool</div>
+    <div>🔥 PIXORA </div>
     <div>
         <button onclick="showPage('passport')">Passport</button>
         <button onclick="showPage('crop')">Crop</button>
