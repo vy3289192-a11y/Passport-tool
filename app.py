@@ -100,6 +100,28 @@ button:hover {
 </select>
 
 <button type="submit">Generate</button>
+<br>
+<br>
+<br>
+<br>
+<br>
+<button type="submit">Generate</button>
+
+<p style="font-size:13px; line-height:1.6; margin-top:15px; color:#eee;">
+Welcome to the Passport Size Photo Tool!<br><br>
+
+This tool helps you create perfect passport-size photos in just a few clicks.<br>
+
+Steps:<br>
+1. Upload your photo<br>
+2. Enter number of photos<br>
+3. Choose format (JPG/PDF)<br>
+4. Click Generate<br><br>
+
+Your image will be automatically resized and arranged for printing.<br><br>
+
+Perfect for passport, visa, and ID cards!
+</p>
 
 </form>
 
