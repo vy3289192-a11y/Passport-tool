@@ -2,8 +2,6 @@ from flask import Flask, request, render_template_string, send_file
 import cv2
 import os
 import numpy as np
-from reportlab.platypus import SimpleDocTemplate, Image as RLImage
-from reportlab.lib.pagesizes import A4
 
 app = Flask(__name__)
 
@@ -12,16 +10,33 @@ HTML = '''
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Passport Tool</title>
+<title>Image Tool</title>
 
 <style>
 body {
-    margin:0;
     font-family:Arial;
+    margin:0;
     background: linear-gradient(135deg,#667eea,#764ba2);
     color:white;
 }
 
+/* NAVBAR */
+.navbar {
+    display:flex;
+    justify-content:space-between;
+    padding:15px;
+    background:rgba(0,0,0,0.3);
+}
+
+.navbar button {
+    margin:5px;
+    padding:8px 15px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+/* CONTAINER */
 .container {
     max-width:400px;
     margin:30px auto;
@@ -31,14 +46,8 @@ body {
     text-align:center;
 }
 
-.upload-box {
-    border:2px dashed #ccc;
-    padding:20px;
-    border-radius:10px;
-    cursor:pointer;
-}
-
-input, select {
+/* INPUT */
+input {
     width:100%;
     padding:10px;
     margin:10px 0;
@@ -46,7 +55,8 @@ input, select {
     border:none;
 }
 
-button {
+/* BUTTON */
+button.submit {
     width:100%;
     padding:12px;
     background:#ff758c;
@@ -55,104 +65,74 @@ button {
     color:white;
 }
 
-/* छोटा preview */
+/* PREVIEW */
 img {
     max-width:150px;
     margin-top:10px;
     border-radius:10px;
-    border:2px solid white;
-}
-
-/* loader */
-.loader {
-    display:none;
-    border:5px solid #f3f3f3;
-    border-top:5px solid #ff758c;
-    border-radius:50%;
-    width:40px;
-    height:40px;
-    animation:spin 1s linear infinite;
-    margin:20px auto;
-}
-
-@keyframes spin {
-    0% { transform:rotate(0deg); }
-    100% { transform:rotate(360deg); }
-}
-
-/* progress */
-.progress {
-    width:100%;
-    background:#ddd;
-    border-radius:10px;
-    overflow:hidden;
-    display:none;
-}
-
-.progress-bar {
-    height:10px;
-    width:0%;
-    background:#ff758c;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-
-<h2>Make Passport Size Photo</h2>
-
-<form method="POST" enctype="multipart/form-data" onsubmit="showLoader()">
-
-<div class="upload-box" onclick="fileInput.click()">
-    <p>Select Image</p>
-    <input type="file" name="file" id="fileInput" hidden required onchange="previewImage(event)">
+<div class="navbar">
+    <div>🔥 Image Tool</div>
+    <div>
+        <button onclick="showPage('passport')">Passport</button>
+        <button onclick="showPage('crop')">Crop</button>
+    </div>
 </div>
 
+<div class="container">
+
+<!-- PASSPORT TOOL -->
+<div id="passport">
+<h2>Passport Photo</h2>
+
+<form method="POST" enctype="multipart/form-data">
+<input type="hidden" name="tool" value="passport">
+
+<input type="file" name="file" required onchange="previewImage(event)">
 <img id="preview" style="display:none">
 
 <input type="number" name="count" value="8">
 
-<select name="type">
-<option value="jpg">JPG</option>
-<option value="pdf">PDF</option>
-</select>
-
-<label>
-<input type="checkbox" name="removebg"> Remove Background
-</label>
-
-<button type="submit">Generate</button>
-
-<div class="loader" id="loader"></div>
-
-<div class="progress" id="progress">
-    <div class="progress-bar" id="bar"></div>
+<button class="submit" type="submit">Generate</button>
+</form>
 </div>
 
+<!-- CROP TOOL -->
+<div id="crop" style="display:none;">
+<h2>Crop Image</h2>
+
+<form method="POST" enctype="multipart/form-data">
+<input type="hidden" name="tool" value="crop">
+
+<input type="file" name="file" required>
+
+<input type="number" name="x" placeholder="Start X">
+<input type="number" name="y" placeholder="Start Y">
+<input type="number" name="w" placeholder="Width">
+<input type="number" name="h" placeholder="Height">
+
+<button class="submit" type="submit">Crop</button>
 </form>
+</div>
 
 </div>
 
 <script>
-function previewImage(event) {
-    const img = document.getElementById('preview');
-    img.src = URL.createObjectURL(event.target.files[0]);
-    img.style.display = "block";
+function showPage(page){
+    document.getElementById("passport").style.display = "none";
+    document.getElementById("crop").style.display = "none";
+    document.getElementById(page).style.display = "block";
 }
 
-function showLoader() {
-    document.getElementById("loader").style.display = "block";
-    document.getElementById("progress").style.display = "block";
-
-    let bar = document.getElementById("bar");
-    let width = 0;
-    let interval = setInterval(() => {
-        width += 10;
-        bar.style.width = width + "%";
-        if (width >= 100) clearInterval(interval);
-    }, 200);
+function previewImage(event){
+    const img = document.getElementById("preview");
+    img.src = URL.createObjectURL(event.target.files[0]);
+    img.style.display = "block";
 }
 </script>
 
@@ -163,75 +143,54 @@ function showLoader() {
 @app.route('/', methods=['GET','POST'])
 def home():
     if request.method == 'POST':
+        tool = request.form.get("tool")
         file = request.files['file']
-        count = int(request.form.get("count"))
-        filetype = request.form.get("type")
-        remove_bg = request.form.get("removebg")
 
         file.save("input.jpg")
         img = cv2.imread("input.jpg")
 
-        # 🔥 REMOVE BG WORKING
-        if remove_bg:
-            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            blur = cv2.GaussianBlur(gray, (5,5), 0)
-            _, thresh = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-            mask = cv2.bitwise_not(thresh)
+        # 🔥 PASSPORT TOOL
+        if tool == "passport":
+            count = int(request.form.get("count"))
 
-            white_bg = np.ones_like(img) * 255
-            img = np.where(mask[:,:,None]==255, img, white_bg)
+            face = cv2.resize(img, (413, 531))
 
-        # resize
-        face = cv2.resize(img, (413, 531))
+            canvas = np.ones((1200, 1000, 3), dtype=np.uint8) * 255
 
-        gap = 40
-        border = 5
+            i = 0
+            for r in range(3):
+                for c in range(3):
+                    if i >= count:
+                        break
 
-        cols = int(np.ceil(np.sqrt(count)))
-        rows = int(np.ceil(count / cols))
+                    y = r * 400
+                    x = c * 350
 
-        cell_w = 413 + gap
-        cell_h = 531 + gap
+                    bordered = cv2.copyMakeBorder(
+                        face,5,5,5,5,
+                        cv2.BORDER_CONSTANT,value=[0,0,0]
+                    )
 
-        canvas_w = cols * cell_w + gap
-        canvas_h = rows * cell_h + gap
+                    canvas[y:y+541, x:x+423] = bordered
+                    i += 1
 
-        canvas = np.ones((canvas_h, canvas_w, 3), dtype=np.uint8) * 255
+            cv2.imwrite("output.jpg", canvas)
+            return send_file("output.jpg", as_attachment=True)
 
-        i = 0
-        for r in range(rows):
-            for c in range(cols):
-                if i >= count:
-                    break
+        # ✂️ CROP TOOL
+        if tool == "crop":
+            x = int(request.form.get("x"))
+            y = int(request.form.get("y"))
+            w = int(request.form.get("w"))
+            h = int(request.form.get("h"))
 
-                x = gap + c * cell_w
-                y = gap + r * cell_h
+            crop = img[y:y+h, x:x+w]
 
-                bordered = cv2.copyMakeBorder(
-                    face, border, border, border, border,
-                    cv2.BORDER_CONSTANT, value=[0,0,0]
-                )
-
-                h_b, w_b = bordered.shape[:2]
-                canvas[y:y+h_b, x:x+w_b] = bordered
-
-                i += 1
-
-        os.makedirs("static", exist_ok=True)
-        img_path = "static/output.jpg"
-        cv2.imwrite(img_path, canvas)
-
-        if filetype == "pdf":
-            pdf_path = "static/output.pdf"
-            doc = SimpleDocTemplate(pdf_path, pagesize=A4)
-            elements = [RLImage(img_path, width=500, height=700)]
-            doc.build(elements)
-            return send_file(pdf_path, as_attachment=True)
-
-        return send_file(img_path, as_attachment=True)
+            cv2.imwrite("crop.jpg", crop)
+            return send_file("crop.jpg", as_attachment=True)
 
     return render_template_string(HTML)
 
+
 if __name__ == "__main__":
-    os.makedirs("static", exist_ok=True)
     app.run(host="0.0.0.0", port=5000)
