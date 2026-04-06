@@ -35,6 +35,7 @@ button {
 </head>
 <body>
 
+<h1>Make Passport Size Photo</h1>
 <h2>🔥 Passport Tool</h2>
 
 <form method="POST" enctype="multipart/form-data">
