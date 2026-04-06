@@ -12,48 +12,98 @@ HTML = '''
 <html>
 <head>
 <title>Passport Tool</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
 body {
     background: linear-gradient(135deg,#667eea,#764ba2);
-    text-align:center;
+    margin:0;
     font-family:Arial;
     color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
 }
+
+.container {
+    width:90%;
+    max-width:400px;
+    background: rgba(255,255,255,0.1);
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.3);
+    text-align:center;
+}
+
+h1 {
+    font-size:22px;
+    margin-bottom:5px;
+}
+
+h2 {
+    font-size:16px;
+    margin-bottom:15px;
+}
+
 input, select {
-    padding:10px;
-    margin:8px;
-    width:250px;
+    padding:12px;
+    margin:8px 0;
+    width:100%;
+    border:none;
+    border-radius:8px;
+    font-size:14px;
 }
+
 button {
     padding:12px;
+    width:100%;
     background:#ff758c;
     border:none;
     border-radius:10px;
     color:white;
+    font-size:16px;
+    margin-top:10px;
+    cursor:pointer;
+}
+
+button:hover {
+    background:#ff5c7a;
+}
+
+@media (max-width:500px) {
+    h1 { font-size:20px; }
+    h2 { font-size:14px; }
 }
 </style>
 </head>
+
 <body>
+
+<div class="container">
 
 <h1>Make Passport Size Photo</h1>
 <h2>🔥 Passport Tool</h2>
 
 <form method="POST" enctype="multipart/form-data">
 
-<input type="file" name="file" required><br>
+<input type="file" name="file" required>
 
-<label>Photos (1–99)</label><br>
-<input type="number" name="count" min="1" max="99" value="8"><br>
+<label>Photos (1–99)</label>
+<input type="number" name="count" min="1" max="99" value="8">
 
-<label>Download Type</label><br>
+<label>Download Type</label>
 <select name="type">
 <option value="jpg">JPG</option>
 <option value="pdf">PDF</option>
-</select><br>
+</select>
 
 <button type="submit">Generate</button>
 
 </form>
+
+</div>
 
 </body>
 </html>
@@ -85,7 +135,6 @@ def home():
         face = img[y:y+crop_h, x:x+crop_w]
         face = cv2.resize(face, (413, 531))
 
-        # GRID SETTINGS
         gap = 40
         border = 5
 
