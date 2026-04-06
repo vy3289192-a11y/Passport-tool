@@ -20,30 +20,8 @@ body {
     font-family:Arial;
     background: linear-gradient(135deg,#667eea,#764ba2);
     color:white;
-    transition:0.3s;
 }
 
-/* DARK MODE */
-.dark {
-    background:#111;
-    color:#eee;
-}
-
-/* NAVBAR */
-.navbar {
-    display:flex;
-    justify-content:space-between;
-    padding:15px;
-    background:rgba(0,0,0,0.3);
-}
-
-.navbar a {
-    color:white;
-    margin:0 10px;
-    text-decoration:none;
-}
-
-/* CONTAINER */
 .container {
     max-width:400px;
     margin:30px auto;
@@ -53,7 +31,6 @@ body {
     text-align:center;
 }
 
-/* UPLOAD BOX */
 .upload-box {
     border:2px dashed #ccc;
     padding:20px;
@@ -61,7 +38,6 @@ body {
     cursor:pointer;
 }
 
-/* INPUT */
 input, select {
     width:100%;
     padding:10px;
@@ -70,7 +46,6 @@ input, select {
     border:none;
 }
 
-/* BUTTON */
 button {
     width:100%;
     padding:12px;
@@ -78,17 +53,17 @@ button {
     border:none;
     border-radius:10px;
     color:white;
-    margin-top:10px;
 }
 
-/* PREVIEW */
+/* छोटा preview */
 img {
-    max-width:100%;
+    max-width:150px;
     margin-top:10px;
     border-radius:10px;
+    border:2px solid white;
 }
 
-/* LOADER */
+/* loader */
 .loader {
     display:none;
     border:5px solid #f3f3f3;
@@ -105,7 +80,7 @@ img {
     100% { transform:rotate(360deg); }
 }
 
-/* PROGRESS BAR */
+/* progress */
 .progress {
     width:100%;
     background:#ddd;
@@ -119,20 +94,10 @@ img {
     width:0%;
     background:#ff758c;
 }
-
 </style>
 </head>
 
 <body>
-
-<div class="navbar">
-    <div>🔥 Passport Tool</div>
-    <div>
-        <a href="#">Home</a>
-        <a href="#">Tools</a>
-        <button onclick="toggleTheme()">🌙</button>
-    </div>
-</div>
 
 <div class="container">
 
@@ -141,16 +106,14 @@ img {
 <form method="POST" enctype="multipart/form-data" onsubmit="showLoader()">
 
 <div class="upload-box" onclick="fileInput.click()">
-    <p>Select or Drag Image</p>
+    <p>Select Image</p>
     <input type="file" name="file" id="fileInput" hidden required onchange="previewImage(event)">
 </div>
 
 <img id="preview" style="display:none">
 
-<label>Photos</label>
 <input type="number" name="count" value="8">
 
-<label>Download Type</label>
 <select name="type">
 <option value="jpg">JPG</option>
 <option value="pdf">PDF</option>
@@ -173,15 +136,12 @@ img {
 </div>
 
 <script>
-
-// PREVIEW
 function previewImage(event) {
     const img = document.getElementById('preview');
     img.src = URL.createObjectURL(event.target.files[0]);
     img.style.display = "block";
 }
 
-// LOADER + PROGRESS
 function showLoader() {
     document.getElementById("loader").style.display = "block";
     document.getElementById("progress").style.display = "block";
@@ -194,12 +154,6 @@ function showLoader() {
         if (width >= 100) clearInterval(interval);
     }, 200);
 }
-
-// DARK MODE
-function toggleTheme() {
-    document.body.classList.toggle("dark");
-}
-
 </script>
 
 </body>
@@ -217,30 +171,50 @@ def home():
         file.save("input.jpg")
         img = cv2.imread("input.jpg")
 
-        # REMOVE BG (simple white bg)
+        # 🔥 REMOVE BG WORKING
         if remove_bg:
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            _, mask = cv2.threshold(gray, 240, 255, cv2.THRESH_BINARY_INV)
-            bg = np.ones_like(img) * 255
-            img = np.where(mask[:,:,None]==255, img, bg)
+            blur = cv2.GaussianBlur(gray, (5,5), 0)
+            _, thresh = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+            mask = cv2.bitwise_not(thresh)
 
-        h, w, _ = img.shape
+            white_bg = np.ones_like(img) * 255
+            img = np.where(mask[:,:,None]==255, img, white_bg)
+
+        # resize
         face = cv2.resize(img, (413, 531))
 
         gap = 40
+        border = 5
+
         cols = int(np.ceil(np.sqrt(count)))
         rows = int(np.ceil(count / cols))
 
-        canvas = np.ones((rows*600, cols*500, 3), dtype=np.uint8)*255
+        cell_w = 413 + gap
+        cell_h = 531 + gap
+
+        canvas_w = cols * cell_w + gap
+        canvas_h = rows * cell_h + gap
+
+        canvas = np.ones((canvas_h, canvas_w, 3), dtype=np.uint8) * 255
 
         i = 0
         for r in range(rows):
             for c in range(cols):
                 if i >= count:
                     break
-                y = r*600
-                x = c*500
-                canvas[y:y+531, x:x+413] = face
+
+                x = gap + c * cell_w
+                y = gap + r * cell_h
+
+                bordered = cv2.copyMakeBorder(
+                    face, border, border, border, border,
+                    cv2.BORDER_CONSTANT, value=[0,0,0]
+                )
+
+                h_b, w_b = bordered.shape[:2]
+                canvas[y:y+h_b, x:x+w_b] = bordered
+
                 i += 1
 
         os.makedirs("static", exist_ok=True)
