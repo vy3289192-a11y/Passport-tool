@@ -22,7 +22,6 @@ body {
     color:white;
 }
 
-/* NAVBAR */
 .navbar {
     display:flex;
     justify-content:space-between;
@@ -38,7 +37,6 @@ body {
     cursor:pointer;
 }
 
-/* CONTAINER */
 .container {
     max-width:400px;
     margin:30px auto;
@@ -48,7 +46,6 @@ body {
     text-align:center;
 }
 
-/* INPUT */
 input, select {
     width:100%;
     padding:10px;
@@ -57,7 +54,6 @@ input, select {
     border:none;
 }
 
-/* BUTTON */
 button.submit {
     width:100%;
     padding:12px;
@@ -67,7 +63,6 @@ button.submit {
     color:white;
 }
 
-/* PREVIEW */
 img {
     max-width:120px;
     margin-top:10px;
@@ -155,7 +150,10 @@ function previewImage(event){
 def home():
     if request.method == 'POST':
         tool = request.form.get("tool")
-        file = request.files['file']
+
+        file = request.files.get('file')
+        if not file or file.filename == "":
+            return "Please upload an image"
 
         os.makedirs("static", exist_ok=True)
 
@@ -165,7 +163,7 @@ def home():
         img = cv2.imread(file_path)
 
         if img is None:
-            return "Error loading image"
+            return "Image not loaded properly"
 
         # 🔥 PASSPORT
         if tool == "passport":
@@ -173,10 +171,9 @@ def home():
             filetype = request.form.get("type")
             remove_bg = request.form.get("remove_bg")
 
-            # resize
             face = cv2.resize(img, (413, 531))
 
-            # REMOVE BG (simple white replace)
+            # REMOVE BG (simple white)
             if remove_bg:
                 gray = cv2.cvtColor(face, cv2.COLOR_BGR2GRAY)
                 _, mask = cv2.threshold(gray, 240, 255, cv2.THRESH_BINARY)
