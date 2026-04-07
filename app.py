@@ -27,7 +27,7 @@ HTML = '''
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
         
         /* Navbar */
-        .nav { background: #111827; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); sticky; top: 0; z-index: 1000; }
+        .nav { background: #111827; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
         .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: white; }
         .nav-brand img { height: 35px; border-radius: 5px; }
         .nav-brand span { font-weight: bold; font-size: 1.3rem; letter-spacing: 0.5px; }
@@ -41,8 +41,8 @@ HTML = '''
         .overlay.active { display: block; }
 
         /* Main Content */
-        .main { padding: 40px 20px; display: flex; justify-content: center; min-height: 85vh; align-items: flex-start; }
-        .card { background: var(--card); padding: 35px; border-radius: 24px; width: 100%; max-width: 480px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); border: 1px solid var(--border); }
+        .main { padding: 40px 20px; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; min-height: 85vh; }
+        .card { background: var(--card); padding: 35px; border-radius: 24px; width: 100%; max-width: 480px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); border: 1px solid var(--border); margin-bottom: 30px; }
         
         h2 { margin-top: 0; font-size: 1.8rem; text-align: center; background: linear-gradient(to right, #60a5fa, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
@@ -59,6 +59,13 @@ HTML = '''
         
         .btn { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.4); }
         .btn:hover { background: #2563eb; transform: translateY(-2px); }
+
+        /* --- NEW: FOOTER SECTION --- */
+        .footer { max-width: 480px; width: 100%; text-align: center; padding: 20px 0; border-top: 1px solid var(--border); }
+        .footer-desc { font-size: 0.9rem; opacity: 0.7; margin-bottom: 20px; line-height: 1.5; }
+        .footer-founder { font-size: 1.05rem; font-weight: 500; margin-bottom: 15px; }
+        .insta-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 0.9rem; transition: 0.3s; box-shadow: 0 4px 15px rgba(220, 39, 67, 0.3); }
+        .insta-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(220, 39, 67, 0.5); }
 
         @media (max-width: 768px) {
             .nav-brand span { font-size: 1.1rem; }
@@ -116,7 +123,20 @@ HTML = '''
                 </button>
             </form>
         </div>
-    </div>
+
+        <div class="footer">
+            <div class="footer-desc">
+                <strong>How it works:</strong> Upload any photo. Our smart tool automatically crops it to the perfect passport size and generates a print-ready layout for you.
+            </div>
+            <div class="footer-founder">
+                Built with ❤️ by <span style="color: var(--accent);">Vishal</span><br>
+                <span style="font-size: 0.85rem; opacity: 0.7;">Founder, Snapzo Pro</span>
+            </div>
+            <a href="https://www.instagram.com/rry.vishal?igsh=YnhweDR6eDhoNXV3" target="_blank" class="insta-btn">
+                <i class="fab fa-instagram" style="font-size: 1.2rem;"></i> Follow me on Instagram
+            </a>
+        </div>
+        </div>
 
     <script>
         function toggleMenu() {
@@ -139,6 +159,8 @@ HTML = '''
 </body>
 </html>
 '''
+
+# --- PYTHON LOGIC (100% UNTOUCHED) ---
 
 def auto_crop_passport(img):
     h, w = img.shape[:2]
