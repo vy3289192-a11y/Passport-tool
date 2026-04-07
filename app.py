@@ -8,33 +8,34 @@ from reportlab.lib.utils import ImageReader
 
 app = Flask(__name__)
 
+# Simple Modern UI
 HTML = '''
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snapzo Pro</title>
     <style>
-        :root { --bg:#0f172a; --card:#1e293b; --text:#f1f5f9; --accent:#3b82f6; }
-        body { margin:0; font-family:sans-serif; background:var(--bg); color:var(--text); text-align:center; }
-        .navbar { padding:15px; background:#111827; font-weight:bold; font-size:1.2rem; }
-        .card { background:var(--card); max-width:400px; margin:40px auto; padding:30px; border-radius:15px; box-shadow:0 10px 20px rgba(0,0,0,0.3); }
-        input, select { width:100%; padding:10px; margin:10px 0; border-radius:8px; border:none; }
-        button { width:100%; padding:12px; background:var(--accent); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold; }
-        #preview { width:100px; display:none; margin:10px auto; border:2px solid var(--accent); }
+        body { font-family: sans-serif; background: #0f172a; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: #1e293b; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 350px; text-align: center; }
+        input, select, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: none; box-sizing: border-box; }
+        button { background: #3b82f6; color: white; font-weight: bold; cursor: pointer; }
+        button:hover { background: #2563eb; }
+        #preview { width: 100px; height: 120px; object-fit: cover; display: none; margin: 10px auto; border: 2px solid #3b82f6; }
     </style>
 </head>
 <body>
-    <div class="navbar">📸 Snapzo Pro</div>
     <div class="card">
-        <h2>Passport Photo Maker</h2>
+        <h2>📸 Snapzo Pro</h2>
         <form method="POST" enctype="multipart/form-data">
-            <input type="file" name="file" accept="image/*" required onchange="document.getElementById('preview').src=URL.createObjectURL(this.files[0]);document.getElementById('preview').style.display='block'">
+            <input type="file" name="file" accept="image/*" required onchange="const img=document.getElementById('preview'); img.src=URL.createObjectURL(this.files[0]); img.style.display='block';">
             <img id="preview">
-            <label>Photos Count (1-12):</label>
-            <input type="number" name="count" value="8" min="1" max="12">
-            <label>Format:</label>
-            <select name="type"><option value="jpg">JPG Image</option><option value="pdf">PDF Document</option></select>
+            <input type="number" name="count" value="8" min="1" max="12" placeholder="Photos Count">
+            <select name="type">
+                <option value="jpg">Download as JPG</option>
+                <option value="pdf">Download as PDF</option>
+            </select>
             <button type="submit">Download Now</button>
         </form>
     </div>
@@ -45,52 +46,54 @@ HTML = '''
 @app.route('/', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
-        file = request.files.get('file')
-        if not file: return "No file uploaded"
+        try:
+            file = request.files.get('file')
+            if not file: return "Error: No file selected", 400
 
-        # Image ko memory mein read karna (File save nahi hogi)
-        in_memory_file = io.BytesIO()
-        file.save(in_memory_file)
-        data = np.frombuffer(in_memory_file.getvalue(), dtype=np.uint8)
-        img = cv2.imdecode(data, cv2.IMREAD_COLOR)
+            # Memory mein image load karna
+            file_bytes = np.frombuffer(file.read(), np.uint8)
+            img = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+            
+            if img is None: return "Error: Could not decode image", 400
 
-        if img is None: return "Invalid Image"
+            count = int(request.form.get("count", 8))
+            filetype = request.form.get("type")
 
-        count = int(request.form.get("count", 8))
-        filetype = request.form.get("type")
+            # Passport Photo Resize
+            face = cv2.resize(img, (413, 531))
+            canvas_img = np.ones((1600, 1300, 3), dtype=np.uint8) * 255
 
-        # Passport size resize
-        face = cv2.resize(img, (413, 531))
-        # White Canvas (A4 Size Sheet)
-        canvas_img = np.ones((1600, 1300, 3), dtype=np.uint8) * 255
-
-        i = 0
-        for r in range(4):
-            for c in range(3):
-                if i >= count: break
+            # Simple grid logic
+            for i in range(min(count, 12)):
+                r, c = i // 3, i % 3
                 y, x = r * 580 + 50, c * 430 + 30
-                # Border
                 bordered = cv2.copyMakeBorder(face, 10, 10, 10, 10, cv2.BORDER_CONSTANT, value=[200, 200, 200])
-                canvas_img[y:y+bordered.shape[0], x:x+bordered.shape[1]] = bordered
-                i += 1
+                h, w = bordered.shape[:2]
+                canvas_img[y:y+h, x:x+w] = bordered
 
-        # Response ko memory mein handle karna
-        if filetype == "pdf":
-            pdf_io = io.BytesIO()
-            c = pdf_canvas.Canvas(pdf_io, pagesize=A4)
-            # Image ko temp save kiye bina PDF mein convert karna
-            _, img_encoded = cv2.imencode('.jpg', canvas_img)
-            img_reader = ImageReader(io.BytesIO(img_encoded.tobytes()))
-            c.drawImage(img_reader, 50, 150, width=500, height=600)
-            c.showPage()
-            c.save()
-            pdf_io.seek(0)
-            return send_file(pdf_io, mimetype='application/pdf', as_attachment=True, download_name='passport_photos.pdf')
-        else:
-            _, img_encoded = cv2.imencode('.jpg', canvas_img)
-            return send_file(io.BytesIO(img_encoded.tobytes()), mimetype='image/jpeg', as_attachment=True, download_name='passport_photos.jpg')
+            # JPG Return
+            if filetype == "jpg":
+                success, encoded_img = cv2.imencode('.jpg', canvas_img)
+                if not success: return "Error: Encoding failed", 500
+                return send_file(io.BytesIO(encoded_img.tobytes()), mimetype='image/jpeg', as_attachment=True, download_name='snapzo_passport.jpg')
+
+            # PDF Return
+            else:
+                pdf_io = io.BytesIO()
+                c = pdf_canvas.Canvas(pdf_io, pagesize=A4)
+                success, encoded_img = cv2.imencode('.jpg', canvas_img)
+                img_reader = ImageReader(io.BytesIO(encoded_img.tobytes()))
+                c.drawImage(img_reader, 50, 150, width=500, height=600)
+                c.showPage()
+                c.save()
+                pdf_io.seek(0)
+                return send_file(pdf_io, mimetype='application/pdf', as_attachment=True, download_name='snapzo_photos.pdf')
+
+        except Exception as e:
+            # Ye line Render logs mein asli error dikhayegi
+            return f"Server Error: {str(e)}", 500
 
     return render_template_string(HTML)
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run()
