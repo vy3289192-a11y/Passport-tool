@@ -2,5 +2,6 @@ flask
 opencv-python-headless
 numpy
 reportlab
+gunicorn
 rembg
 onnxruntime
