@@ -35,13 +35,13 @@ HTML = '''
         .nav-brand img { height: 35px; border-radius: 5px; }
         .nav-brand span { font-weight: bold; font-size: 1.3rem; letter-spacing: 0.5px; }
 
-        .desktop-menu { display: flex; gap: 10px; align-items: center; }
-        .desktop-menu .menu-btn { padding: 10px 15px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-weight: 500; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; }
+        .desktop-menu { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; }
+        .desktop-menu .menu-btn { padding: 8px 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-weight: 500; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; }
         .desktop-menu .menu-btn:hover, .desktop-menu .active-menu { background: var(--accent); color: white; }
         .mobile-toggle { display: none; font-size: 1.4rem; cursor: pointer; }
 
         /* Sidebar */
-        .sidebar { width: 250px; height: 100vh; background: #111827; position: fixed; left: -250px; top: 0; transition: 0.3s; z-index: 2000; padding: 20px; box-sizing: border-box; }
+        .sidebar { width: 250px; height: 100vh; background: #111827; position: fixed; left: -250px; top: 0; transition: 0.3s; z-index: 2000; padding: 20px; box-sizing: border-box; overflow-y: auto; }
         .sidebar.active { left: 0; }
         .sidebar .menu-btn { padding: 15px; display: flex; align-items: center; gap: 15px; color: var(--text); border-radius: 8px; margin-bottom: 10px; transition: 0.2s; cursor: pointer; }
         .sidebar .menu-btn:hover, .sidebar .active-menu { background: var(--accent); }
@@ -75,7 +75,7 @@ HTML = '''
         .img-container { max-height: 400px; display: none; margin-top: 15px; }
         .img-container img { max-width: 100%; display: block; }
 
-        @media (max-width: 850px) {
+        @media (max-width: 950px) {
             .desktop-menu { display: none; }
             .mobile-toggle { display: block; }
             .card { padding: 25px; }
@@ -94,7 +94,8 @@ HTML = '''
             <div class="menu-btn" onclick="switchTool('crop')" id="desk-crop"><i class="fas fa-crop-alt"></i> Manual Crop</div>
             <div class="menu-btn" onclick="switchTool('pdf')" id="desk-pdf"><i class="fas fa-file-pdf"></i> Photo to PDF</div>
             <div class="menu-btn" onclick="switchTool('compress')" id="desk-compress"><i class="fas fa-compress-arrows-alt"></i> Compress</div>
-            <div class="menu-btn" onclick="alert('This AI feature requires a Premium Server. Coming Soon!')"><i class="fas fa-magic"></i> Remove BG</div>
+            <div class="menu-btn" onclick="switchTool('social')" id="desk-social"><i class="fas fa-share-alt"></i> Social Resizer</div>
+            <div class="menu-btn" onclick="switchTool('format')" id="desk-format"><i class="fas fa-exchange-alt"></i> Converter</div>
         </div>
         <i class="fas fa-bars mobile-toggle" onclick="toggleMenu()"></i>
     </div>
@@ -106,7 +107,8 @@ HTML = '''
         <div class="menu-btn" onclick="switchTool('crop')" id="mob-crop"><i class="fas fa-crop-alt"></i> Manual Crop</div>
         <div class="menu-btn" onclick="switchTool('pdf')" id="mob-pdf"><i class="fas fa-file-pdf"></i> Photo to PDF</div>
         <div class="menu-btn" onclick="switchTool('compress')" id="mob-compress"><i class="fas fa-compress-arrows-alt"></i> Compress</div>
-        <div class="menu-btn" onclick="alert('This AI feature requires a Premium Server. Coming Soon!')"><i class="fas fa-magic"></i> Remove BG</div>
+        <div class="menu-btn" onclick="switchTool('social')" id="mob-social"><i class="fas fa-share-alt"></i> Social Resizer</div>
+        <div class="menu-btn" onclick="switchTool('format')" id="mob-format"><i class="fas fa-exchange-alt"></i> Format Converter</div>
     </div>
 
     <div class="main">
@@ -177,8 +179,60 @@ HTML = '''
             </form>
         </div>
 
+        <div class="card" id="tool-social" style="display: none;">
+            <h2>Social Media Resizer</h2>
+            <form method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="tool_type" value="social">
+                <div class="upload-zone" onclick="document.getElementById('fileInputSocial').click()">
+                    <input type="file" name="file" id="fileInputSocial" hidden required onchange="handlePreview(this, 'preview-social', 'drop-text-social')">
+                    <div id="drop-text-social">
+                        <i class="fas fa-share-alt" style="font-size: 3.5rem; color: var(--accent); margin-bottom: 10px;"></i>
+                        <p style="margin:0"><b>Upload Image</b> to resize</p>
+                    </div>
+                    <img id="preview-social" class="preview-img">
+                </div>
+                <div class="row">
+                    <div class="group">
+                        <label>Select Platform</label>
+                        <select name="platform">
+                            <option value="yt">YouTube Thumbnail (1280x720)</option>
+                            <option value="insta">Instagram Post (1080x1080)</option>
+                            <option value="fb">Facebook Cover (820x312)</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn"><i class="fas fa-crop"></i> Resize & Download</button>
+            </form>
+        </div>
+
+        <div class="card" id="tool-format" style="display: none;">
+            <h2>Format Converter</h2>
+            <form method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="tool_type" value="format">
+                <div class="upload-zone" onclick="document.getElementById('fileInputFormat').click()">
+                    <input type="file" name="file" id="fileInputFormat" hidden required onchange="handlePreview(this, 'preview-format', 'drop-text-format')">
+                    <div id="drop-text-format">
+                        <i class="fas fa-exchange-alt" style="font-size: 3.5rem; color: var(--accent); margin-bottom: 10px;"></i>
+                        <p style="margin:0"><b>Upload Image</b> to convert format</p>
+                    </div>
+                    <img id="preview-format" class="preview-img">
+                </div>
+                <div class="row">
+                    <div class="group">
+                        <label>Convert To</label>
+                        <select name="out_format">
+                            <option value="png">PNG (High Quality)</option>
+                            <option value="jpg">JPG (Standard)</option>
+                            <option value="webp">WEBP (Best for Websites)</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn"><i class="fas fa-file-export"></i> Convert & Download</button>
+            </form>
+        </div>
+
         <div class="footer">
-            <div class="footer-desc"><strong>Snapzo Pro Suite:</strong> Create passport photos, crop precisely, compress sizes, or convert to PDF - all in one place.</div>
+            <div class="footer-desc"><strong>Snapzo Pro Suite:</strong> Create passport photos, crop, compress, convert formats or resize for social media - all in one place.</div>
             <div class="footer-founder">Built with ❤️ by <span style="color: var(--accent);">Vishal</span><br><span style="font-size: 0.85rem; opacity: 0.7;">Founder, Snapzo Pro</span></div>
             <a href="https://www.instagram.com/rry.vishal?igsh=YnhweDR6eDhoNXV3" target="_blank" class="insta-btn"><i class="fab fa-instagram" style="font-size: 1.2rem;"></i> Follow me on Instagram</a>
         </div>
@@ -193,13 +247,13 @@ HTML = '''
         }
 
         function switchTool(toolName) {
-            const tools = ['passport', 'crop', 'pdf', 'compress'];
+            const tools = ['passport', 'crop', 'pdf', 'compress', 'social', 'format'];
             tools.forEach(t => {
                 document.getElementById('tool-' + t).style.display = (t === toolName) ? 'block' : 'none';
                 document.getElementById('desk-' + t).classList.toggle('active-menu', t === toolName);
                 document.getElementById('mob-' + t).classList.toggle('active-menu', t === toolName);
             });
-            if(window.innerWidth <= 850) { toggleMenu(); }
+            if(window.innerWidth <= 950) { document.getElementById('sidebar').classList.remove('active'); document.getElementById('overlay').classList.remove('active'); }
         }
 
         function handlePreview(input, imgId, dropTextId) {
@@ -335,6 +389,38 @@ def home():
                 encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), quality]
                 _, buffer = cv2.imencode('.jpg', img, encode_param)
                 return send_file(io.BytesIO(buffer), mimetype='image/jpeg', as_attachment=True, download_name='snapzo_compressed.jpg')
+
+            # ================= 5. NEW: SOCIAL RESIZER =================
+            elif tool_type == 'social':
+                platform = request.form.get('platform')
+                if platform == 'yt':
+                    dim = (1280, 720)
+                elif platform == 'insta':
+                    dim = (1080, 1080)
+                elif platform == 'fb':
+                    dim = (820, 312)
+                else:
+                    dim = (1080, 1080)
+                
+                # Standard resize to fit the platform exactly
+                resized_img = cv2.resize(img, dim)
+                _, buffer = cv2.imencode('.jpg', resized_img)
+                return send_file(io.BytesIO(buffer), mimetype='image/jpeg', as_attachment=True, download_name=f'snapzo_{platform}.jpg')
+
+            # ================= 6. NEW: FORMAT CONVERTER =================
+            elif tool_type == 'format':
+                out_format = request.form.get('out_format', 'png')
+                if out_format == 'webp':
+                    _, buffer = cv2.imencode('.webp', img)
+                    mime = 'image/webp'
+                elif out_format == 'png':
+                    _, buffer = cv2.imencode('.png', img)
+                    mime = 'image/png'
+                else:
+                    _, buffer = cv2.imencode('.jpg', img)
+                    mime = 'image/jpeg'
+                
+                return send_file(io.BytesIO(buffer), mimetype=mime, as_attachment=True, download_name=f'snapzo_converted.{out_format}')
 
         except Exception as e:
             return f"Server Error: {str(e)}", 500
