@@ -8,80 +8,60 @@ from reportlab.lib.utils import ImageReader
 
 app = Flask(__name__)
 
+# Modern Responsive UI
 HTML = '''
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snapzo Pro | Modern Editor</title>
+    <title>Snapzo Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --bg: #f8fafc; --sidebar: #ffffff; --card: #ffffff; --text: #1e293b;
-            --accent: #3b82f6; --border: #e2e8f0; --hover: #eff6ff; --header: #ffffff;
-        }
-        body.dark-mode {
-            --bg: #0f172a; --sidebar: #1e293b; --card: #1e293b; --text: #f1f5f9;
-            --accent: #60a5fa; --border: #334155; --hover: #334155; --header: #111827;
-        }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; min-height: 100vh; display: flex; flex-direction: column; }
-        .mobile-header { display: none; background: var(--header); padding: 15px 20px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; align-items: center; justify-content: space-between; }
-        .menu-toggle { font-size: 1.5rem; cursor: pointer; }
-        .sidebar { width: 260px; height: 100vh; background: var(--sidebar); border-right: 1px solid var(--border); position: fixed; padding: 20px; box-sizing: border-box; z-index: 150; transition: transform 0.3s ease; }
-        .logo { font-size: 1.5rem; font-weight: bold; margin-bottom: 40px; color: var(--accent); }
-        .menu-item { padding: 12px 15px; border-radius: 8px; cursor: pointer; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; color: var(--text); text-decoration: none; }
-        .menu-item.active { background: var(--hover); color: var(--accent); }
-        .content { margin-left: 260px; flex: 1; padding: 40px; display: flex; justify-content: center; }
-        .tool-card { background: var(--card); padding: 35px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); width: 100%; max-width: 500px; }
-        .upload-box { border: 2px dashed var(--accent); border-radius: 15px; padding: 30px; text-align: center; cursor: pointer; background: var(--hover); min-height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        #preview { max-width: 100%; max-height: 200px; display: none; border-radius: 8px; margin-top: 10px; }
-        .btn-primary { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 20px; }
-        @media (max-width: 768px) {
-            .mobile-header { display: flex; }
-            .sidebar { transform: translateX(-100%); }
-            .sidebar.open { transform: translateX(0); }
-            .content { margin-left: 0; padding: 20px; }
-        }
+        :root { --bg: #0f172a; --card: #1e293b; --accent: #3b82f6; --text: #f1f5f9; }
+        body { margin: 0; font-family: sans-serif; background: var(--bg); color: var(--text); }
+        .nav { background: #111827; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .main { padding: 20px; display: flex; justify-content: center; }
+        .card { background: var(--card); padding: 30px; border-radius: 15px; width: 100%; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .upload { border: 2px dashed var(--accent); padding: 30px; border-radius: 10px; cursor: pointer; text-align: center; background: rgba(59,130,246,0.05); }
+        #preview { max-width: 100px; display: none; margin: 15px auto; border-radius: 5px; border: 2px solid var(--accent); }
+        input, select, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; box-sizing: border-box; }
+        button { background: var(--accent); color: white; font-weight: bold; cursor: pointer; }
+        @media (max-width: 600px) { .card { padding: 20px; } }
     </style>
 </head>
-<body class="dark-mode">
-    <div class="mobile-header">
-        <div style="font-weight:bold; color:var(--accent)">Snapzo Pro</div>
-        <div class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></div>
+<body>
+    <div class="nav">
+        <div style="font-weight:bold; font-size:1.2rem;"><i class="fas fa-camera-retro"></i> Snapzo Pro</div>
+        <i class="fas fa-bars" onclick="alert('Menu features coming soon!')" style="cursor:pointer"></i>
     </div>
-
-    <div class="sidebar" id="sidebar">
-        <div class="logo"><i class="fas fa-camera-retro"></i> Snapzo Pro</div>
-        <div class="menu-item active"><i class="fas fa-id-badge"></i> Passport Maker</div>
-        <div class="menu-item" onclick="alert('Coming Soon')"><i class="fas fa-magic"></i> Remove BG</div>
-        <div class="menu-item" onclick="location.reload()"><i class="fas fa-home"></i> Home</div>
-    </div>
-
-    <div class="content">
-        <div class="tool-card">
-            <h2>Passport Photo Maker</h2>
+    <div class="main">
+        <div class="card">
+            <h2 style="margin-top:0">Passport Maker</h2>
             <form method="POST" enctype="multipart/form-data">
-                <div class="upload-box" onclick="document.getElementById('fileInput').click()">
-                    <input type="file" name="file" id="fileInput" hidden required onchange="handlePreview(this)">
-                    <div id="prompt"><i class="fas fa-cloud-upload-alt" style="font-size:2rem"></i><p>Click to Upload</p></div>
+                <div class="upload" onclick="document.getElementById('fileInput').click()">
+                    <input type="file" name="file" id="fileInput" hidden required onchange="showPreview(this)">
+                    <div id="msg"><i class="fas fa-upload" style="font-size:2rem"></i><p>Click or Drag Image</p></div>
                     <img id="preview">
                 </div>
-                <div style="display:flex; gap:10px; margin-top:15px">
-                    <div style="flex:1"><label>Count</label><input type="number" name="count" value="8" min="1" max="12" style="width:100%; padding:10px; border-radius:5px"></div>
-                    <div style="flex:1"><label>Format</label><select name="type" style="width:100%; padding:10px; border-radius:5px"><option value="jpg">JPG</option><option value="pdf">PDF</option></select></div>
+                <div style="display:flex; gap:10px; margin-top:10px">
+                    <div style="flex:1"><label>Count</label><input type="number" name="count" value="8" min="1" max="12"></div>
+                    <div style="flex:1"><label>Format</label><select name="type"><option value="jpg">JPG</option><option value="pdf">PDF</option></select></div>
                 </div>
-                <button type="submit" class="btn-primary">Generate & Download</button>
+                <button type="submit">Download Photos</button>
             </form>
         </div>
     </div>
-
     <script>
-        function handlePreview(input) {
+        function showPreview(input) {
             if (input.files && input.files[0]) {
-                document.getElementById('preview').src = URL.createObjectURL(input.files[0]);
-                document.getElementById('preview').style.display = 'block';
-                document.getElementById('prompt').style.display = 'none';
+                const reader = new FileReader();
+                reader.onload = e => {
+                    document.getElementById('preview').src = e.target.result;
+                    document.getElementById('preview').style.display = 'block';
+                    document.getElementById('msg').style.display = 'none';
+                };
+                reader.readAsDataURL(input.files[0]);
             }
         }
     </script>
@@ -89,16 +69,16 @@ HTML = '''
 </html>
 '''
 
-def auto_crop(img):
+def auto_crop_passport(img):
     h, w = img.shape[:2]
     target_ratio = 413 / 531
-    if (w/h) > target_ratio:
+    if (w / h) > target_ratio:
         new_w = int(h * target_ratio)
         offset = (w - new_w) // 2
         return img[:, offset:offset+new_w]
     else:
         new_h = int(w / target_ratio)
-        offset = int((h - new_h) * 0.1)
+        offset = int((h - new_h) * 0.1) # Face area safety
         return img[offset:offset+new_h, :]
 
 @app.route('/', methods=['GET', 'POST'])
@@ -106,37 +86,49 @@ def home():
     if request.method == 'POST':
         try:
             file = request.files.get('file')
-            if not file: return "Upload error", 400
+            if not file: return "File missing", 400
+            
+            # Read Image
             img = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
             
-            # Auto Crop & Resize
-            face = cv2.resize(auto_crop(img), (413, 531))
-            bordered = cv2.copyMakeBorder(face, 12, 12, 12, 12, cv2.BORDER_CONSTANT, value=[230, 230, 230])
-            bh, bw = bordered.shape[:2]
+            # Crop & Resize
+            cropped = auto_crop_passport(img)
+            face = cv2.resize(cropped, (413, 531))
             
-            canvas = np.ones((1800, 1400, 3), dtype=np.uint8) * 255
+            # Border
+            bordered = cv2.copyMakeBorder(face, 12, 12, 12, 12, cv2.BORDER_CONSTANT, value=[225, 225, 225])
+            bh, bw = bordered.shape[:2] # Dynamic size (bh=555, bw=437)
+
+            # Canvas (Extra big for safety)
+            canvas = np.ones((2000, 1500, 3), dtype=np.uint8) * 255
             count = int(request.form.get("count", 8))
+            
             for i in range(min(count, 12)):
                 r, c = i // 3, i % 3
-                y, x = r*(bh+40)+60, c*(bw+30)+60
-                canvas[y:y+bh, x:x+bw] = bordered
+                # Dynamic Slice Placement (Ab error nahi aayega)
+                y_pos = r * (bh + 40) + 60
+                x_pos = c * (bw + 20) + 60
+                canvas[y_pos : y_pos + bh, x_pos : x_pos + bw] = bordered
 
+            # Output
             _, buffer = cv2.imencode('.jpg', canvas)
-            io_buf = io.BytesIO(buffer)
+            final_io = io.BytesIO(buffer)
 
             if request.form.get("type") == "pdf":
                 pdf_io = io.BytesIO()
-                c = pdf_canvas.Canvas(pdf_io, pagesize=A4)
-                c.drawImage(ImageReader(io_buf), 50, 150, width=500, height=600)
-                c.showPage()
-                c.save()
+                c_pdf = pdf_canvas.Canvas(pdf_io, pagesize=A4)
+                c_pdf.drawImage(ImageReader(final_io), 50, 100, width=500, height=650)
+                c_pdf.showPage()
+                c_pdf.save()
                 pdf_io.seek(0)
                 return send_file(pdf_io, mimetype='application/pdf', as_attachment=True, download_name='photos.pdf')
             
-            io_buf.seek(0)
-            return send_file(io_buf, mimetype='image/jpeg', as_attachment=True, download_name='photos.jpg')
+            final_io.seek(0)
+            return send_file(final_io, mimetype='image/jpeg', as_attachment=True, download_name='photos.jpg')
+
         except Exception as e:
             return f"Error: {str(e)}", 500
+            
     return render_template_string(HTML)
 
 if __name__ == "__main__":
