@@ -35,11 +35,19 @@ HTML = '''
         .nav-brand img { height: 35px; border-radius: 5px; }
         .nav-brand span { font-weight: bold; font-size: 1.3rem; letter-spacing: 0.5px; }
 
-        /* Sidebar (Mobile Menu) */
+        /* Desktop Menu (NEW) */
+        .desktop-menu { display: flex; gap: 10px; align-items: center; }
+        .desktop-menu .menu-btn { padding: 10px 15px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-weight: 500; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; }
+        .desktop-menu .menu-btn:hover, .desktop-menu .active-menu { background: var(--accent); color: white; }
+
+        /* Mobile Toggle Icon */
+        .mobile-toggle { display: none; font-size: 1.4rem; cursor: pointer; }
+
+        /* Sidebar (Mobile Menu Only) */
         .sidebar { width: 250px; height: 100vh; background: #111827; position: fixed; left: -250px; top: 0; transition: 0.3s; z-index: 2000; padding: 20px; box-sizing: border-box; }
         .sidebar.active { left: 0; }
-        .menu-item { padding: 15px; display: flex; align-items: center; gap: 15px; color: var(--text); text-decoration: none; border-radius: 8px; margin-bottom: 10px; transition: 0.2s; cursor: pointer; }
-        .menu-item:hover, .menu-item.active-menu { background: var(--accent); }
+        .sidebar .menu-btn { padding: 15px; display: flex; align-items: center; gap: 15px; color: var(--text); border-radius: 8px; margin-bottom: 10px; transition: 0.2s; cursor: pointer; }
+        .sidebar .menu-btn:hover, .sidebar .active-menu { background: var(--accent); }
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1500; }
         .overlay.active { display: block; }
 
@@ -74,8 +82,10 @@ HTML = '''
         .img-container { max-height: 400px; display: none; margin-top: 15px; }
         .img-container img { max-width: 100%; display: block; }
 
-        @media (max-width: 768px) {
-            .nav-brand span { font-size: 1.1rem; }
+        /* Responsive Breakpoints */
+        @media (max-width: 850px) {
+            .desktop-menu { display: none; } /* Hide top menu on small screens */
+            .mobile-toggle { display: block; } /* Show 3 lines on small screens */
             .card { padding: 25px; }
         }
     </style>
@@ -87,18 +97,24 @@ HTML = '''
             <img src="''' + LOGO_URL + '''" alt="Logo">
             <span>Snapzo Pro</span>
         </a>
-        <i class="fas fa-bars" style="font-size: 1.4rem; cursor: pointer;" onclick="toggleMenu()"></i>
+        
+        <div class="desktop-menu">
+            <div class="menu-btn active-menu" onclick="switchTool('passport')" id="desk-passport"><i class="fas fa-id-card"></i> Passport Maker</div>
+            <div class="menu-btn" onclick="switchTool('crop')" id="desk-crop"><i class="fas fa-crop-alt"></i> Manual Crop</div>
+            <div class="menu-btn" onclick="switchTool('pdf')" id="desk-pdf"><i class="fas fa-file-pdf"></i> Photo to PDF</div>
+            <div class="menu-btn" onclick="switchTool('compress')" id="desk-compress"><i class="fas fa-compress-arrows-alt"></i> Compress</div>
+        </div>
+
+        <i class="fas fa-bars mobile-toggle" onclick="toggleMenu()"></i>
     </div>
 
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
     <div class="sidebar" id="sidebar">
-        <h3 style="color:var(--accent)">Menu</h3>
-        <div class="menu-item active-menu" onclick="switchTool('passport')" id="menu-passport"><i class="fas fa-id-card"></i> Passport Maker</div>
-        <div class="menu-item" onclick="switchTool('crop')" id="menu-crop"><i class="fas fa-crop-alt"></i> Manual Crop</div>
-        
-        <div class="menu-item" onclick="switchTool('pdf')" id="menu-pdf"><i class="fas fa-file-pdf"></i> Photo to PDF</div>
-        <div class="menu-item" onclick="switchTool('compress')" id="menu-compress"><i class="fas fa-compress-arrows-alt"></i> Image Compressor</div>
-        <div class="menu-item" onclick="alert('AI Feature coming soon!')"><i class="fas fa-magic"></i> Remove BG</div>
+        <h3 style="color:var(--accent); margin-top:0;">Menu</h3>
+        <div class="menu-btn active-menu" onclick="switchTool('passport')" id="mob-passport"><i class="fas fa-id-card"></i> Passport Maker</div>
+        <div class="menu-btn" onclick="switchTool('crop')" id="mob-crop"><i class="fas fa-crop-alt"></i> Manual Crop</div>
+        <div class="menu-btn" onclick="switchTool('pdf')" id="mob-pdf"><i class="fas fa-file-pdf"></i> Photo to PDF</div>
+        <div class="menu-btn" onclick="switchTool('compress')" id="mob-compress"><i class="fas fa-compress-arrows-alt"></i> Compress</div>
     </div>
 
     <div class="main">
@@ -209,7 +225,6 @@ HTML = '''
             </form>
         </div>
 
-
         <div class="footer">
             <div class="footer-desc">
                 <strong>Snapzo Pro Suite:</strong> Create passport photos, crop precisely, compress sizes, or convert to PDF - all in one place.
@@ -232,18 +247,30 @@ HTML = '''
             document.getElementById('overlay').classList.toggle('active');
         }
 
-        // Updated Switch logic to include new tools safely
+        // Updated Switch logic to handle both Desktop and Mobile menu highlights
         function switchTool(toolName) {
             document.getElementById('tool-passport').style.display = toolName === 'passport' ? 'block' : 'none';
             document.getElementById('tool-crop').style.display = toolName === 'crop' ? 'block' : 'none';
             document.getElementById('tool-pdf').style.display = toolName === 'pdf' ? 'block' : 'none';
             document.getElementById('tool-compress').style.display = toolName === 'compress' ? 'block' : 'none';
             
-            document.getElementById('menu-passport').classList.toggle('active-menu', toolName === 'passport');
-            document.getElementById('menu-crop').classList.toggle('active-menu', toolName === 'crop');
-            document.getElementById('menu-pdf').classList.toggle('active-menu', toolName === 'pdf');
-            document.getElementById('menu-compress').classList.toggle('active-menu', toolName === 'compress');
-            toggleMenu(); 
+            // Desktop active states
+            document.getElementById('desk-passport').classList.toggle('active-menu', toolName === 'passport');
+            document.getElementById('desk-crop').classList.toggle('active-menu', toolName === 'crop');
+            document.getElementById('desk-pdf').classList.toggle('active-menu', toolName === 'pdf');
+            document.getElementById('desk-compress').classList.toggle('active-menu', toolName === 'compress');
+            
+            // Mobile active states
+            document.getElementById('mob-passport').classList.toggle('active-menu', toolName === 'passport');
+            document.getElementById('mob-crop').classList.toggle('active-menu', toolName === 'crop');
+            document.getElementById('mob-pdf').classList.toggle('active-menu', toolName === 'pdf');
+            document.getElementById('mob-compress').classList.toggle('active-menu', toolName === 'compress');
+            
+            // Close mobile menu if open
+            if(window.innerWidth <= 850) {
+                document.getElementById('sidebar').classList.remove('active');
+                document.getElementById('overlay').classList.remove('active');
+            }
         }
 
         function handleFilePass(input) {
@@ -258,6 +285,7 @@ HTML = '''
             }
         }
 
+        // Yeh Cropper.js initialize karta hai (Bilkul Pi7 jaisa blue box layega)
         function handleFileCrop(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -273,7 +301,6 @@ HTML = '''
             }
         }
 
-        // New handlers for previewing so old code doesn't break
         function handleFilePdf(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -312,7 +339,7 @@ HTML = '''
 </html>
 '''
 
-# --- PYTHON LOGIC (UNTOUCHED PASSPORT & CROP) ---
+# --- PYTHON LOGIC (100% UNTOUCHED) ---
 
 def auto_crop_passport(img):
     h, w = img.shape[:2]
@@ -381,16 +408,14 @@ def home():
                 io_buf = io.BytesIO(buffer)
                 return send_file(io_buf, mimetype='image/jpeg', as_attachment=True, download_name='snapzo_cropped.jpg')
 
-            # ================= NEW: PHOTO TO PDF =================
+            # ================= PHOTO TO PDF =================
             elif tool_type == 'pdf':
-                # Convert image to buffer
                 _, buffer = cv2.imencode('.jpg', img)
                 io_buf = io.BytesIO(buffer)
                 
                 pdf_io = io.BytesIO()
                 c = pdf_canvas.Canvas(pdf_io, pagesize=A4)
                 
-                # Math to fit the image perfectly in the center of an A4 page
                 img_h, img_w = img.shape[:2]
                 a4_w, a4_h = A4
                 margin = 50
@@ -411,10 +436,9 @@ def home():
                 pdf_io.seek(0)
                 return send_file(pdf_io, mimetype='application/pdf', as_attachment=True, download_name='snapzo_document.pdf')
 
-            # ================= NEW: IMAGE COMPRESSOR =================
+            # ================= IMAGE COMPRESSOR =================
             elif tool_type == 'compress':
                 quality = int(request.form.get("quality", 60))
-                # Protect from invalid inputs (limit between 5 and 100)
                 quality = max(5, min(100, quality))
                 
                 encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), quality]
