@@ -1,5 +1,6 @@
-flask==3.0.0
+flask
 opencv-python-headless
 numpy
 reportlab
-gunicorn
+rembg
+onnxruntime
