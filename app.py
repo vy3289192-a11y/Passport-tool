@@ -95,6 +95,9 @@ HTML = '''
         <h3 style="color:var(--accent)">Menu</h3>
         <div class="menu-item active-menu" onclick="switchTool('passport')" id="menu-passport"><i class="fas fa-id-card"></i> Passport Maker</div>
         <div class="menu-item" onclick="switchTool('crop')" id="menu-crop"><i class="fas fa-crop-alt"></i> Manual Crop</div>
+        
+        <div class="menu-item" onclick="switchTool('pdf')" id="menu-pdf"><i class="fas fa-file-pdf"></i> Photo to PDF</div>
+        <div class="menu-item" onclick="switchTool('compress')" id="menu-compress"><i class="fas fa-compress-arrows-alt"></i> Image Compressor</div>
         <div class="menu-item" onclick="alert('AI Feature coming soon!')"><i class="fas fa-magic"></i> Remove BG</div>
     </div>
 
@@ -133,7 +136,6 @@ HTML = '''
             </form>
         </div>
 
-
         <div class="card" id="tool-crop" style="display: none;">
             <h2>Manual Crop Studio</h2>
             <form method="POST" enctype="multipart/form-data" id="cropForm">
@@ -161,10 +163,56 @@ HTML = '''
             </form>
         </div>
 
+        <div class="card" id="tool-pdf" style="display: none;">
+            <h2>Photo to PDF Converter</h2>
+            <form method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="tool_type" value="pdf">
+                <div class="upload-zone" onclick="document.getElementById('fileInputPdf').click()">
+                    <input type="file" name="file" id="fileInputPdf" hidden required onchange="handleFilePdf(this)">
+                    <div id="drop-text-pdf">
+                        <i class="fas fa-file-pdf" style="font-size: 3.5rem; color: var(--accent); margin-bottom: 10px;"></i>
+                        <p style="margin:0"><b>Upload Image</b> to convert to PDF</p>
+                    </div>
+                    <img id="preview-pdf" class="preview-img">
+                </div>
+
+                <button type="submit" class="btn" style="margin-top: 20px;">
+                    <i class="fas fa-download"></i> Download PDF
+                </button>
+            </form>
+        </div>
+
+        <div class="card" id="tool-compress" style="display: none;">
+            <h2>Image Compressor</h2>
+            <form method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="tool_type" value="compress">
+                <div class="upload-zone" onclick="document.getElementById('fileInputCompress').click()">
+                    <input type="file" name="file" id="fileInputCompress" hidden required onchange="handleFileCompress(this)">
+                    <div id="drop-text-compress">
+                        <i class="fas fa-compress-arrows-alt" style="font-size: 3.5rem; color: var(--accent); margin-bottom: 10px;"></i>
+                        <p style="margin:0"><b>Upload Image</b> to reduce file size</p>
+                    </div>
+                    <img id="preview-compress" class="preview-img">
+                </div>
+
+                <div class="row">
+                    <div class="group">
+                        <label>Image Quality (10% to 100%)</label>
+                        <input type="number" name="quality" value="60" min="10" max="100">
+                        <p style="font-size:0.75rem; opacity:0.6; margin-top:5px;">Lower % means smaller MB size.</p>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">
+                    <i class="fas fa-compress"></i> Compress & Download
+                </button>
+            </form>
+        </div>
+
 
         <div class="footer">
             <div class="footer-desc">
-                <strong>How it works:</strong> Upload any photo. Our smart tool automatically crops it to the perfect passport size or use manual crop for custom sizes.
+                <strong>Snapzo Pro Suite:</strong> Create passport photos, crop precisely, compress sizes, or convert to PDF - all in one place.
             </div>
             <div class="footer-founder">
                 Built with ❤️ by <span style="color: var(--accent);">Vishal</span><br>
@@ -184,17 +232,20 @@ HTML = '''
             document.getElementById('overlay').classList.toggle('active');
         }
 
-        // Switch between Tools
+        // Updated Switch logic to include new tools safely
         function switchTool(toolName) {
             document.getElementById('tool-passport').style.display = toolName === 'passport' ? 'block' : 'none';
             document.getElementById('tool-crop').style.display = toolName === 'crop' ? 'block' : 'none';
+            document.getElementById('tool-pdf').style.display = toolName === 'pdf' ? 'block' : 'none';
+            document.getElementById('tool-compress').style.display = toolName === 'compress' ? 'block' : 'none';
             
             document.getElementById('menu-passport').classList.toggle('active-menu', toolName === 'passport');
             document.getElementById('menu-crop').classList.toggle('active-menu', toolName === 'crop');
-            toggleMenu(); // Close menu on mobile
+            document.getElementById('menu-pdf').classList.toggle('active-menu', toolName === 'pdf');
+            document.getElementById('menu-compress').classList.toggle('active-menu', toolName === 'compress');
+            toggleMenu(); 
         }
 
-        // Passport Tool Preview
         function handleFilePass(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -207,43 +258,53 @@ HTML = '''
             }
         }
 
-        // Crop Tool Initialization
         function handleFileCrop(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = e => {
                     document.getElementById('upload-zone-crop').style.display = 'none';
                     document.getElementById('cropper-wrapper').style.display = 'block';
-                    
                     const image = document.getElementById('image-to-crop');
                     image.src = e.target.result;
-
                     if (cropper) { cropper.destroy(); }
-                    
-                    // Initialize Cropper.js
-                    cropper = new Cropper(image, {
-                        viewMode: 1,
-                        background: false,
-                        zoomable: false,
-                    });
+                    cropper = new Cropper(image, { viewMode: 1, background: false, zoomable: false });
                 };
                 reader.readAsDataURL(input.files[0]);
             }
         }
 
-        // Submit Crop Form with Coordinates
-        function submitCrop() {
-            if (!cropper) {
-                alert('Please upload an image first.');
-                return;
+        // New handlers for previewing so old code doesn't break
+        function handleFilePdf(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    document.getElementById('preview-pdf').src = e.target.result;
+                    document.getElementById('preview-pdf').style.display = 'block';
+                    document.getElementById('drop-text-pdf').style.display = 'none';
+                };
+                reader.readAsDataURL(input.files[0]);
             }
-            // Get coordinates from visual box
+        }
+
+        function handleFileCompress(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    document.getElementById('preview-compress').src = e.target.result;
+                    document.getElementById('preview-compress').style.display = 'block';
+                    document.getElementById('drop-text-compress').style.display = 'none';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function submitCrop() {
+            if (!cropper) return alert('Please upload an image first.');
             const cropData = cropper.getData(true);
             document.getElementById('cropX').value = cropData.x;
             document.getElementById('cropY').value = cropData.y;
             document.getElementById('cropWidth').value = cropData.width;
             document.getElementById('cropHeight').value = cropData.height;
-            
             document.getElementById('cropForm').submit();
         }
     </script>
@@ -251,7 +312,7 @@ HTML = '''
 </html>
 '''
 
-# --- PYTHON LOGIC (UNTOUCHED PASSPORT, NEW CROP HANDLER) ---
+# --- PYTHON LOGIC (UNTOUCHED PASSPORT & CROP) ---
 
 def auto_crop_passport(img):
     h, w = img.shape[:2]
@@ -274,6 +335,7 @@ def home():
             if not file: return "Error: No file", 400
             
             img = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
+            if img is None: return "Error processing image", 400
 
             # ================= PASSPORT LOGIC =================
             if tool_type == 'passport':
@@ -304,22 +366,62 @@ def home():
                 io_buf.seek(0)
                 return send_file(io_buf, mimetype='image/jpeg', as_attachment=True, download_name='snapzo_photos.jpg')
 
-            # ================= NEW CROP LOGIC =================
+            # ================= CROP LOGIC =================
             elif tool_type == 'crop':
                 x = int(request.form.get('x', 0))
                 y = int(request.form.get('y', 0))
                 w = int(request.form.get('width', img.shape[1]))
                 h = int(request.form.get('height', img.shape[0]))
 
-                # Safety checks so numpy doesn't crash
                 x, y = max(0, x), max(0, y)
                 w, h = min(w, img.shape[1] - x), min(h, img.shape[0] - y)
 
                 cropped_img = img[y:y+h, x:x+w]
-                
                 _, buffer = cv2.imencode('.jpg', cropped_img)
                 io_buf = io.BytesIO(buffer)
                 return send_file(io_buf, mimetype='image/jpeg', as_attachment=True, download_name='snapzo_cropped.jpg')
+
+            # ================= NEW: PHOTO TO PDF =================
+            elif tool_type == 'pdf':
+                # Convert image to buffer
+                _, buffer = cv2.imencode('.jpg', img)
+                io_buf = io.BytesIO(buffer)
+                
+                pdf_io = io.BytesIO()
+                c = pdf_canvas.Canvas(pdf_io, pagesize=A4)
+                
+                # Math to fit the image perfectly in the center of an A4 page
+                img_h, img_w = img.shape[:2]
+                a4_w, a4_h = A4
+                margin = 50
+                max_w = a4_w - (2 * margin)
+                max_h = a4_h - (2 * margin)
+                
+                ratio = min(max_w / img_w, max_h / img_h)
+                new_w = img_w * ratio
+                new_h = img_h * ratio
+                
+                pos_x = (a4_w - new_w) / 2
+                pos_y = (a4_h - new_h) / 2
+                
+                c.drawImage(ImageReader(io_buf), pos_x, pos_y, width=new_w, height=new_h)
+                c.showPage()
+                c.save()
+                
+                pdf_io.seek(0)
+                return send_file(pdf_io, mimetype='application/pdf', as_attachment=True, download_name='snapzo_document.pdf')
+
+            # ================= NEW: IMAGE COMPRESSOR =================
+            elif tool_type == 'compress':
+                quality = int(request.form.get("quality", 60))
+                # Protect from invalid inputs (limit between 5 and 100)
+                quality = max(5, min(100, quality))
+                
+                encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), quality]
+                _, buffer = cv2.imencode('.jpg', img, encode_param)
+                
+                io_buf = io.BytesIO(buffer)
+                return send_file(io_buf, mimetype='image/jpeg', as_attachment=True, download_name='snapzo_compressed.jpg')
 
         except Exception as e:
             return f"Server Error: {str(e)}", 500
