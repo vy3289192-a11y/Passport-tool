@@ -8,7 +8,8 @@ from reportlab.lib.utils import ImageReader
 
 app = Flask(__name__)
 
-LOGO_URL = "https://i.ibb.co/Cp1Dzh0t/46596.png"
+# --- UPDATED: Aapka Naya Direct Image Logo Link ---
+LOGO_URL = "https://i.ibb.co/Q73xvDmw/46658.jpg"
 
 HTML = '''
 <!DOCTYPE html>
@@ -32,7 +33,7 @@ HTML = '''
         
         .nav { background: #111827; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
         .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: white; }
-        .nav-brand img { height: 35px; border-radius: 5px; }
+        .nav-brand img { height: 35px; border-radius: 5px; object-fit: cover; }
         .nav-brand span { font-weight: bold; font-size: 1.3rem; letter-spacing: 0.5px; }
 
         .desktop-menu { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; }
@@ -67,7 +68,7 @@ HTML = '''
         .img-container { max-height: 400px; display: none; margin-top: 15px; }
         .img-container img { max-width: 100%; display: block; }
 
-        /* --- NEW: TRUST & SOCIAL PROOF SECTION --- */
+        /* --- TRUST & SOCIAL PROOF SECTION --- */
         .trust-section { width: 100%; max-width: 900px; text-align: center; padding: 50px 20px 20px; border-top: 1px solid var(--border); margin-top: 20px; }
         .trust-stats { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-bottom: 30px; }
         .stat-item { display: flex; flex-direction: column; align-items: center; }
@@ -79,7 +80,7 @@ HTML = '''
         .trust-logos i { font-size: 3rem; transition: 0.3s; }
         .trust-logos i:hover { opacity: 1; color: var(--accent); }
 
-        /* --- NEW: TESTIMONIALS SECTION --- */
+        /* --- TESTIMONIALS SECTION --- */
         .testimonials { width: 100%; max-width: 1100px; margin: 40px auto 60px; padding: 0 20px; }
         .testimonials h2 { font-size: 2.2rem; margin-bottom: 40px; color: white; background: none; -webkit-text-fill-color: white; }
         .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
