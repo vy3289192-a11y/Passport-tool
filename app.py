@@ -15,7 +15,7 @@ HTML = '''
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <meta name="google-site-verification" content="TlhWO7oDD-Gp8H0gKFC3U7n7v213ccnwGp0C9OB_7Uc" />
 
@@ -58,85 +58,112 @@ HTML = '''
     </script>
 
     <style>
-        :root { --bg: #0f172a; --card: #1e293b; --accent: #3b82f6; --text: #f1f5f9; --border: #334155; }
-        body.light-mode { --bg: #f8fafc; --card: #ffffff; --accent: #2563eb; --text: #1e293b; --border: #e2e8f0; }
+        /* FIX: Sabhi elements box k andar rahenge, screen se bahar nahi jayenge */
+        * { box-sizing: border-box; }
 
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; transition: 0.3s; }
+        /* FIX: By Default LIGHT MODE colors */
+        :root { 
+            --bg: #f8fafc; 
+            --card: #ffffff; 
+            --nav: #ffffff;
+            --accent: #2563eb; 
+            --text: #1e293b; 
+            --text-muted: #475569;
+            --border: #e2e8f0; 
+            --box-bg: #f1f5f9;
+            --input-bg: #ffffff;
+        }
+
+        /* DARK MODE colors */
+        body.dark-mode { 
+            --bg: #0f172a; 
+            --card: #1e293b; 
+            --nav: #111827;
+            --accent: #3b82f6; 
+            --text: #f1f5f9; 
+            --text-muted: #94a3b8;
+            --border: #334155; 
+            --box-bg: #111827;
+            --input-bg: #0f172a;
+        }
+
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; width: 100vw; max-width: 100%; transition: background 0.3s, color 0.3s; }
         
-        .nav { background: #111827; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
-        .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: white; font-weight: bold; font-size: 1.3rem; }
+        .nav { background: var(--nav); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
+        .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); font-weight: bold; font-size: 1.3rem; }
         .nav-brand img { height: 35px; border-radius: 5px; }
 
         .desktop-menu { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
-        .menu-btn { text-decoration: none; padding: 8px 10px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 0.85rem; color: #cbd5e1; display: inline-block; white-space: nowrap; }
+        .menu-btn { text-decoration: none; padding: 8px 10px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 0.85rem; color: var(--text); display: inline-block; white-space: nowrap; font-weight: 500; }
         .menu-btn:hover, .active-menu { background: var(--accent); color: white; }
 
         .mobile-toggle { display: none; font-size: 1.5rem; cursor: pointer; color: var(--accent); }
-        .sidebar { width: 250px; height: 100vh; background: #111827; position: fixed; left: -250px; top: 0; transition: 0.3s; z-index: 2000; padding: 20px; box-sizing: border-box; overflow-y: auto; }
+        .sidebar { width: 250px; height: 100vh; background: var(--nav); position: fixed; left: -250px; top: 0; transition: 0.3s; z-index: 2000; padding: 20px; overflow-y: auto; border-right: 1px solid var(--border); }
         .sidebar.active { left: 0; }
-        .sidebar .menu-btn { display: flex; text-decoration: none; align-items: center; gap: 15px; color: #cbd5e1; border-radius: 8px; margin-bottom: 10px; transition: 0.2s; padding: 15px; font-size: 1rem; }
+        .sidebar .menu-btn { display: flex; text-decoration: none; align-items: center; gap: 15px; color: var(--text); border-radius: 8px; margin-bottom: 10px; transition: 0.2s; padding: 15px; font-size: 1rem; }
         .sidebar .menu-btn:hover, .sidebar .active-menu { background: var(--accent); color: white; }
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1500; }
         .overlay.active { display: block; }
 
-        .main { padding: 50px 20px; display: flex; flex-direction: column; align-items: center; min-height: 85vh; }
+        .main { padding: 40px 20px; display: flex; flex-direction: column; align-items: center; min-height: 85vh; width: 100%; }
         
         .tool-wrapper { display: none; width: 100%; max-width: 1100px; gap: 40px; align-items: flex-start; justify-content: space-between; margin-bottom: 40px; }
         .tool-wrapper.active { display: flex; }
         
         .tool-content { flex: 1.2; text-align: left; }
-        .tool-content h1 { font-size: 2.2rem; color: white; margin: 0 0 15px 0; background: linear-gradient(to right, #60a5fa, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .tool-content p { font-size: 1.05rem; line-height: 1.6; opacity: 0.9; }
+        .tool-content h1 { font-size: 2.2rem; color: var(--text); margin: 0 0 15px 0; background: linear-gradient(to right, #60a5fa, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .tool-content p { font-size: 1.05rem; line-height: 1.6; color: var(--text); opacity: 0.9; }
         
         .feature-list { list-style: none; padding: 0; margin: 25px 0; }
-        .feature-list li { margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+        .feature-list li { margin-bottom: 12px; display: flex; align-items: center; gap: 10px; color: var(--text); }
         .feature-list i { color: #10b981; }
         
-        .visual-box { background: #111827; border: 1px solid var(--border); border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 20px; }
+        .visual-box { background: var(--box-bg); border: 1px solid var(--border); border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 20px; color: var(--text); }
+        .visual-box span, .visual-box p { color: var(--text); }
         
-        .card { flex: 1; background: var(--card); padding: 35px; border-radius: 24px; width: 100%; max-width: 450px; box-shadow: 0 25px 50px rgba(0,0,0,0.3); border: 1px solid var(--border); }
-        .card h2 { margin-top: 0; text-align: center; font-size: 1.6rem; color: white; }
+        .card { flex: 1; background: var(--card); padding: 30px; border-radius: 24px; width: 100%; max-width: 450px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid var(--border); }
+        .card h2 { margin-top: 0; text-align: center; font-size: 1.6rem; color: var(--text); }
 
-        .upload-zone { border: 2px dashed var(--accent); padding: 40px 20px; border-radius: 18px; cursor: pointer; text-align: center; background: rgba(59,130,246,0.03); position: relative; }
+        .upload-zone { border: 2px dashed var(--accent); padding: 40px 20px; border-radius: 18px; cursor: pointer; text-align: center; background: rgba(59,130,246,0.05); position: relative; }
         .preview-img { max-width: 100%; max-height: 250px; border-radius: 12px; display: none; margin-top: 15px; border: 2px solid var(--accent); }
 
-        input, select, textarea { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid var(--border); background: #0f172a; color: white; box-sizing: border-box; font-size: 1rem; }
-        .row { display: flex; gap: 15px; margin: 20px 0; }
+        input, select, textarea { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); font-size: 1rem; }
+        .row { display: flex; gap: 15px; margin: 20px 0; width: 100%; }
         .group { flex: 1; }
-        label { display: block; font-size: 0.85rem; margin-bottom: 8px; opacity: 0.8; }
+        label { display: block; font-size: 0.85rem; margin-bottom: 8px; color: var(--text); opacity: 0.8; }
         
         .btn { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(59,130,246,0.4); }
 
         /* QUILL EDITOR CUSTOM STYLES */
-        #toolbar-container { background: #e2e8f0; border-radius: 10px 10px 0 0; border: 1px solid var(--border); border-bottom: none; }
-        #editor-container { border-radius: 0 0 10px 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); height: 250px; font-size: 1rem; font-family: 'Segoe UI', sans-serif; }
+        #toolbar-container { background: var(--box-bg); border-radius: 10px 10px 0 0; border: 1px solid var(--border); border-bottom: none; }
+        #editor-container { border-radius: 0 0 10px 10px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); height: 250px; font-size: 1rem; font-family: 'Segoe UI', sans-serif; }
         .ql-toolbar.ql-snow + .ql-container.ql-snow { border: 1px solid var(--border); }
-        .ql-snow .ql-stroke { stroke: #334155; }
-        .ql-snow .ql-fill { fill: #334155; }
-        .ql-snow .ql-picker { color: #334155; }
+        .ql-snow .ql-stroke { stroke: var(--text); }
+        .ql-snow .ql-fill { fill: var(--text); }
+        .ql-snow .ql-picker { color: var(--text); }
 
         /* OCR Loading Bar */
-        .progress-bar-container { width: 100%; background: #334155; border-radius: 10px; margin-top: 15px; display: none; overflow: hidden; }
+        .progress-bar-container { width: 100%; background: var(--border); border-radius: 10px; margin-top: 15px; display: none; overflow: hidden; }
         .progress-bar { height: 8px; background: #10b981; width: 0%; transition: 0.3s; }
 
         /* Trust Stats */
         .trust-section { width: 100%; max-width: 900px; text-align: center; padding: 50px 0; border-top: 1px solid var(--border); margin-top: 20px; }
         .trust-stats { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-bottom: 30px; }
         .stat-item { display: flex; flex-direction: column; align-items: center; }
-        .stat-value { font-size: 2.5rem; font-weight: bold; color: white; }
-        .stat-label { font-size: 0.9rem; color: #94a3b8; margin-top: 5px; }
+        .stat-value { font-size: 2.5rem; font-weight: bold; color: var(--text); }
+        .stat-label { font-size: 0.9rem; color: var(--text-muted); margin-top: 5px; }
 
         /* Testimonials */
-        .testimonials { width: 100%; max-width: 1100px; margin: 40px auto; padding: 0 20px; }
-        .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+        .testimonials { width: 100%; max-width: 1100px; margin: 40px auto; padding: 0 10px; }
+        .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
         .testi-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 30px; }
         .testi-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
         .testi-avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); }
-        .testi-info h4 { margin: 0; color: white; }
-        .testi-info p { margin: 3px 0 0; color: #94a3b8; font-size: 0.9rem; }
+        .testi-info h4 { margin: 0; color: var(--text); }
+        .testi-info p { margin: 3px 0 0; color: var(--text-muted); font-size: 0.9rem; }
 
-        .footer { text-align: center; padding: 40px; border-top: 1px solid var(--border); width: 100%; max-width: 1100px; }
+        .footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--border); width: 100%; max-width: 1100px; color: var(--text); }
         .insta-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: bold; margin-top: 15px; }
 
         @media (max-width: 900px) { 
@@ -145,6 +172,7 @@ HTML = '''
             .feature-list li { justify-content: center; } 
             .desktop-menu { display: none; } 
             .mobile-toggle { display: block; }
+            .card { padding: 25px 20px; }
         }
     </style>
 </head>
@@ -369,16 +397,14 @@ HTML = '''
         <div class="tool-wrapper" id="tool-format">
             <div class="tool-content">
                 <h1>Format Converter</h1>
-                <p>Convert any image format instantly. Supports JPG, PNG, WEBP, BMP, and TIFF for maximum quality.</p>
+                <p>Convert any image format instantly. Supports JPG, PNG, WEBP, BMP, and TIFF.</p>
                 <div class="visual-box">
                     <div style="display:flex; align-items:center; justify-content:center; gap:15px; font-weight:bold; font-size:1.1rem; flex-wrap:wrap;">
-                        <span style="color:#94a3b8;">.JPG</span>
+                        <span>.JPG</span>
                         <i class="fas fa-sync-alt" style="color:var(--accent);"></i>
-                        <span style="color:#10b981;">.PNG</span>
+                        <span>.PNG</span>
                         <i class="fas fa-sync-alt" style="color:var(--accent);"></i>
-                        <span style="color:#f59e0b;">.WEBP</span>
-                        <i class="fas fa-sync-alt" style="color:var(--accent);"></i>
-                        <span style="color:#ec4899;">.BMP</span>
+                        <span>.WEBP</span>
                     </div>
                 </div>
             </div>
@@ -445,14 +471,12 @@ HTML = '''
     <script>
         let cropper;
 
-        // Initialize Rich Text Editor
         var quill = new Quill('#editor-container', {
             modules: { toolbar: '#toolbar-container' },
             placeholder: 'Start typing your document here...',
             theme: 'snow'
         });
 
-        // URL Mapping for Clean Paths
         const routeMap = {
             'passport': 'passport-maker',
             'img2text': 'image-to-text',
@@ -475,18 +499,15 @@ HTML = '''
             '/convert-format': 'format'
         };
 
-        // ====== OCR IMAGE TO TEXT LOGIC ======
         function startOCR(input) {
             if (input.files && input.files[0]) {
                 const file = input.files[0];
                 const reader = new FileReader();
                 reader.onload = e => {
-                    // Show Image Preview
                     document.getElementById('p-ocr').src = e.target.result;
                     document.getElementById('p-ocr').style.display = 'block';
                     document.getElementById('t-ocr').style.display = 'none';
 
-                    // Setup UI for Loading
                     const loadDiv = document.getElementById('ocr-loading');
                     const resultArea = document.getElementById('ocr-result');
                     const copyBtn = document.getElementById('btn-copy-ocr');
@@ -499,7 +520,6 @@ HTML = '''
                     bar.style.width = '0%';
                     percentText.innerText = '0%';
 
-                    // Run Tesseract JS
                     Tesseract.recognize(
                       file,
                       'eng',
@@ -530,7 +550,6 @@ HTML = '''
             const text = document.getElementById('ocr-result').value;
             navigator.clipboard.writeText(text).then(() => alert("Extracted Text Copied Successfully!"));
         }
-        // =====================================
 
         function downloadRichPDF() {
             var element = document.querySelector('.ql-editor');
@@ -556,7 +575,8 @@ HTML = '''
             html2pdf().set(opt).from(tempDiv).save();
         }
 
-        function toggleTheme() { document.body.classList.toggle('light-mode'); }
+        // FIX: Toggle dark-mode class correctly
+        function toggleTheme() { document.body.classList.toggle('dark-mode'); }
         
         function toggleMenu() {
             document.getElementById('sidebar').classList.toggle('active');
@@ -579,7 +599,6 @@ HTML = '''
             });
             window.scrollTo(0,0);
             
-            // CLEAN URL MAGIC
             let targetPath = '/' + routeMap[name];
             if(window.location.pathname !== targetPath) {
                 window.history.pushState(null, null, targetPath);
@@ -656,7 +675,7 @@ HTML = '''
 </html>
 '''
 
-# --- FLASK BACKEND LOGIC (With Multiple Routes for Clean URLs) ---
+# --- FLASK BACKEND ---
 
 def strict_passport_crop(img):
     h, w = img.shape[:2]
@@ -670,7 +689,6 @@ def strict_passport_crop(img):
         offset = int((h - new_h) * 0.15)
         return img[offset:offset+new_h, :]
 
-# Naya route add kar diya Image to Text ke liye
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/passport-maker', methods=['GET', 'POST'])
 @app.route('/image-to-text', methods=['GET', 'POST'])
