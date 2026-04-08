@@ -37,6 +37,15 @@ HTML = '''
         .menu-btn { padding: 8px 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 0.85rem; color: #cbd5e1; }
         .menu-btn:hover, .active-menu { background: var(--accent); color: white; }
 
+        /* MOBILE MENU CSS ADDED BACK */
+        .mobile-toggle { display: none; font-size: 1.5rem; cursor: pointer; color: var(--accent); }
+        .sidebar { width: 250px; height: 100vh; background: #111827; position: fixed; left: -250px; top: 0; transition: 0.3s; z-index: 2000; padding: 20px; box-sizing: border-box; overflow-y: auto; }
+        .sidebar.active { left: 0; }
+        .sidebar .menu-btn { padding: 15px; display: flex; align-items: center; gap: 15px; color: #cbd5e1; border-radius: 8px; margin-bottom: 10px; transition: 0.2s; cursor: pointer; font-size: 1rem; }
+        .sidebar .menu-btn:hover, .sidebar .active-menu { background: var(--accent); color: white; }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1500; }
+        .overlay.active { display: block; }
+
         .main { padding: 50px 20px; display: flex; flex-direction: column; align-items: center; min-height: 85vh; }
         
         /* TWO-COLUMN LAYOUT */
@@ -86,7 +95,13 @@ HTML = '''
         .footer { text-align: center; padding: 40px; border-top: 1px solid var(--border); width: 100%; max-width: 1100px; }
         .insta-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: bold; margin-top: 15px; }
 
-        @media (max-width: 900px) { .tool-wrapper.active { flex-direction: column; align-items: center; } .tool-content { text-align: center; order: -1; } .feature-list li { justify-content: center; } .desktop-menu { display: none; } }
+        @media (max-width: 900px) { 
+            .tool-wrapper.active { flex-direction: column; align-items: center; } 
+            .tool-content { text-align: center; order: -1; } 
+            .feature-list li { justify-content: center; } 
+            .desktop-menu { display: none; } 
+            .mobile-toggle { display: block; } /* Mobile Menu icon visible now */
+        }
     </style>
 </head>
 <body>
@@ -103,7 +118,20 @@ HTML = '''
                 <div class="menu-btn" onclick="switchTool('social')" id="d-social">Social Size</div>
             </div>
             <div onclick="toggleTheme()" style="cursor:pointer; color:var(--accent); font-size:1.3rem;"><i class="fas fa-adjust"></i></div>
+            <i class="fas fa-bars mobile-toggle" onclick="toggleMenu()" style="margin-left: 10px;"></i>
         </div>
+    </div>
+
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+    <div class="sidebar" id="sidebar">
+        <h3 style="color:var(--accent); margin-top:0;">Snapzo Menu</h3>
+        <div class="menu-btn active-menu" onclick="switchTool('passport')" id="m-passport"><i class="fas fa-id-badge"></i> Passport Maker</div>
+        <div class="menu-btn" onclick="switchTool('textpdf')" id="m-textpdf"><i class="fas fa-file-alt"></i> Text to PDF</div>
+        <div class="menu-btn" onclick="switchTool('pdf')" id="m-pdf"><i class="fas fa-images"></i> Image to PDF</div>
+        <div class="menu-btn" onclick="switchTool('crop')" id="m-crop"><i class="fas fa-crop-alt"></i> Manual Crop</div>
+        <div class="menu-btn" onclick="switchTool('compress')" id="m-compress"><i class="fas fa-compress-arrows-alt"></i> Compress</div>
+        <div class="menu-btn" onclick="switchTool('social')" id="m-social"><i class="fas fa-share-alt"></i> Social Size</div>
+        <div class="menu-btn" onclick="switchTool('format')" id="m-format"><i class="fas fa-exchange-alt"></i> Format Convert</div>
     </div>
 
     <div class="main">
@@ -235,6 +263,46 @@ HTML = '''
             </div>
         </div>
 
+        <div class="tool-wrapper" id="tool-format">
+            <div class="tool-content">
+                <h1>Format Converter</h1>
+                <p>Change your image file extensions instantly. Need a high-quality PNG, a standard JPG, or a web-optimized WEBP? We got you.</p>
+                <div class="visual-box">
+                    <div style="display:flex; align-items:center; justify-content:center; gap:20px; font-weight:bold; font-size:1.2rem;">
+                        <span style="color:#94a3b8;">.JPG</span>
+                        <i class="fas fa-sync-alt" style="color:var(--accent);"></i>
+                        <span style="color:#10b981;">.PNG</span>
+                        <i class="fas fa-sync-alt" style="color:var(--accent);"></i>
+                        <span style="color:#f59e0b;">.WEBP</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <form method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="tool_type" value="format">
+                    <div class="upload-zone" onclick="document.getElementById('fileInputFormat').click()">
+                        <input type="file" name="file" id="fileInputFormat" hidden required onchange="handlePreview(this, 'preview-format', 'drop-text-format')">
+                        <div id="drop-text-format">
+                            <i class="fas fa-exchange-alt" style="font-size: 3.5rem; color: var(--accent); margin-bottom: 10px;"></i>
+                            <p style="margin:0"><b>Upload Image</b></p>
+                        </div>
+                        <img id="preview-format" class="preview-img">
+                    </div>
+                    <div class="row">
+                        <div class="group">
+                            <label>Convert To</label>
+                            <select name="out_format">
+                                <option value="png">PNG (High Quality)</option>
+                                <option value="jpg">JPG (Standard)</option>
+                                <option value="webp">WEBP (Best for Websites)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn">Convert</button>
+                </form>
+            </div>
+        </div>
+
         <div class="trust-section">
             <div class="trust-stats">
                 <div class="stat-item"><div class="stat-value">4.9 ⭐</div><div class="stat-label">User Rating</div></div>
@@ -269,14 +337,35 @@ HTML = '''
 
     <script>
         let cropper;
+
         function toggleTheme() { document.body.classList.toggle('light-mode'); }
+        
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+
         function switchTool(name) {
-            ['passport', 'textpdf', 'pdf', 'crop', 'compress', 'social'].forEach(t => {
-                document.getElementById('tool-'+t).classList.toggle('active', t === name);
-                document.getElementById('d-'+t).classList.toggle('active-menu', t === name);
+            const tools = ['passport', 'textpdf', 'pdf', 'crop', 'compress', 'social', 'format'];
+            tools.forEach(t => {
+                const el = document.getElementById('tool-'+t);
+                if(el) el.style.display = (t === name) ? 'flex' : 'none';
+                
+                const deskBtn = document.getElementById('d-'+t);
+                if(deskBtn) deskBtn.classList.toggle('active-menu', t === name);
+                
+                const mobBtn = document.getElementById('m-'+t);
+                if(mobBtn) mobBtn.classList.toggle('active-menu', t === name);
             });
             window.scrollTo(0,0);
+            
+            // Close mobile menu automatically after selection
+            if(window.innerWidth <= 900) {
+                document.getElementById('sidebar').classList.remove('active');
+                document.getElementById('overlay').classList.remove('active');
+            }
         }
+
         function handlePreview(input, pId, tId) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -288,11 +377,13 @@ HTML = '''
                 reader.readAsDataURL(input.files[0]);
             }
         }
+
         function handleMultiple(input) {
             const div = document.getElementById('pdf-count');
             div.innerText = input.files.length + " Images Selected ✅";
             div.style.display = 'block'; document.getElementById('t-pdf').style.display = 'none';
         }
+
         function initCrop(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -307,7 +398,9 @@ HTML = '''
                 reader.readAsDataURL(input.files[0]);
             }
         }
+
         function doCrop() {
+            if(!cropper) return alert('Please upload image first');
             const data = cropper.getData(true);
             document.getElementById('cX').value = data.x;
             document.getElementById('cY').value = data.y;
@@ -320,7 +413,7 @@ HTML = '''
 </html>
 '''
 
-# --- BACKEND LOGIC (STRICT SIZE + TOOLS) ---
+# --- BACKEND LOGIC ---
 
 def strict_passport_crop(img):
     h, w = img.shape[:2]
@@ -339,6 +432,7 @@ def home():
     if request.method == 'POST':
         try:
             tool_type = request.form.get('tool_type')
+            
             if tool_type == 'textpdf':
                 text = request.form.get('pdf_text', '')
                 pdf_io = io.BytesIO()
@@ -401,6 +495,11 @@ def home():
                 res = cv2.resize(img, dim)
                 _, buffer = cv2.imencode('.jpg', res)
                 return send_file(io.BytesIO(buffer), mimetype='image/jpeg', as_attachment=True, download_name='resized.jpg')
+
+            elif tool_type == 'format':
+                f = request.form.get('out_format', 'png')
+                _, buffer = cv2.imencode(f'.{f}', img)
+                return send_file(io.BytesIO(buffer), mimetype=f'image/{f}', as_attachment=True, download_name=f'converted.{f}')
 
         except Exception as e: return f"Error: {str(e)}", 500
     return render_template_string(HTML)
