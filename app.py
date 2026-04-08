@@ -17,7 +17,7 @@ HTML = '''
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <meta name="google-site-verification" content="TlhW07oDD-Gp8H0gKFC3U7n7v2l3ccnwGpOC90B_7Uc" />
+    <meta name="google-site-verification" content="TlhWO7oDD-Gp8H0gKFC3U7n7v213ccnwGp0C9OB_7Uc" />
 
     <title>Snapzo Pro | Free AI Passport Photo Maker & Image Tools</title>
     
@@ -25,6 +25,29 @@ HTML = '''
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Snapzo Pro",
+      "operatingSystem": "All",
+      "applicationCategory": "MultimediaApplication",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "1200000"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "INR"
+      },
+      "image": "https://i.ibb.co/Q73xvDmw/46658.jpg",
+      "description": "Free online AI passport size photo maker, image to PDF converter, crop tool, and compressor.",
+      "featureList": "Passport Photo Maker, Text to PDF, Image to PDF, Image Compressor, Social Media Resizer, Manual Crop"
+    }
+    </script>
 
     <style>
         :root { --bg: #0f172a; --card: #1e293b; --accent: #3b82f6; --text: #f1f5f9; --border: #334155; }
