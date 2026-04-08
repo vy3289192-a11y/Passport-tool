@@ -187,6 +187,10 @@ HTML = '''
         .footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--border); width: 100%; max-width: 1100px; color: var(--text); }
         .insta-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: bold; margin-top: 15px; }
 
+        .seo-links { margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border); text-align: center; font-size: 0.85rem; color: var(--text-muted); }
+        .seo-links a { color: var(--accent); text-decoration: none; margin: 0 5px; }
+        .seo-links a:hover { text-decoration: underline; }
+
         @media (max-width: 900px) { 
             .tool-wrapper.active { 
                 flex-direction: column; 
@@ -467,6 +471,13 @@ HTML = '''
                     </div>
                     <button type="submit" class="btn">Convert & Download</button>
                 </form>
+                
+                <div class="seo-links">
+                    <p style="margin-bottom:5px;">Popular Tools:</p>
+                    <a href="/jpg-to-png" onclick="switchTool('format', event, 'png')">JPG to PNG</a> | 
+                    <a href="/png-to-jpg" onclick="switchTool('format', event, 'jpg')">PNG to JPG</a> |
+                    <a href="/webp-to-jpg" onclick="switchTool('format', event, 'jpg')">WEBP to JPG</a>
+                </div>
             </div>
         </div>
 
@@ -511,6 +522,7 @@ HTML = '''
             theme: 'snow'
         });
 
+        // 1. ALL DYNAMIC URLS MAPPED TO TOOLS
         const routeMap = {
             'passport': 'passport-maker',
             'img2text': 'image-to-text',
@@ -530,7 +542,10 @@ HTML = '''
             '/image-crop': 'crop',
             '/compress': 'compress',
             '/social-size': 'social',
-            '/convert-format': 'format'
+            '/convert-format': 'format',
+            '/jpg-to-png': 'format',   // Deep Linking For Google
+            '/png-to-jpg': 'format',   // Deep Linking For Google
+            '/webp-to-jpg': 'format'   // Deep Linking For Google
         };
 
         const seoTitleMap = {
@@ -541,7 +556,7 @@ HTML = '''
             'crop': 'Free Image Cropper Online | Snapzo Pro',
             'compress': 'Image Compressor | Reduce Photo Size in KB | Snapzo Pro',
             'social': 'Social Media Image Resizer | Snapzo Pro',
-            'format': 'JPG to PNG Converter | Convert Image Formats | Snapzo Pro'
+            'format': 'Image Format Converter | Snapzo Pro'
         };
 
         function startOCR(input) {
@@ -627,7 +642,8 @@ HTML = '''
             document.getElementById('overlay').classList.toggle('active');
         }
 
-        function switchTool(name, event) {
+        // 2. THE AUTO-SELECT MAGIC FUNCTION
+        function switchTool(name, event, autoFormat = null) {
             if(event) event.preventDefault(); 
             
             const tools = ['passport', 'img2text', 'textpdf', 'pdf', 'crop', 'compress', 'social', 'format'];
@@ -654,15 +670,29 @@ HTML = '''
                 }
             });
             
-            window.scrollTo(0,0);
-            
-            if(seoTitleMap[name]) {
-                document.title = seoTitleMap[name];
+            // Auto Select Dropdown for specific links (e.g., JPG to PNG)
+            if(autoFormat) {
+                let dropdown = document.querySelector('select[name="out_format"]');
+                if(dropdown) dropdown.value = autoFormat;
             }
             
-            let targetPath = '/' + routeMap[name];
-            if(window.location.pathname !== targetPath) {
-                window.history.pushState(null, null, targetPath);
+            window.scrollTo(0,0);
+            
+            // Set dynamic path based on logic
+            let targetPath = window.location.pathname;
+            
+            // Sirf tabhi URL update karein jab wo naye button se aa raha ho, 
+            // page load par existing specific URL kharab na ho.
+            if(event && !autoFormat) {
+                if(seoTitleMap[name]) document.title = seoTitleMap[name];
+                targetPath = '/' + routeMap[name];
+                if(window.location.pathname !== targetPath) {
+                    window.history.pushState(null, null, targetPath);
+                }
+            } else if (event && autoFormat) {
+                 // For internal bottom links clicking
+                 targetPath = event.target.getAttribute('href');
+                 window.history.pushState(null, null, targetPath);
             }
             
             if(window.innerWidth <= 900) {
@@ -671,10 +701,15 @@ HTML = '''
             }
         }
 
+        // 3. LOAD HONAY PAR CHECK KAREGA KIS LINK SE AAYA HAI
         window.onload = function() {
             let path = window.location.pathname;
             if(pathMap[path]) {
-                switchTool(pathMap[path], null);
+                // Agar direct Google se JPG to PNG wale link par aaya hai toh automatically 'png' select karega!
+                if(path === '/jpg-to-png') switchTool(pathMap[path], null, 'png');
+                else if(path === '/png-to-jpg') switchTool(pathMap[path], null, 'jpg');
+                else if(path === '/webp-to-jpg') switchTool(pathMap[path], null, 'jpg');
+                else switchTool(pathMap[path], null);
             } else if (path !== '/') {
                 switchTool('passport', null);
             }
@@ -683,7 +718,10 @@ HTML = '''
         window.addEventListener('popstate', function() {
             let path = window.location.pathname;
             if(pathMap[path]) {
-                switchTool(pathMap[path], null);
+                if(path === '/jpg-to-png') switchTool(pathMap[path], null, 'png');
+                else if(path === '/png-to-jpg') switchTool(pathMap[path], null, 'jpg');
+                else if(path === '/webp-to-jpg') switchTool(pathMap[path], null, 'jpg');
+                else switchTool(pathMap[path], null);
             } else {
                 switchTool('passport', null);
             }
@@ -750,6 +788,7 @@ def strict_passport_crop(img):
         offset = int((h - new_h) * 0.15)
         return img[offset:offset+new_h, :]
 
+# 4. NAYE SPECIAL ROUTES ADDED FOR GOOGLE SEO
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/passport-maker', methods=['GET', 'POST'])
 @app.route('/image-to-text', methods=['GET', 'POST'])
@@ -759,6 +798,9 @@ def strict_passport_crop(img):
 @app.route('/compress', methods=['GET', 'POST'])
 @app.route('/social-size', methods=['GET', 'POST'])
 @app.route('/convert-format', methods=['GET', 'POST'])
+@app.route('/jpg-to-png', methods=['GET', 'POST'])
+@app.route('/png-to-jpg', methods=['GET', 'POST'])
+@app.route('/webp-to-jpg', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
         try:
@@ -829,6 +871,8 @@ def home():
         except Exception as e: return f"Error: {str(e)}", 500
 
     path = request.path
+    
+    # 5. SPECIAL TITLES FOR SPECIFIC KEYWORDS
     seo_data = {
         '/': ('Snapzo Pro | Free AI Passport Photo Maker & Image Tools', 'Free online AI passport size photo maker, image to PDF converter, Text to PDF, Image to Text (OCR), and compressor.'),
         '/passport-maker': ('Strict AI Passport Photo Maker | Snapzo Pro', 'Create exact 3.5x4.5 passport photos for SSC, RRB, and NTPC forms automatically.'),
@@ -838,7 +882,10 @@ def home():
         '/image-crop': ('Free Image Cropper Online | Snapzo Pro', 'Crop your photos manually with full control online.'),
         '/compress': ('Image Compressor | Reduce Photo Size in KB | Snapzo Pro', 'Reduce photo file size in KB for online form uploads without losing quality.'),
         '/social-size': ('Social Media Image Resizer | Snapzo Pro', 'Resize images perfectly for YouTube thumbnails, Instagram posts, and Facebook.'),
-        '/convert-format': ('JPG to PNG Converter | Convert Image Formats | Snapzo Pro', 'Convert images to JPG, PNG, WEBP, BMP, and TIFF formats instantly for free.')
+        '/convert-format': ('Image Format Converter | Snapzo Pro', 'Convert images to JPG, PNG, WEBP, BMP, and TIFF formats instantly for free.'),
+        '/jpg-to-png': ('JPG to PNG Converter Online | Snapzo Pro', 'Convert JPG images to transparent PNG format online for free without losing quality.'),
+        '/png-to-jpg': ('PNG to JPG Converter Online | Snapzo Pro', 'Convert PNG images to standard JPG format online for free instantly.'),
+        '/webp-to-jpg': ('WEBP to JPG Converter Online | Snapzo Pro', 'Convert WEBP web images to standard JPG format online for free.')
     }
     
     page_title, page_desc = seo_data.get(path, seo_data['/'])
