@@ -123,16 +123,7 @@ HTML = '''
 
         .main { padding: 40px 20px; display: flex; flex-direction: column; align-items: center; min-height: 85vh; width: 100%; }
         
-        .tool-wrapper { 
-            display: none; 
-            width: 100%; 
-            max-width: 1100px; 
-            gap: 40px; 
-            align-items: flex-start; 
-            justify-content: space-between; 
-            margin-bottom: 40px; 
-        }
-        
+        .tool-wrapper { display: none; width: 100%; max-width: 1100px; gap: 40px; align-items: flex-start; justify-content: space-between; margin-bottom: 40px; }
         .tool-wrapper.active { display: flex; }
         
         .tool-content { flex: 1.2; text-align: left; }
@@ -187,26 +178,14 @@ HTML = '''
         .footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--border); width: 100%; max-width: 1100px; color: var(--text); }
         .insta-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: bold; margin-top: 15px; }
 
-        .seo-links { margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border); text-align: center; font-size: 0.85rem; color: var(--text-muted); }
-        .seo-links a { color: var(--accent); text-decoration: none; margin: 0 5px; }
+        .seo-links { margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border); text-align: center; font-size: 0.85rem; color: var(--text-muted); line-height: 1.8; }
+        .seo-links a { color: var(--accent); text-decoration: none; margin: 0 5px; font-weight: 500; }
         .seo-links a:hover { text-decoration: underline; }
 
         @media (max-width: 900px) { 
-            .tool-wrapper.active { 
-                flex-direction: column; 
-                align-items: center; 
-                gap: 30px;
-            } 
-            .tool-content { 
-                text-align: center; 
-                width: 100%; 
-                margin-bottom: 10px;
-            } 
-            .card { 
-                width: 100%; 
-                max-width: 100%; 
-                padding: 30px 20px; 
-            }
+            .tool-wrapper.active { flex-direction: column; align-items: center; gap: 30px; } 
+            .tool-content { text-align: center; width: 100%; margin-bottom: 10px; } 
+            .card { width: 100%; max-width: 100%; padding: 30px 20px; }
             .feature-list li { justify-content: center; } 
             .visual-box { margin: 0 auto 25px auto; }
             .desktop-menu { display: none; } 
@@ -282,6 +261,11 @@ HTML = '''
                     </div>
                     <button class="btn"><i class="fas fa-bolt"></i> Generate Photo</button>
                 </form>
+                <div class="seo-links">
+                    <p style="margin-bottom:5px;">Popular Searches:</p>
+                    <a href="/ssc-photo-maker" onclick="switchTool('passport', event)">SSC Photo Maker</a> | 
+                    <a href="/rrb-photo-maker" onclick="switchTool('passport', event)">RRB Photo Maker</a>
+                </div>
             </div>
         </div>
 
@@ -320,6 +304,11 @@ HTML = '''
                 <button type="button" class="btn" id="btn-copy-ocr" style="display:none; background:#10b981; margin-top:15px;" onclick="copyOCRText()">
                     <i class="fas fa-copy"></i> Copy Extracted Text
                 </button>
+                <div class="seo-links">
+                    <p style="margin-bottom:5px;">Popular Searches:</p>
+                    <a href="/extract-text-from-image" onclick="switchTool('img2text', event)">Extract Text From Image</a> | 
+                    <a href="/picture-to-text" onclick="switchTool('img2text', event)">Picture to Text</a>
+                </div>
             </div>
         </div>
 
@@ -357,6 +346,10 @@ HTML = '''
                     <div id="editor-container"></div>
                 </div>
                 <button type="button" class="btn" onclick="downloadRichPDF()"><i class="fas fa-file-pdf"></i> Download PDF Document</button>
+                <div class="seo-links">
+                    <p style="margin-bottom:5px;">Popular Searches:</p>
+                    <a href="/text-to-pdf-converter" onclick="switchTool('textpdf', event)">Text to PDF Converter</a>
+                </div>
             </div>
         </div>
 
@@ -381,6 +374,11 @@ HTML = '''
                     </div>
                     <button class="btn">Generate PDF</button>
                 </form>
+                <div class="seo-links">
+                    <p style="margin-bottom:5px;">Popular Searches:</p>
+                    <a href="/jpg-to-pdf" onclick="switchTool('pdf', event)">JPG to PDF</a> | 
+                    <a href="/png-to-pdf" onclick="switchTool('pdf', event)">PNG to PDF</a>
+                </div>
             </div>
         </div>
 
@@ -397,6 +395,10 @@ HTML = '''
                     <div id="c-wrapper" style="display:none;"><img id="i-crop" style="max-width:100%;"></div>
                     <button type="button" class="btn" onclick="doCrop()" style="margin-top:15px;">Crop Now</button>
                 </form>
+                <div class="seo-links">
+                    <p style="margin-bottom:5px;">Popular Searches:</p>
+                    <a href="/crop-photo-online" onclick="switchTool('crop', event)">Crop Photo Online</a>
+                </div>
             </div>
         </div>
 
@@ -413,6 +415,11 @@ HTML = '''
                     <div class="row"><div class="group"><label>Quality (10-100)</label><input type="number" name="quality" value="60"></div></div>
                     <button class="btn">Compress</button>
                 </form>
+                <div class="seo-links">
+                    <p style="margin-bottom:5px;">Popular Searches:</p>
+                    <a href="/reduce-image-size" onclick="switchTool('compress', event)">Reduce Image Size</a> | 
+                    <a href="/compress-image-to-50kb" onclick="switchTool('compress', event)">Compress Image to 50KB</a>
+                </div>
             </div>
         </div>
 
@@ -429,6 +436,11 @@ HTML = '''
                     <div class="row"><div class="group"><label>Platform</label><select name="platform"><option value="yt">YouTube Thumbnail</option><option value="insta">Instagram Post</option><option value="fb">Facebook Cover</option></select></div></div>
                     <button class="btn">Resize Now</button>
                 </form>
+                <div class="seo-links">
+                    <p style="margin-bottom:5px;">Popular Searches:</p>
+                    <a href="/youtube-thumbnail-resizer" onclick="switchTool('social', event)">YouTube Thumbnail Resizer</a> | 
+                    <a href="/instagram-photo-resizer" onclick="switchTool('social', event)">Instagram Photo Resizer</a>
+                </div>
             </div>
         </div>
 
@@ -473,7 +485,7 @@ HTML = '''
                 </form>
                 
                 <div class="seo-links">
-                    <p style="margin-bottom:5px;">Popular Tools:</p>
+                    <p style="margin-bottom:5px;">Popular Searches:</p>
                     <a href="/jpg-to-png" onclick="switchTool('format', event, 'png')">JPG to PNG</a> | 
                     <a href="/png-to-jpg" onclick="switchTool('format', event, 'jpg')">PNG to JPG</a> |
                     <a href="/webp-to-jpg" onclick="switchTool('format', event, 'jpg')">WEBP to JPG</a>
@@ -522,7 +534,9 @@ HTML = '''
             theme: 'snow'
         });
 
+        // ==========================================
         // 1. ALL DYNAMIC URLS MAPPED TO TOOLS
+        // ==========================================
         const routeMap = {
             'passport': 'passport-maker',
             'img2text': 'image-to-text',
@@ -535,6 +549,7 @@ HTML = '''
         };
 
         const pathMap = {
+            // Main Links
             '/passport-maker': 'passport',
             '/image-to-text': 'img2text',
             '/text-to-pdf': 'textpdf',
@@ -543,9 +558,23 @@ HTML = '''
             '/compress': 'compress',
             '/social-size': 'social',
             '/convert-format': 'format',
-            '/jpg-to-png': 'format',   // Deep Linking For Google
-            '/png-to-jpg': 'format',   // Deep Linking For Google
-            '/webp-to-jpg': 'format'   // Deep Linking For Google
+            
+            // Deep Links (Keywords for Google)
+            '/jpg-to-png': 'format',   
+            '/png-to-jpg': 'format',   
+            '/webp-to-jpg': 'format',
+            '/ssc-photo-maker': 'passport',
+            '/rrb-photo-maker': 'passport',
+            '/extract-text-from-image': 'img2text',
+            '/picture-to-text': 'img2text',
+            '/text-to-pdf-converter': 'textpdf',
+            '/jpg-to-pdf': 'pdf',
+            '/png-to-pdf': 'pdf',
+            '/crop-photo-online': 'crop',
+            '/reduce-image-size': 'compress',
+            '/compress-image-to-50kb': 'compress',
+            '/youtube-thumbnail-resizer': 'social',
+            '/instagram-photo-resizer': 'social'
         };
 
         const seoTitleMap = {
@@ -642,7 +671,6 @@ HTML = '''
             document.getElementById('overlay').classList.toggle('active');
         }
 
-        // 2. THE AUTO-SELECT MAGIC FUNCTION
         function switchTool(name, event, autoFormat = null) {
             if(event) event.preventDefault(); 
             
@@ -670,7 +698,6 @@ HTML = '''
                 }
             });
             
-            // Auto Select Dropdown for specific links (e.g., JPG to PNG)
             if(autoFormat) {
                 let dropdown = document.querySelector('select[name="out_format"]');
                 if(dropdown) dropdown.value = autoFormat;
@@ -678,19 +705,21 @@ HTML = '''
             
             window.scrollTo(0,0);
             
-            // Set dynamic path based on logic
             let targetPath = window.location.pathname;
             
-            // Sirf tabhi URL update karein jab wo naye button se aa raha ho, 
-            // page load par existing specific URL kharab na ho.
             if(event && !autoFormat) {
-                if(seoTitleMap[name]) document.title = seoTitleMap[name];
-                targetPath = '/' + routeMap[name];
+                // Ye tab chalega jab user internal sub-link par nahi, direct sidebar/menu link par click kare
+                if(event.target.getAttribute('href') && event.target.getAttribute('href').startsWith('/')) {
+                    targetPath = event.target.getAttribute('href');
+                } else {
+                    targetPath = '/' + routeMap[name];
+                }
+                
                 if(window.location.pathname !== targetPath) {
                     window.history.pushState(null, null, targetPath);
                 }
+                // Optionally update title slightly if we can, but reload usually handles true SEO title.
             } else if (event && autoFormat) {
-                 // For internal bottom links clicking
                  targetPath = event.target.getAttribute('href');
                  window.history.pushState(null, null, targetPath);
             }
@@ -701,11 +730,9 @@ HTML = '''
             }
         }
 
-        // 3. LOAD HONAY PAR CHECK KAREGA KIS LINK SE AAYA HAI
         window.onload = function() {
             let path = window.location.pathname;
             if(pathMap[path]) {
-                // Agar direct Google se JPG to PNG wale link par aaya hai toh automatically 'png' select karega!
                 if(path === '/jpg-to-png') switchTool(pathMap[path], null, 'png');
                 else if(path === '/png-to-jpg') switchTool(pathMap[path], null, 'jpg');
                 else if(path === '/webp-to-jpg') switchTool(pathMap[path], null, 'jpg');
@@ -788,7 +815,9 @@ def strict_passport_crop(img):
         offset = int((h - new_h) * 0.15)
         return img[offset:offset+new_h, :]
 
-# 4. NAYE SPECIAL ROUTES ADDED FOR GOOGLE SEO
+# ==========================================
+# 4. ADDED ALL DEEP LINKS AS ROUTES SO GOOGLE DOES NOT GET 404
+# ==========================================
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/passport-maker', methods=['GET', 'POST'])
 @app.route('/image-to-text', methods=['GET', 'POST'])
@@ -798,9 +827,22 @@ def strict_passport_crop(img):
 @app.route('/compress', methods=['GET', 'POST'])
 @app.route('/social-size', methods=['GET', 'POST'])
 @app.route('/convert-format', methods=['GET', 'POST'])
+# Deep Links
 @app.route('/jpg-to-png', methods=['GET', 'POST'])
 @app.route('/png-to-jpg', methods=['GET', 'POST'])
 @app.route('/webp-to-jpg', methods=['GET', 'POST'])
+@app.route('/ssc-photo-maker', methods=['GET', 'POST'])
+@app.route('/rrb-photo-maker', methods=['GET', 'POST'])
+@app.route('/extract-text-from-image', methods=['GET', 'POST'])
+@app.route('/picture-to-text', methods=['GET', 'POST'])
+@app.route('/text-to-pdf-converter', methods=['GET', 'POST'])
+@app.route('/jpg-to-pdf', methods=['GET', 'POST'])
+@app.route('/png-to-pdf', methods=['GET', 'POST'])
+@app.route('/crop-photo-online', methods=['GET', 'POST'])
+@app.route('/reduce-image-size', methods=['GET', 'POST'])
+@app.route('/compress-image-to-50kb', methods=['GET', 'POST'])
+@app.route('/youtube-thumbnail-resizer', methods=['GET', 'POST'])
+@app.route('/instagram-photo-resizer', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
         try:
@@ -872,7 +914,9 @@ def home():
 
     path = request.path
     
-    # 5. SPECIAL TITLES FOR SPECIFIC KEYWORDS
+    # ==========================================
+    # 5. ALL TITLES FOR SPECIFIC KEYWORDS
+    # ==========================================
     seo_data = {
         '/': ('Snapzo Pro | Free AI Passport Photo Maker & Image Tools', 'Free online AI passport size photo maker, image to PDF converter, Text to PDF, Image to Text (OCR), and compressor.'),
         '/passport-maker': ('Strict AI Passport Photo Maker | Snapzo Pro', 'Create exact 3.5x4.5 passport photos for SSC, RRB, and NTPC forms automatically.'),
@@ -883,9 +927,23 @@ def home():
         '/compress': ('Image Compressor | Reduce Photo Size in KB | Snapzo Pro', 'Reduce photo file size in KB for online form uploads without losing quality.'),
         '/social-size': ('Social Media Image Resizer | Snapzo Pro', 'Resize images perfectly for YouTube thumbnails, Instagram posts, and Facebook.'),
         '/convert-format': ('Image Format Converter | Snapzo Pro', 'Convert images to JPG, PNG, WEBP, BMP, and TIFF formats instantly for free.'),
+        
+        # Deep Links / Keyword Links
         '/jpg-to-png': ('JPG to PNG Converter Online | Snapzo Pro', 'Convert JPG images to transparent PNG format online for free without losing quality.'),
         '/png-to-jpg': ('PNG to JPG Converter Online | Snapzo Pro', 'Convert PNG images to standard JPG format online for free instantly.'),
-        '/webp-to-jpg': ('WEBP to JPG Converter Online | Snapzo Pro', 'Convert WEBP web images to standard JPG format online for free.')
+        '/webp-to-jpg': ('WEBP to JPG Converter Online | Snapzo Pro', 'Convert WEBP web images to standard JPG format online for free.'),
+        '/ssc-photo-maker': ('SSC Photo Maker Online | Snapzo Pro', 'Make perfect passport size photos for SSC exam forms with exact dimensions automatically.'),
+        '/rrb-photo-maker': ('RRB Photo Maker Online | Snapzo Pro', 'Create official passport photos for RRB exams in seconds.'),
+        '/extract-text-from-image': ('Extract Text From Image Free | Snapzo Pro', 'Easily extract text from any picture or screenshot with our advanced free AI OCR tool.'),
+        '/picture-to-text': ('Picture to Text Converter | Snapzo Pro', 'Convert picture to text online instantly. Just upload and copy text for free.'),
+        '/text-to-pdf-converter': ('Text to PDF Converter | Snapzo Pro', 'Convert text to PDF files online for free. Use our rich document editor.'),
+        '/jpg-to-pdf': ('JPG to PDF Converter Online | Snapzo Pro', 'Convert JPG images to PDF documents securely and for free.'),
+        '/png-to-pdf': ('PNG to PDF Converter Online | Snapzo Pro', 'Convert PNG images to PDF documents securely and for free.'),
+        '/crop-photo-online': ('Crop Photo Online Free | Snapzo Pro', 'Free online image cropper. Crop photos, pictures, and images to any size.'),
+        '/reduce-image-size': ('Reduce Image Size Online | Snapzo Pro', 'Reduce image file size quickly without losing quality. Best for online form uploads.'),
+        '/compress-image-to-50kb': ('Compress Image to 50KB | Snapzo Pro', 'Compress your photos to exactly 50KB or any specific size for government form uploads.'),
+        '/youtube-thumbnail-resizer': ('YouTube Thumbnail Resizer | Snapzo Pro', 'Resize images perfectly for YouTube thumbnails (1280x720) in one click.'),
+        '/instagram-photo-resizer': ('Instagram Photo Resizer | Snapzo Pro', 'Resize images perfectly for Instagram Posts (1080x1080) for free.')
     }
     
     page_title, page_desc = seo_data.get(path, seo_data['/'])
