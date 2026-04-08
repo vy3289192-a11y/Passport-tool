@@ -44,8 +44,8 @@ HTML = '''
         "priceCurrency": "INR"
       },
       "image": "https://i.ibb.co/Q73xvDmw/46658.jpg",
-      "description": "Free online AI passport size photo maker, image to PDF converter, crop tool, and compressor.",
-      "featureList": "Passport Photo Maker, Text to PDF, Image to PDF, Image Compressor, Social Media Resizer, Manual Crop"
+      "description": "Free online AI passport size photo maker, image to PDF converter, Text to PDF, crop tool, and compressor.",
+      "featureList": "Passport Photo Maker, Text to PDF, Image to PDF, Image Format Converter, Image Compressor, Social Media Resizer, Manual Crop"
     }
     </script>
 
@@ -60,13 +60,13 @@ HTML = '''
         .nav-brand img { height: 35px; border-radius: 5px; }
 
         .desktop-menu { display: flex; gap: 5px; }
-        .menu-btn { padding: 8px 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 0.85rem; color: #cbd5e1; }
+        .menu-btn { text-decoration: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 0.85rem; color: #cbd5e1; display: inline-block; }
         .menu-btn:hover, .active-menu { background: var(--accent); color: white; }
 
         .mobile-toggle { display: none; font-size: 1.5rem; cursor: pointer; color: var(--accent); }
         .sidebar { width: 250px; height: 100vh; background: #111827; position: fixed; left: -250px; top: 0; transition: 0.3s; z-index: 2000; padding: 20px; box-sizing: border-box; overflow-y: auto; }
         .sidebar.active { left: 0; }
-        .sidebar .menu-btn { padding: 15px; display: flex; align-items: center; gap: 15px; color: #cbd5e1; border-radius: 8px; margin-bottom: 10px; transition: 0.2s; cursor: pointer; font-size: 1rem; }
+        .sidebar .menu-btn { display: flex; text-decoration: none; align-items: center; gap: 15px; color: #cbd5e1; border-radius: 8px; margin-bottom: 10px; transition: 0.2s; padding: 15px; font-size: 1rem; }
         .sidebar .menu-btn:hover, .sidebar .active-menu { background: var(--accent); color: white; }
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1500; }
         .overlay.active { display: block; }
@@ -135,12 +135,13 @@ HTML = '''
         <a href="/" class="nav-brand"><img src="''' + LOGO_URL + '''"><span>Snapzo Pro</span></a>
         <div class="nav-right" style="display:flex; align-items:center; gap:15px;">
             <div class="desktop-menu">
-                <div class="menu-btn active-menu" onclick="switchTool('passport')" id="d-passport">Passport Maker</div>
-                <div class="menu-btn" onclick="switchTool('textpdf')" id="d-textpdf">Text to PDF</div>
-                <div class="menu-btn" onclick="switchTool('pdf')" id="d-pdf">Image to PDF</div>
-                <div class="menu-btn" onclick="switchTool('crop')" id="d-crop">Crop</div>
-                <div class="menu-btn" onclick="switchTool('compress')" id="d-compress">Compress</div>
-                <div class="menu-btn" onclick="switchTool('social')" id="d-social">Social Size</div>
+                <a href="#passport" class="menu-btn active-menu" onclick="switchTool('passport')" id="d-passport">Passport Maker</a>
+                <a href="#textpdf" class="menu-btn" onclick="switchTool('textpdf')" id="d-textpdf">Text to PDF</a>
+                <a href="#pdf" class="menu-btn" onclick="switchTool('pdf')" id="d-pdf">Image to PDF</a>
+                <a href="#crop" class="menu-btn" onclick="switchTool('crop')" id="d-crop">Crop</a>
+                <a href="#compress" class="menu-btn" onclick="switchTool('compress')" id="d-compress">Compress</a>
+                <a href="#social" class="menu-btn" onclick="switchTool('social')" id="d-social">Social Size</a>
+                <a href="#format" class="menu-btn" onclick="switchTool('format')" id="d-format">Convert Format</a>
             </div>
             <div onclick="toggleTheme()" style="cursor:pointer; color:var(--accent); font-size:1.3rem;"><i class="fas fa-adjust"></i></div>
             <i class="fas fa-bars mobile-toggle" onclick="toggleMenu()" style="margin-left: 10px;"></i>
@@ -150,13 +151,13 @@ HTML = '''
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
     <div class="sidebar" id="sidebar">
         <h3 style="color:var(--accent); margin-top:0;">Snapzo Menu</h3>
-        <div class="menu-btn active-menu" onclick="switchTool('passport')" id="m-passport"><i class="fas fa-id-badge"></i> Passport Maker</div>
-        <div class="menu-btn" onclick="switchTool('textpdf')" id="m-textpdf"><i class="fas fa-file-alt"></i> Text to PDF</div>
-        <div class="menu-btn" onclick="switchTool('pdf')" id="m-pdf"><i class="fas fa-images"></i> Image to PDF</div>
-        <div class="menu-btn" onclick="switchTool('crop')" id="m-crop"><i class="fas fa-crop-alt"></i> Manual Crop</div>
-        <div class="menu-btn" onclick="switchTool('compress')" id="m-compress"><i class="fas fa-compress-arrows-alt"></i> Compress</div>
-        <div class="menu-btn" onclick="switchTool('social')" id="m-social"><i class="fas fa-share-alt"></i> Social Size</div>
-        <div class="menu-btn" onclick="switchTool('format')" id="m-format"><i class="fas fa-exchange-alt"></i> Format Convert</div>
+        <a href="#passport" class="menu-btn active-menu" onclick="switchTool('passport')" id="m-passport"><i class="fas fa-id-badge"></i> Passport Maker</a>
+        <a href="#textpdf" class="menu-btn" onclick="switchTool('textpdf')" id="m-textpdf"><i class="fas fa-file-alt"></i> Text to PDF</a>
+        <a href="#pdf" class="menu-btn" onclick="switchTool('pdf')" id="m-pdf"><i class="fas fa-images"></i> Image to PDF</a>
+        <a href="#crop" class="menu-btn" onclick="switchTool('crop')" id="m-crop"><i class="fas fa-crop-alt"></i> Manual Crop</a>
+        <a href="#compress" class="menu-btn" onclick="switchTool('compress')" id="m-compress"><i class="fas fa-compress-arrows-alt"></i> Compress</a>
+        <a href="#social" class="menu-btn" onclick="switchTool('social')" id="m-social"><i class="fas fa-share-alt"></i> Social Size</a>
+        <a href="#format" class="menu-btn" onclick="switchTool('format')" id="m-format"><i class="fas fa-exchange-alt"></i> Convert Format</a>
     </div>
 
     <div class="main">
@@ -291,14 +292,16 @@ HTML = '''
         <div class="tool-wrapper" id="tool-format">
             <div class="tool-content">
                 <h1>Format Converter</h1>
-                <p>Change your image file extensions instantly. Need a high-quality PNG, a standard JPG, or a web-optimized WEBP? We got you.</p>
+                <p>Convert any image format instantly. Supports JPG, PNG, WEBP, BMP, and TIFF for maximum quality.</p>
                 <div class="visual-box">
-                    <div style="display:flex; align-items:center; justify-content:center; gap:20px; font-weight:bold; font-size:1.2rem;">
+                    <div style="display:flex; align-items:center; justify-content:center; gap:15px; font-weight:bold; font-size:1.1rem; flex-wrap:wrap;">
                         <span style="color:#94a3b8;">.JPG</span>
                         <i class="fas fa-sync-alt" style="color:var(--accent);"></i>
                         <span style="color:#10b981;">.PNG</span>
                         <i class="fas fa-sync-alt" style="color:var(--accent);"></i>
                         <span style="color:#f59e0b;">.WEBP</span>
+                        <i class="fas fa-sync-alt" style="color:var(--accent);"></i>
+                        <span style="color:#ec4899;">.BMP</span>
                     </div>
                 </div>
             </div>
@@ -317,13 +320,15 @@ HTML = '''
                         <div class="group">
                             <label>Convert To</label>
                             <select name="out_format">
-                                <option value="png">PNG (High Quality)</option>
                                 <option value="jpg">JPG (Standard)</option>
-                                <option value="webp">WEBP (Best for Websites)</option>
+                                <option value="png">PNG (High Quality)</option>
+                                <option value="webp">WEBP (Web Optimized)</option>
+                                <option value="bmp">BMP (Bitmap)</option>
+                                <option value="tiff">TIFF (Print Quality)</option>
                             </select>
                         </div>
                     </div>
-                    <button type="submit" class="btn">Convert</button>
+                    <button type="submit" class="btn">Convert & Download</button>
                 </form>
             </div>
         </div>
@@ -384,12 +389,21 @@ HTML = '''
             });
             window.scrollTo(0,0);
             
-            // Close mobile menu automatically after selection
             if(window.innerWidth <= 900) {
                 document.getElementById('sidebar').classList.remove('active');
                 document.getElementById('overlay').classList.remove('active');
             }
         }
+
+        // On Page Load: Read URL Hash to open correct tool (SEO Deep Linking)
+        window.onload = function() {
+            if(window.location.hash) {
+                let tool = window.location.hash.substring(1);
+                if(['passport', 'textpdf', 'pdf', 'crop', 'compress', 'social', 'format'].includes(tool)) {
+                    switchTool(tool);
+                }
+            }
+        };
 
         function handlePreview(input, pId, tId) {
             if (input.files && input.files[0]) {
@@ -524,7 +538,8 @@ def home():
             elif tool_type == 'format':
                 f = request.form.get('out_format', 'png')
                 _, buffer = cv2.imencode(f'.{f}', img)
-                return send_file(io.BytesIO(buffer), mimetype=f'image/{f}', as_attachment=True, download_name=f'converted.{f}')
+                mime = f'image/{f}' if f != 'jpg' else 'image/jpeg'
+                return send_file(io.BytesIO(buffer), mimetype=mime, as_attachment=True, download_name=f'converted.{f}')
 
         except Exception as e: return f"Error: {str(e)}", 500
     return render_template_string(HTML)
