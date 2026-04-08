@@ -17,7 +17,7 @@ HTML = '''
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <meta name="google-site-verification" content="YAHAN_APNA_CODE_PASTE_KAREIN" />
+    <meta name="google-site-verification" content=<meta name="google-site-verification" content="TlhW07oDD-Gp8H0gKFC3U7n7v2l3ccnwGpOC90B_7Uc" /> />
 
     <title>Snapzo Pro | Free AI Passport Photo Maker & Image Tools</title>
     
