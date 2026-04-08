@@ -52,7 +52,6 @@ HTML = '''
       "url": "https://snapzopro.online/"
     }
     </script>
-
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -71,8 +70,7 @@ HTML = '''
         "priceCurrency": "INR"
       },
       "image": "''' + LOGO_URL + '''",
-      "description": "{{ page_desc }}",
-      "featureList": "Passport Photo Maker, Text to PDF, Image to Text, Image to PDF, Image Format Converter, Image Compressor, Social Media Resizer, Manual Crop"
+      "description": "{{ page_desc }}"
     }
     </script>
 
@@ -105,6 +103,9 @@ HTML = '''
 
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; width: 100vw; max-width: 100%; transition: background 0.3s, color 0.3s; }
         
+        /* Privacy Banner */
+        .privacy-banner { background: #10b981; color: white; text-align: center; padding: 6px; font-size: 0.85rem; font-weight: bold; letter-spacing: 0.5px; }
+
         .nav { background: var(--nav); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
         .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); font-weight: bold; font-size: 1.3rem; }
         .nav-brand img { height: 35px; border-radius: 5px; }
@@ -135,7 +136,6 @@ HTML = '''
         .feature-list i { color: #10b981; }
         
         .visual-box { background: var(--box-bg); border: 1px solid var(--border); border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 20px; color: var(--text); }
-        .visual-box span, .visual-box p { color: var(--text); }
         
         .card { flex: 1; background: var(--card); padding: 30px; border-radius: 24px; width: 100%; max-width: 450px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid var(--border); }
         .card h2 { margin-top: 0; text-align: center; font-size: 1.6rem; color: var(--text); }
@@ -146,11 +146,12 @@ HTML = '''
         input, select, textarea { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); font-size: 1rem; }
         .row { display: flex; gap: 15px; margin: 20px 0; width: 100%; }
         .group { flex: 1; }
-        label { display: block; font-size: 0.85rem; margin-bottom: 8px; color: var(--text); opacity: 0.8; }
+        label { display: block; font-size: 0.85rem; margin-bottom: 8px; color: var(--text); opacity: 0.8; font-weight: 500;}
         
-        .btn { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top:10px; }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(59,130,246,0.4); }
 
+        /* QUILL EDITOR CUSTOM STYLES */
         #toolbar-container { background: var(--box-bg); border-radius: 10px 10px 0 0; border: 1px solid var(--border); border-bottom: none; }
         #editor-container { border-radius: 0 0 10px 10px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); height: 250px; font-size: 1rem; font-family: 'Segoe UI', sans-serif; }
         .ql-toolbar.ql-snow + .ql-container.ql-snow { border: 1px solid var(--border); }
@@ -182,6 +183,11 @@ HTML = '''
         .seo-links a { color: var(--accent); text-decoration: none; margin: 0 5px; font-weight: 500; }
         .seo-links a:hover { text-decoration: underline; }
 
+        /* Checkbox Styling */
+        .check-container { display: flex; align-items: center; gap: 10px; margin-top: 15px; background: rgba(59,130,246,0.1); padding: 10px 15px; border-radius: 8px; }
+        .check-container input { width: 20px; height: 20px; cursor: pointer; }
+        .check-container label { margin-bottom: 0; cursor: pointer; opacity: 1; color: var(--accent); font-weight: bold; }
+
         @media (max-width: 900px) { 
             .tool-wrapper.active { flex-direction: column; align-items: center; gap: 30px; } 
             .tool-content { text-align: center; width: 100%; margin-bottom: 10px; } 
@@ -194,6 +200,10 @@ HTML = '''
     </style>
 </head>
 <body>
+
+    <div class="privacy-banner">
+        <i class="fas fa-shield-alt"></i> 100% SECURE & PRIVATE - FILES AUTO-DELETE AFTER PROCESSING
+    </div>
 
     <div class="nav">
         <a href="/" class="nav-brand"><img src="''' + LOGO_URL + '''"><span>Snapzo Pro</span></a>
@@ -231,19 +241,19 @@ HTML = '''
         <div class="tool-wrapper active" id="tool-passport">
             <div class="tool-content">
                 <h1>Strict AI Passport Maker</h1>
-                <p>Turn a regular photo into an official passport photo fast. Hamara AI strictly 3.5x4.5 ratio use karta hai taaki koi galti na ho.</p>
+                <p>Turn a regular photo into an official passport photo fast. Hamara AI strictly 3.5x4.5 ratio use karta hai taaki SSC/RRB forms me koi galti na ho.</p>
                 <div class="visual-box">
                     <div style="display:flex; align-items:center; justify-content:center; gap:20px;">
                         <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80" style="width:100px; height:100px; object-fit:cover; border-radius:12px;">
                         <i class="fas fa-arrow-right" style="font-size:1.5rem; color:var(--accent);"></i>
                         <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80" style="width:100px; height:128px; object-fit:cover; border:4px solid white; border-radius:2px;">
                     </div>
-                    <p style="margin-top:10px; font-size:0.9rem;">AI Auto-Crop ensures correct size.</p>
+                    <p style="margin-top:10px; font-size:0.9rem;">Auto-Crop + Optional Name & Date Plate.</p>
                 </div>
                 <ul class="feature-list">
-                    <li><i class="fas fa-check-circle"></i> Permanent 413x531 Pixels</li>
-                    <li><i class="fas fa-check-circle"></i> Perfect for SSC, RRB, NTPC Forms</li>
-                    <li><i class="fas fa-check-circle"></i> Multiple Copies Layout Ready</li>
+                    <li><i class="fas fa-check-circle"></i> Permanent 413x531 Pixels (Official Size)</li>
+                    <li><i class="fas fa-check-circle"></i> <b style="color:var(--accent)">NEW:</b> Auto-Print Name & Date on Photo</li>
+                    <li><i class="fas fa-check-circle"></i> Multiple Copies Ready to Print</li>
                 </ul>
             </div>
             <div class="card">
@@ -255,6 +265,18 @@ HTML = '''
                         <div id="t-pass"><i class="fas fa-camera" style="font-size:3rem; color:var(--accent);"></i><p>Upload any Photo</p></div>
                         <img id="p-pass" class="preview-img">
                     </div>
+                    
+                    <div class="row" style="margin-bottom:0;">
+                        <div class="group">
+                            <label>Print Name (Optional)</label>
+                            <input type="text" name="print_name" placeholder="E.g., VISHAL YADAV">
+                        </div>
+                        <div class="group">
+                            <label>Print Date (Optional)</label>
+                            <input type="text" name="print_date" placeholder="E.g., 10/04/2026">
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="group"><label>Quantity</label><input type="number" name="count" value="8"></div>
                         <div class="group"><label>Format</label><select name="type"><option value="jpg">JPG Image</option><option value="pdf">PDF Document</option></select></div>
@@ -355,13 +377,17 @@ HTML = '''
 
         <div class="tool-wrapper" id="tool-pdf">
             <div class="tool-content">
-                <h1>Images to PDF</h1>
+                <h1>Images to PDF (Scanner)</h1>
                 <p>Combine multiple marksheets or documents into a single PDF file securely.</p>
                 <div class="visual-box">
                     <i class="fas fa-images" style="font-size:3rem; color:#38bdf8;"></i>
                     <i class="fas fa-plus" style="margin:0 10px;"></i>
                     <i class="fas fa-file-pdf" style="font-size:3rem; color:#ef4444;"></i>
                 </div>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check-circle"></i> Secure Offline Conversion</li>
+                    <li><i class="fas fa-check-circle"></i> <b style="color:var(--accent)">NEW:</b> Magic Scan (Cleans dark shadows)</li>
+                </ul>
             </div>
             <div class="card">
                 <h2>Select Files</h2>
@@ -372,6 +398,12 @@ HTML = '''
                         <div id="t-pdf"><i class="fas fa-file-upload" style="font-size:3rem; color:var(--accent);"></i><p>Select Multiple Photos</p></div>
                         <div id="pdf-count" style="display:none; font-weight:bold; color:var(--accent);"></div>
                     </div>
+                    
+                    <div class="check-container">
+                        <input type="checkbox" id="magic_scan" name="magic_scan" value="yes">
+                        <label for="magic_scan">Apply "Magic Scan" Filter (For clear dark documents)</label>
+                    </div>
+
                     <button class="btn">Generate PDF</button>
                 </form>
                 <div class="seo-links">
@@ -403,7 +435,14 @@ HTML = '''
         </div>
 
         <div class="tool-wrapper" id="tool-compress">
-            <div class="tool-content"><h1>Image Compressor</h1><p>Reduce photo size (KB) for online form uploads.</p></div>
+            <div class="tool-content">
+                <h1>Smart Image Compressor</h1>
+                <p>Reduce photo size accurately for online form uploads without losing visual quality.</p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check-circle"></i> <b style="color:var(--accent)">NEW:</b> Auto-Target Size (Just type desired KB)</li>
+                    <li><i class="fas fa-check-circle"></i> Best for SSC, UPSC, IBPS Forms</li>
+                </ul>
+            </div>
             <div class="card">
                 <form method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="tool_type" value="compress">
@@ -412,8 +451,15 @@ HTML = '''
                         <div id="t-comp"><i class="fas fa-compress-arrows-alt" style="font-size:3rem; color:var(--accent);"></i><p>Upload Photo</p></div>
                         <img id="p-comp" class="preview-img">
                     </div>
-                    <div class="row"><div class="group"><label>Quality (10-100)</label><input type="number" name="quality" value="60"></div></div>
-                    <button class="btn">Compress</button>
+                    
+                    <div class="row">
+                        <div class="group">
+                            <label>Target File Size (In KB)</label>
+                            <input type="number" name="target_kb" value="50" placeholder="E.g., 50">
+                        </div>
+                    </div>
+                    
+                    <button class="btn">Smart Compress</button>
                 </form>
                 <div class="seo-links">
                     <p style="margin-bottom:5px;">Popular Searches:</p>
@@ -506,15 +552,15 @@ HTML = '''
             <div class="testi-grid">
                 <div class="testi-card">
                     <div class="testi-header"><img src="https://i.pravatar.cc/150?img=11" class="testi-avatar"><div><h4>Ravi Sharma</h4><p>Govt. Job Aspirant</p></div></div>
-                    <p>"Bhai strictly strict size fix hai! NTPC form ke liye exact passport ban gayi without cyber cafe jaye."</p>
+                    <p>"Bhai strictly strict size fix hai! NTPC form ke liye exact passport ban gayi aur Name Date bhi chhap gaya."</p>
                 </div>
                 <div class="testi-card">
                     <div class="testi-header"><img src="https://i.pravatar.cc/150?img=5" class="testi-avatar"><div><h4>Neha Verma</h4><p>College Student</p></div></div>
-                    <p>"Naya Image to Text OCR feature bahut kaam ka hai. Screenshots se notes nikalna bahut aasan ho gaya!"</p>
+                    <p>"Naya Image to Text OCR feature bahut kaam ka hai. Aur Magic Scanner se Notes bilkul clear ho jate hain PDF me!"</p>
                 </div>
                 <div class="testi-card">
-                    <div class="testi-header"><img src="https://i.pravatar.cc/150?img=60" class="testi-avatar"><div><h4>Arjun</h4><p>Freelancer</p></div></div>
-                    <p>"Social resizer YouTube thumbnails ke liye ekdum perfect size deta hai. Highly recommended!"</p>
+                    <div class="testi-header"><img src="https://i.pravatar.cc/150?img=60" class="testi-avatar"><div><h4>Arjun</h4><p>Govt Job Aspirant</p></div></div>
+                    <p>"Bhai ka Target KB compressor kamaal hai. Sidha 45KB likho aur file upload form ke hisab se set! Sabse best!"</p>
                 </div>
             </div>
         </div>
@@ -527,16 +573,12 @@ HTML = '''
 
     <script>
         let cropper;
-
         var quill = new Quill('#editor-container', {
             modules: { toolbar: '#toolbar-container' },
             placeholder: 'Start typing your document here...',
             theme: 'snow'
         });
 
-        // ==========================================
-        // 1. ALL DYNAMIC URLS MAPPED TO TOOLS
-        // ==========================================
         const routeMap = {
             'passport': 'passport-maker',
             'img2text': 'image-to-text',
@@ -549,7 +591,6 @@ HTML = '''
         };
 
         const pathMap = {
-            // Main Links
             '/passport-maker': 'passport',
             '/image-to-text': 'img2text',
             '/text-to-pdf': 'textpdf',
@@ -559,7 +600,6 @@ HTML = '''
             '/social-size': 'social',
             '/convert-format': 'format',
             
-            // Deep Links (Keywords for Google)
             '/jpg-to-png': 'format',   
             '/png-to-jpg': 'format',   
             '/webp-to-jpg': 'format',
@@ -610,8 +650,7 @@ HTML = '''
                     percentText.innerText = '0%';
 
                     Tesseract.recognize(
-                      file,
-                      'eng',
+                      file, 'eng',
                       { logger: m => {
                           if(m.status === 'recognizing text'){
                               let p = Math.round(m.progress * 100);
@@ -623,12 +662,9 @@ HTML = '''
                         loadDiv.style.display = 'none';
                         resultArea.style.display = 'block';
                         resultArea.value = text;
-                        if(text.trim().length > 0) {
-                            copyBtn.style.display = 'block';
-                        }
+                        if(text.trim().length > 0) copyBtn.style.display = 'block';
                     }).catch(err => {
                         loadDiv.innerHTML = "<span style='color:red;'>Error extracting text. Try a clearer image!</span>";
-                        console.error(err);
                     });
                 };
                 reader.readAsDataURL(file);
@@ -642,30 +678,20 @@ HTML = '''
 
         function downloadRichPDF() {
             var element = document.querySelector('.ql-editor');
-            if (element.innerText.trim().length === 0) {
-                alert("Please type some text first!");
-                return;
-            }
+            if (element.innerText.trim().length === 0) return alert("Please type some text first!");
             var opt = {
-                margin:       0.8,
-                filename:     'Snapzo_Document.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2 },
-                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+                margin: 0.8, filename: 'Snapzo_Document.pdf',
+                image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
-            
             var tempDiv = document.createElement('div');
             tempDiv.innerHTML = element.innerHTML;
-            tempDiv.style.color = 'black'; 
-            tempDiv.style.background = 'white';
-            tempDiv.style.fontSize = '12pt';
-            tempDiv.style.fontFamily = 'Arial, sans-serif';
-            
+            tempDiv.style.color = 'black'; tempDiv.style.background = 'white';
+            tempDiv.style.fontSize = '12pt'; tempDiv.style.fontFamily = 'Arial, sans-serif';
             html2pdf().set(opt).from(tempDiv).save();
         }
 
         function toggleTheme() { document.body.classList.toggle('dark-mode'); }
-        
         function toggleMenu() {
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('overlay').classList.toggle('active');
@@ -673,52 +699,31 @@ HTML = '''
 
         function switchTool(name, event, autoFormat = null) {
             if(event) event.preventDefault(); 
-            
             const tools = ['passport', 'img2text', 'textpdf', 'pdf', 'crop', 'compress', 'social', 'format'];
             tools.forEach(t => {
                 const el = document.getElementById('tool-'+t);
-                if(el) {
-                    if (t === name) {
-                        el.classList.add('active');
-                    } else {
-                        el.classList.remove('active');
-                    }
-                }
-                
+                if(el) { if (t === name) el.classList.add('active'); else el.classList.remove('active'); }
                 const deskBtn = document.getElementById('d-'+t);
-                if(deskBtn) {
-                    if (t === name) deskBtn.classList.add('active-menu');
-                    else deskBtn.classList.remove('active-menu');
-                }
-                
+                if(deskBtn) { if (t === name) deskBtn.classList.add('active-menu'); else deskBtn.classList.remove('active-menu'); }
                 const mobBtn = document.getElementById('m-'+t);
-                if(mobBtn) {
-                    if (t === name) mobBtn.classList.add('active-menu');
-                    else mobBtn.classList.remove('active-menu');
-                }
+                if(mobBtn) { if (t === name) mobBtn.classList.add('active-menu'); else mobBtn.classList.remove('active-menu'); }
             });
-            
             if(autoFormat) {
                 let dropdown = document.querySelector('select[name="out_format"]');
                 if(dropdown) dropdown.value = autoFormat;
             }
-            
             window.scrollTo(0,0);
             
             let targetPath = window.location.pathname;
-            
             if(event && !autoFormat) {
-                // Ye tab chalega jab user internal sub-link par nahi, direct sidebar/menu link par click kare
                 if(event.target.getAttribute('href') && event.target.getAttribute('href').startsWith('/')) {
                     targetPath = event.target.getAttribute('href');
                 } else {
                     targetPath = '/' + routeMap[name];
                 }
-                
                 if(window.location.pathname !== targetPath) {
                     window.history.pushState(null, null, targetPath);
                 }
-                // Optionally update title slightly if we can, but reload usually handles true SEO title.
             } else if (event && autoFormat) {
                  targetPath = event.target.getAttribute('href');
                  window.history.pushState(null, null, targetPath);
@@ -737,9 +742,7 @@ HTML = '''
                 else if(path === '/png-to-jpg') switchTool(pathMap[path], null, 'jpg');
                 else if(path === '/webp-to-jpg') switchTool(pathMap[path], null, 'jpg');
                 else switchTool(pathMap[path], null);
-            } else if (path !== '/') {
-                switchTool('passport', null);
-            }
+            } else if (path !== '/') switchTool('passport', null);
         };
 
         window.addEventListener('popstate', function() {
@@ -749,9 +752,7 @@ HTML = '''
                 else if(path === '/png-to-jpg') switchTool(pathMap[path], null, 'jpg');
                 else if(path === '/webp-to-jpg') switchTool(pathMap[path], null, 'jpg');
                 else switchTool(pathMap[path], null);
-            } else {
-                switchTool('passport', null);
-            }
+            } else switchTool('passport', null);
         });
 
         function handlePreview(input, pId, tId) {
@@ -790,10 +791,8 @@ HTML = '''
         function doCrop() {
             if(!cropper) return alert('Please upload image first');
             const data = cropper.getData(true);
-            document.getElementById('cX').value = data.x;
-            document.getElementById('cY').value = data.y;
-            document.getElementById('cW').value = data.width;
-            document.getElementById('cH').value = data.height;
+            document.getElementById('cX').value = data.x; document.getElementById('cY').value = data.y;
+            document.getElementById('cW').value = data.width; document.getElementById('cH').value = data.height;
             document.getElementById('cropForm').submit();
         }
     </script>
@@ -801,11 +800,11 @@ HTML = '''
 </html>
 '''
 
-# --- FLASK BACKEND LOGIC ---
+# --- FLASK BACKEND LOGIC (WITH NEW KILLER FEATURES) ---
 
 def strict_passport_crop(img):
     h, w = img.shape[:2]
-    target_ratio = 0.777
+    target_ratio = 0.777 # 3.5 x 4.5 ratio
     if (w/h) > target_ratio:
         new_w = int(h * target_ratio)
         offset = (w - new_w) // 2
@@ -815,9 +814,6 @@ def strict_passport_crop(img):
         offset = int((h - new_h) * 0.15)
         return img[offset:offset+new_h, :]
 
-# ==========================================
-# 4. ADDED ALL DEEP LINKS AS ROUTES SO GOOGLE DOES NOT GET 404
-# ==========================================
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/passport-maker', methods=['GET', 'POST'])
 @app.route('/image-to-text', methods=['GET', 'POST'])
@@ -827,7 +823,6 @@ def strict_passport_crop(img):
 @app.route('/compress', methods=['GET', 'POST'])
 @app.route('/social-size', methods=['GET', 'POST'])
 @app.route('/convert-format', methods=['GET', 'POST'])
-# Deep Links
 @app.route('/jpg-to-png', methods=['GET', 'POST'])
 @app.route('/png-to-jpg', methods=['GET', 'POST'])
 @app.route('/webp-to-jpg', methods=['GET', 'POST'])
@@ -851,40 +846,76 @@ def home():
             if tool_type == 'textpdf':
                 return "Use Client-Side PDF Generator", 400
 
+            # 3. MAGIC SCANNER FEATURE
             if tool_type == 'pdf':
                 files = request.files.getlist('file')
+                apply_magic = request.form.get('magic_scan') == 'yes'
                 pdf_io = io.BytesIO()
                 c = pdf_canvas.Canvas(pdf_io, pagesize=A4)
+                
                 for f in files:
                     img = cv2.imdecode(np.frombuffer(f.read(), np.uint8), cv2.IMREAD_COLOR)
                     if img is not None:
+                        if apply_magic:
+                            # Convert to B&W High Contrast (CamScanner Effect)
+                            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+                            clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
+                            enhanced = clahe.apply(gray)
+                            _, img = cv2.threshold(enhanced, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                            img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR) # Back to 3 channels for PDF
+                            
                         _, buf = cv2.imencode('.jpg', img)
                         c.drawImage(ImageReader(io.BytesIO(buf)), 50, 50, width=500, height=700)
                         c.showPage()
                 c.save(); pdf_io.seek(0)
-                return send_file(pdf_io, mimetype='application/pdf', as_attachment=True, download_name='docs.pdf')
+                return send_file(pdf_io, mimetype='application/pdf', as_attachment=True, download_name='snapzo_scanned.pdf')
 
             file = request.files.get('file')
             img = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
 
+            # 1. NAME & DATE PASSPORT FEATURE
             if tool_type == 'passport':
-                face = cv2.resize(strict_passport_crop(img), (413, 531))
+                face = cv2.resize(strict_passport_crop(img), (413, 531)) # Official Size
+                
+                print_name = request.form.get("print_name", "").strip().upper()
+                print_date = request.form.get("print_date", "").strip()
+                
+                if print_name or print_date:
+                    # Draw White Strip at bottom (Height 80px)
+                    cv2.rectangle(face, (0, 531-80), (413, 531), (255,255,255), -1)
+                    font = cv2.FONT_HERSHEY_SIMPLEX
+                    
+                    if print_name and print_date:
+                        # Center Align Text
+                        n_size = cv2.getTextSize(print_name, font, 0.7, 2)[0]
+                        d_size = cv2.getTextSize(print_date, font, 0.6, 2)[0]
+                        cv2.putText(face, print_name, ((413-n_size[0])//2, 531-45), font, 0.7, (0,0,0), 2)
+                        cv2.putText(face, print_date, ((413-d_size[0])//2, 531-15), font, 0.6, (0,0,0), 2)
+                    elif print_name:
+                        n_size = cv2.getTextSize(print_name, font, 0.8, 2)[0]
+                        cv2.putText(face, print_name, ((413-n_size[0])//2, 531-30), font, 0.8, (0,0,0), 2)
+                    elif print_date:
+                        d_size = cv2.getTextSize(print_date, font, 0.8, 2)[0]
+                        cv2.putText(face, print_date, ((413-d_size[0])//2, 531-30), font, 0.8, (0,0,0), 2)
+                
                 bordered = cv2.copyMakeBorder(face, 10, 10, 10, 10, cv2.BORDER_CONSTANT, value=[245, 245, 245])
                 bh, bw = bordered.shape[:2]
                 canvas = np.ones((2500, 1800, 3), dtype=np.uint8) * 255
                 count = int(request.form.get("count", 8))
+                
                 for i in range(min(count, 12)):
                     r, c = i // 3, i % 3
                     canvas[r*(bh+40)+70:r*(bh+40)+70+bh, c*(bw+30)+70:c*(bw+30)+70+bw] = bordered
                 final = canvas[:((count-1)//3+1)*(bh+40)+100, :(3 if count>=3 else count)*(bw+30)+100]
                 _, buf = cv2.imencode('.jpg', final)
+                
                 if request.form.get("type") == "pdf":
                     pdf_io = io.BytesIO()
                     c = pdf_canvas.Canvas(pdf_io, pagesize=A4)
                     c.drawImage(ImageReader(io.BytesIO(buf)), 50, 100, width=500, height=650)
                     c.save(); pdf_io.seek(0)
-                    return send_file(pdf_io, mimetype='application/pdf', as_attachment=True, download_name='passport.pdf')
-                return send_file(io.BytesIO(buf), mimetype='image/jpeg', as_attachment=True, download_name='passport.jpg')
+                    return send_file(pdf_io, mimetype='application/pdf', as_attachment=True, download_name='passport_ready.pdf')
+                return send_file(io.BytesIO(buf), mimetype='image/jpeg', as_attachment=True, download_name='passport_ready.jpg')
 
             elif tool_type == 'crop':
                 x, y, w, h = int(request.form.get('x')), int(request.form.get('y')), int(request.form.get('width')), int(request.form.get('height'))
@@ -892,17 +923,38 @@ def home():
                 _, buffer = cv2.imencode('.jpg', cropped)
                 return send_file(io.BytesIO(buffer), mimetype='image/jpeg', as_attachment=True, download_name='cropped.jpg')
 
+            # 2. TARGET KB COMPRESSOR FEATURE
             elif tool_type == 'compress':
-                q = int(request.form.get("quality", 60))
-                _, buffer = cv2.imencode('.jpg', img, [int(cv2.IMWRITE_JPEG_QUALITY), q])
-                return send_file(io.BytesIO(buffer), mimetype='image/jpeg', as_attachment=True, download_name='compressed.jpg')
+                target_kb = int(request.form.get("target_kb", 50))
+                target_bytes = target_kb * 1024
+                
+                quality = 95
+                encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), quality]
+                _, buffer = cv2.imencode('.jpg', img, encode_param)
+                
+                # Step 1: Reduce Quality
+                while len(buffer) > target_bytes and quality > 15:
+                    quality -= 5
+                    encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), quality]
+                    _, buffer = cv2.imencode('.jpg', img, encode_param)
+                
+                # Step 2: Resize Image if still too large
+                scale = 1.0
+                while len(buffer) > target_bytes and scale > 0.1:
+                    scale -= 0.1
+                    new_w = int(img.shape[1] * scale)
+                    new_h = int(img.shape[0] * scale)
+                    resized = cv2.resize(img, (new_w, new_h), interpolation=cv2.INTER_AREA)
+                    _, buffer = cv2.imencode('.jpg', resized, encode_param)
+
+                return send_file(io.BytesIO(buffer), mimetype='image/jpeg', as_attachment=True, download_name=f'compressed_{target_kb}kb.jpg')
 
             elif tool_type == 'social':
                 p = request.form.get('platform')
                 dim = (1280, 720) if p=='yt' else (1080, 1080) if p=='insta' else (820, 312)
                 res = cv2.resize(img, dim)
                 _, buffer = cv2.imencode('.jpg', res)
-                return send_file(io.BytesIO(buffer), mimetype='image/jpeg', as_attachment=True, download_name='resized.jpg')
+                return send_file(io.BytesIO(buffer), mimetype='image/jpeg', as_attachment=True, download_name='social_resized.jpg')
 
             elif tool_type == 'format':
                 f = request.form.get('out_format', 'png')
@@ -913,10 +965,6 @@ def home():
         except Exception as e: return f"Error: {str(e)}", 500
 
     path = request.path
-    
-    # ==========================================
-    # 5. ALL TITLES FOR SPECIFIC KEYWORDS
-    # ==========================================
     seo_data = {
         '/': ('Snapzo Pro | Free AI Passport Photo Maker & Image Tools', 'Free online AI passport size photo maker, image to PDF converter, Text to PDF, Image to Text (OCR), and compressor.'),
         '/passport-maker': ('Strict AI Passport Photo Maker | Snapzo Pro', 'Create exact 3.5x4.5 passport photos for SSC, RRB, and NTPC forms automatically.'),
@@ -927,8 +975,6 @@ def home():
         '/compress': ('Image Compressor | Reduce Photo Size in KB | Snapzo Pro', 'Reduce photo file size in KB for online form uploads without losing quality.'),
         '/social-size': ('Social Media Image Resizer | Snapzo Pro', 'Resize images perfectly for YouTube thumbnails, Instagram posts, and Facebook.'),
         '/convert-format': ('Image Format Converter | Snapzo Pro', 'Convert images to JPG, PNG, WEBP, BMP, and TIFF formats instantly for free.'),
-        
-        # Deep Links / Keyword Links
         '/jpg-to-png': ('JPG to PNG Converter Online | Snapzo Pro', 'Convert JPG images to transparent PNG format online for free without losing quality.'),
         '/png-to-jpg': ('PNG to JPG Converter Online | Snapzo Pro', 'Convert PNG images to standard JPG format online for free instantly.'),
         '/webp-to-jpg': ('WEBP to JPG Converter Online | Snapzo Pro', 'Convert WEBP web images to standard JPG format online for free.'),
@@ -945,9 +991,7 @@ def home():
         '/youtube-thumbnail-resizer': ('YouTube Thumbnail Resizer | Snapzo Pro', 'Resize images perfectly for YouTube thumbnails (1280x720) in one click.'),
         '/instagram-photo-resizer': ('Instagram Photo Resizer | Snapzo Pro', 'Resize images perfectly for Instagram Posts (1080x1080) for free.')
     }
-    
     page_title, page_desc = seo_data.get(path, seo_data['/'])
-    
     return render_template_string(HTML, page_title=page_title, page_desc=page_desc)
 
 if __name__ == "__main__":
