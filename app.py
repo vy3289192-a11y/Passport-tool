@@ -174,7 +174,7 @@ HTML = '''
         .testi-info h4 { margin: 0; color: var(--text); }
         .testi-info p { margin: 3px 0 0; color: var(--text-muted); font-size: 0.9rem; }
 
-        .footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--border); width: 100%; max-width: 1100px; color: var(--text); }
+        .footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--border); width: 100%; max-width: 1100px; color: var(--text); margin-top: 20px; }
         .insta-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: bold; margin-top: 15px; }
 
         .seo-links { margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border); text-align: center; font-size: 0.85rem; color: var(--text-muted); line-height: 1.8; }
@@ -184,6 +184,13 @@ HTML = '''
         .check-container { display: flex; align-items: center; gap: 10px; margin-top: 15px; background: rgba(59,130,246,0.1); padding: 10px 15px; border-radius: 8px; }
         .check-container input { width: 20px; height: 20px; cursor: pointer; }
         .check-container label { margin-bottom: 0; cursor: pointer; opacity: 1; color: var(--accent); font-weight: bold; }
+
+        /* FOOTER LINKS STYLING */
+        .footer-links { text-align: center; margin-bottom: 30px; }
+        .footer-links h4 { color: var(--text); margin-bottom: 20px; font-size: 1.2rem; }
+        .f-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+        .f-grid a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: 0.2s; background: var(--box-bg); padding: 10px 18px; border-radius: 8px; border: 1px solid var(--border); font-weight: 500; }
+        .f-grid a:hover { background: var(--accent); color: white; border-color: var(--accent); transform: translateY(-2px); }
 
         @media (max-width: 900px) { 
             .tool-wrapper.active { flex-direction: column; align-items: center; gap: 30px; } 
@@ -224,7 +231,7 @@ HTML = '''
     <div class="sidebar" id="sidebar">
         <h3 style="color:var(--accent); margin-top:0;">Snapzo Menu</h3>
         <a href="/passport-maker" class="menu-btn active-menu" onclick="switchTool('passport', event)" id="m-passport"><i class="fas fa-id-badge"></i> Passport Maker</a>
-        <a href="/id-card-print" class="menu-btn" onclick="switchTool('idcard', event)" id="m-idcard"><i class="fas fa-address-card"></i> ID Card Print (Front+Back)</a>
+        <a href="/id-card-print" class="menu-btn" onclick="switchTool('idcard', event)" id="m-idcard"><i class="fas fa-address-card"></i> ID Card Print</a>
         <a href="/signature-cleaner" class="menu-btn" onclick="switchTool('sign', event)" id="m-sign"><i class="fas fa-signature"></i> Signature Cleaner</a>
         <a href="/photo-sign-joiner" class="menu-btn" onclick="switchTool('joiner', event)" id="m-joiner"><i class="fas fa-object-group"></i> Photo + Sign Joiner</a>
         <a href="/image-to-text" class="menu-btn" onclick="switchTool('img2text', event)" id="m-img2text"><i class="fas fa-file-word"></i> Image to Text (OCR)</a>
@@ -241,7 +248,7 @@ HTML = '''
         <div class="tool-wrapper active" id="tool-passport">
             <div class="tool-content">
                 <h1>Strict AI Passport Maker</h1>
-                <p>Turn a regular photo into an official passport photo fast. Hamara AI strictly 3.5x4.5 ratio use karta hai taaki forms me koi galti na ho.</p>
+                <p>Turn a regular photo into an official passport photo fast. Hamara AI strictly 3.5x4.5 ratio use karta hai taaki SSC/RRB forms me koi galti na ho.</p>
                 <div class="visual-box">
                     <div style="display:flex; align-items:center; justify-content:center; gap:20px;">
                         <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80" style="width:100px; height:100px; object-fit:cover; border-radius:12px;">
@@ -606,9 +613,46 @@ HTML = '''
             </div>
         </div>
 
+        <div class="testimonials">
+            <h2>What Users Say ⭐⭐⭐⭐⭐</h2>
+            <div class="testi-grid">
+                <div class="testi-card">
+                    <div class="testi-header"><img src="https://i.pravatar.cc/150?img=11" class="testi-avatar"><div><h4>Ravi Sharma</h4><p>Govt. Job Aspirant</p></div></div>
+                    <p>"Bhai strictly strict size fix hai! NTPC form ke liye exact passport ban gayi aur Name Date bhi chhap gaya."</p>
+                </div>
+                <div class="testi-card">
+                    <div class="testi-header"><img src="https://i.pravatar.cc/150?img=5" class="testi-avatar"><div><h4>Neha Verma</h4><p>College Student</p></div></div>
+                    <p>"Naya Image to Text OCR feature bahut kaam ka hai. Aur Magic Scanner se Notes bilkul clear ho jate hain PDF me!"</p>
+                </div>
+                <div class="testi-card">
+                    <div class="testi-header"><img src="https://i.pravatar.cc/150?img=60" class="testi-avatar"><div><h4>Arjun</h4><p>Govt Job Aspirant</p></div></div>
+                    <p>"Bhai ka Target KB compressor kamaal hai. Sidha 45KB likho aur file upload form ke hisab se set! Sabse best!"</p>
+                </div>
+            </div>
+        </div>
+
         <div class="footer">
-            <p>Built with ❤️ by <b>Vishal</b></p>
-            <a href="https://www.instagram.com/rry.vishal?igsh=YnhweDR6eDhoNXV3" target="_blank" class="insta-btn"><i class="fab fa-instagram"></i> Follow on Instagram</a>
+            <div class="footer-links">
+                <h4>All Snapzo Pro Tools</h4>
+                <div class="f-grid">
+                    <a href="/passport-maker" onclick="switchTool('passport', event)">Passport Maker</a>
+                    <a href="/id-card-print" onclick="switchTool('idcard', event)">ID Card Print Studio</a>
+                    <a href="/signature-cleaner" onclick="switchTool('sign', event)">Signature Cleaner</a>
+                    <a href="/photo-sign-joiner" onclick="switchTool('joiner', event)">Photo + Sign Joiner</a>
+                    <a href="/image-to-text" onclick="switchTool('img2text', event)">Image to Text (OCR)</a>
+                    <a href="/text-to-pdf" onclick="switchTool('textpdf', event)">Text to PDF Maker</a>
+                    <a href="/image-to-pdf" onclick="switchTool('pdf', event)">Image to PDF Converter</a>
+                    <a href="/image-crop" onclick="switchTool('crop', event)">Manual Crop Studio</a>
+                    <a href="/compress" onclick="switchTool('compress', event)">Smart Image Compressor</a>
+                    <a href="/social-size" onclick="switchTool('social', event)">Social Media Resizer</a>
+                    <a href="/convert-format" onclick="switchTool('format', event)">Image Format Converter</a>
+                </div>
+            </div>
+            
+            <div style="border-top: 1px solid var(--border); padding-top: 25px; margin-top: 10px;">
+                <p>Built with ❤️ by <b>Vishal</b></p>
+                <a href="https://www.instagram.com/rry.vishal?igsh=YnhweDR6eDhoNXV3" target="_blank" class="insta-btn"><i class="fab fa-instagram"></i> Follow on Instagram</a>
+            </div>
         </div>
     </div>
 
@@ -762,7 +806,9 @@ HTML = '''
                 let dropdown = document.querySelector('select[name="out_format"]');
                 if(dropdown) dropdown.value = autoFormat;
             }
-            window.scrollTo(0,0);
+            
+            // YAHI HAI WO MAGIC JO USER KO SEEDHA UPAR LE JAYEGA!
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             
             let targetPath = window.location.pathname;
             if(event && !autoFormat) {
@@ -899,7 +945,6 @@ def home():
             if tool_type == 'textpdf':
                 return "Use Client-Side PDF Generator", 400
 
-            # NEW 1: ID CARD PRINT (Merge Front and Back on A4)
             if tool_type == 'idcard':
                 f_front = request.files.get('front')
                 f_back = request.files.get('back')
@@ -908,54 +953,39 @@ def home():
                 
                 pdf_io = io.BytesIO()
                 c = pdf_canvas.Canvas(pdf_io, pagesize=A4)
-                
                 _, buf_f = cv2.imencode('.jpg', img_f)
                 _, buf_b = cv2.imencode('.jpg', img_b)
                 
-                # Draw exactly like a cyber cafe A4 page (Center aligned)
                 c.drawImage(ImageReader(io.BytesIO(buf_f)), 150, 500, width=300, height=190)
                 c.drawImage(ImageReader(io.BytesIO(buf_b)), 150, 290, width=300, height=190)
                 c.showPage()
                 c.save(); pdf_io.seek(0)
                 return send_file(pdf_io, mimetype='application/pdf', as_attachment=True, download_name='id_card_print.pdf')
 
-            # NEW 2: SIGNATURE CLEANER
             if tool_type == 'sign':
                 file = request.files.get('file')
                 img = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
                 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-                # Otsu's thresholding to remove shadow and make it B&W
                 _, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-                
-                # Find non-white pixels to crop perfectly
                 coords = cv2.findNonZero(255 - thresh)
                 x, y, w, h = cv2.boundingRect(coords)
                 cropped = thresh[y:y+h, x:x+w]
-                
-                # Add a little padding
                 cropped = cv2.copyMakeBorder(cropped, 20, 20, 20, 20, cv2.BORDER_CONSTANT, value=[255, 255, 255])
                 _, buf = cv2.imencode('.png', cropped)
                 return send_file(io.BytesIO(buf), mimetype='image/png', as_attachment=True, download_name='clean_signature.png')
 
-            # NEW 3: PHOTO + SIGN JOINER
             if tool_type == 'joiner':
                 f_photo = request.files.get('photo')
                 f_sign = request.files.get('sign')
                 img_p = cv2.imdecode(np.frombuffer(f_photo.read(), np.uint8), cv2.IMREAD_COLOR)
                 img_s = cv2.imdecode(np.frombuffer(f_sign.read(), np.uint8), cv2.IMREAD_COLOR)
                 
-                # Resize Photo to standard width (413px)
                 face = cv2.resize(strict_passport_crop(img_p), (413, 531))
-                
-                # Resize Signature to match photo width (413px) and fixed height (150px)
                 sign_resized = cv2.resize(img_s, (413, 150))
-                
-                # Merge Top and Bottom
                 merged = np.vstack((face, sign_resized))
                 _, buf = cv2.imencode('.jpg', merged)
                 return send_file(io.BytesIO(buf), mimetype='image/jpeg', as_attachment=True, download_name='photo_sign_merged.jpg')
 
-            # --- PREVIOUS TOOLS ---
             if tool_type == 'pdf':
                 files = request.files.getlist('file')
                 apply_magic = request.form.get('magic_scan') == 'yes'
