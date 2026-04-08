@@ -15,7 +15,7 @@ HTML = '''
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <meta name="google-site-verification" content="TlhWO7oDD-Gp8H0gKFC3U7n7v213ccnwGp0C9OB_7Uc" />
 
@@ -164,19 +164,25 @@ HTML = '''
         .insta-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: bold; margin-top: 15px; }
 
         /* ==================================================================== */
-        /* MOBILE UI FIX - Yeh rule guarantee karta hai ki mobile par design ek ke neeche ek aayega */
+        /* 🚀 BULLETPROOF MOBILE UI FIX 🚀 */
         /* ==================================================================== */
         @media (max-width: 900px) { 
             .tool-wrapper.active { 
-                flex-direction: column !important; 
-                align-items: center !important; 
-                gap: 30px !important;
+                display: block !important; /* Force block layout, no more flexbox side-by-side */
             } 
             .tool-content { 
+                display: block !important;
                 text-align: center !important; 
                 width: 100% !important; 
-                margin-bottom: 10px !important;
+                margin-bottom: 30px !important;
             } 
+            .card { 
+                display: block !important;
+                width: 100% !important; 
+                max-width: 100% !important; 
+                padding: 30px 20px !important; 
+                margin: 0 auto !important;
+            }
             .feature-list li { 
                 justify-content: center !important; 
             } 
@@ -185,14 +191,6 @@ HTML = '''
             }
             .desktop-menu { display: none !important; } 
             .mobile-toggle { display: block !important; }
-            .card { 
-                width: 100% !important; 
-                max-width: 100% !important; 
-                padding: 30px 20px !important; 
-            }
-            .card h2 {
-                margin-top: 10px !important;
-            }
         }
     </style>
 </head>
@@ -608,7 +606,7 @@ HTML = '''
             const tools = ['passport', 'img2text', 'textpdf', 'pdf', 'crop', 'compress', 'social', 'format'];
             tools.forEach(t => {
                 const el = document.getElementById('tool-'+t);
-                if(el) el.style.display = (t === name) ? 'flex' : 'none';
+                if(el) el.style.display = (t === name) ? 'block' : 'none';
                 
                 const deskBtn = document.getElementById('d-'+t);
                 if(deskBtn) deskBtn.classList.toggle('active-menu', t === name);
