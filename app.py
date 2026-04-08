@@ -149,13 +149,13 @@ HTML = '''
         <a href="/" class="nav-brand"><img src="''' + LOGO_URL + '''"><span>Snapzo Pro</span></a>
         <div class="nav-right" style="display:flex; align-items:center; gap:15px;">
             <div class="desktop-menu">
-                <a href="#passport" class="menu-btn active-menu" onclick="switchTool('passport', event)" id="d-passport">Passport Maker</a>
-                <a href="#textpdf" class="menu-btn" onclick="switchTool('textpdf', event)" id="d-textpdf">Text to PDF</a>
-                <a href="#pdf" class="menu-btn" onclick="switchTool('pdf', event)" id="d-pdf">Image to PDF</a>
-                <a href="#crop" class="menu-btn" onclick="switchTool('crop', event)" id="d-crop">Crop</a>
-                <a href="#compress" class="menu-btn" onclick="switchTool('compress', event)" id="d-compress">Compress</a>
-                <a href="#social" class="menu-btn" onclick="switchTool('social', event)" id="d-social">Social Size</a>
-                <a href="#format" class="menu-btn" onclick="switchTool('format', event)" id="d-format">Convert Format</a>
+                <a href="/passport-maker" class="menu-btn active-menu" onclick="switchTool('passport', event)" id="d-passport">Passport Maker</a>
+                <a href="/text-to-pdf" class="menu-btn" onclick="switchTool('textpdf', event)" id="d-textpdf">Text to PDF</a>
+                <a href="/image-to-pdf" class="menu-btn" onclick="switchTool('pdf', event)" id="d-pdf">Image to PDF</a>
+                <a href="/image-crop" class="menu-btn" onclick="switchTool('crop', event)" id="d-crop">Crop</a>
+                <a href="/compress" class="menu-btn" onclick="switchTool('compress', event)" id="d-compress">Compress</a>
+                <a href="/social-size" class="menu-btn" onclick="switchTool('social', event)" id="d-social">Social Size</a>
+                <a href="/convert-format" class="menu-btn" onclick="switchTool('format', event)" id="d-format">Convert Format</a>
             </div>
             <div onclick="toggleTheme()" style="cursor:pointer; color:var(--accent); font-size:1.3rem;"><i class="fas fa-adjust"></i></div>
             <i class="fas fa-bars mobile-toggle" onclick="toggleMenu()" style="margin-left: 10px;"></i>
@@ -165,13 +165,13 @@ HTML = '''
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
     <div class="sidebar" id="sidebar">
         <h3 style="color:var(--accent); margin-top:0;">Snapzo Menu</h3>
-        <a href="#passport" class="menu-btn active-menu" onclick="switchTool('passport', event)" id="m-passport"><i class="fas fa-id-badge"></i> Passport Maker</a>
-        <a href="#textpdf" class="menu-btn" onclick="switchTool('textpdf', event)" id="m-textpdf"><i class="fas fa-file-alt"></i> Text to PDF</a>
-        <a href="#pdf" class="menu-btn" onclick="switchTool('pdf', event)" id="m-pdf"><i class="fas fa-images"></i> Image to PDF</a>
-        <a href="#crop" class="menu-btn" onclick="switchTool('crop', event)" id="m-crop"><i class="fas fa-crop-alt"></i> Manual Crop</a>
-        <a href="#compress" class="menu-btn" onclick="switchTool('compress', event)" id="m-compress"><i class="fas fa-compress-arrows-alt"></i> Compress</a>
-        <a href="#social" class="menu-btn" onclick="switchTool('social', event)" id="m-social"><i class="fas fa-share-alt"></i> Social Size</a>
-        <a href="#format" class="menu-btn" onclick="switchTool('format', event)" id="m-format"><i class="fas fa-exchange-alt"></i> Convert Format</a>
+        <a href="/passport-maker" class="menu-btn active-menu" onclick="switchTool('passport', event)" id="m-passport"><i class="fas fa-id-badge"></i> Passport Maker</a>
+        <a href="/text-to-pdf" class="menu-btn" onclick="switchTool('textpdf', event)" id="m-textpdf"><i class="fas fa-file-alt"></i> Text to PDF</a>
+        <a href="/image-to-pdf" class="menu-btn" onclick="switchTool('pdf', event)" id="m-pdf"><i class="fas fa-images"></i> Image to PDF</a>
+        <a href="/image-crop" class="menu-btn" onclick="switchTool('crop', event)" id="m-crop"><i class="fas fa-crop-alt"></i> Manual Crop</a>
+        <a href="/compress" class="menu-btn" onclick="switchTool('compress', event)" id="m-compress"><i class="fas fa-compress-arrows-alt"></i> Compress</a>
+        <a href="/social-size" class="menu-btn" onclick="switchTool('social', event)" id="m-social"><i class="fas fa-share-alt"></i> Social Size</a>
+        <a href="/convert-format" class="menu-btn" onclick="switchTool('format', event)" id="m-format"><i class="fas fa-exchange-alt"></i> Convert Format</a>
     </div>
 
     <div class="main">
@@ -407,7 +407,27 @@ HTML = '''
             theme: 'snow'
         });
 
-        // Function to create PDF directly from Editor (Client-Side)
+        // URL Mapping for Clean Paths
+        const routeMap = {
+            'passport': 'passport-maker',
+            'textpdf': 'text-to-pdf',
+            'pdf': 'image-to-pdf',
+            'crop': 'image-crop',
+            'compress': 'compress',
+            'social': 'social-size',
+            'format': 'convert-format'
+        };
+
+        const pathMap = {
+            '/passport-maker': 'passport',
+            '/text-to-pdf': 'textpdf',
+            '/image-to-pdf': 'pdf',
+            '/image-crop': 'crop',
+            '/compress': 'compress',
+            '/social-size': 'social',
+            '/convert-format': 'format'
+        };
+
         function downloadRichPDF() {
             var element = document.querySelector('.ql-editor');
             if (element.innerText.trim().length === 0) {
@@ -422,7 +442,6 @@ HTML = '''
                 jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
             
-            // Create temporary container for clean PDF print
             var tempDiv = document.createElement('div');
             tempDiv.innerHTML = element.innerHTML;
             tempDiv.style.color = 'black'; 
@@ -456,8 +475,10 @@ HTML = '''
             });
             window.scrollTo(0,0);
             
-            if(window.location.hash !== '#' + name) {
-                window.history.pushState(null, null, '#' + name);
+            // CLEAN URL MAGIC (No Hashtags)
+            let targetPath = '/' + routeMap[name];
+            if(window.location.pathname !== targetPath) {
+                window.history.pushState(null, null, targetPath);
             }
             
             if(window.innerWidth <= 900) {
@@ -466,19 +487,21 @@ HTML = '''
             }
         }
 
+        // Jab page load ho to URL path dekhe
         window.onload = function() {
-            if(window.location.hash) {
-                let tool = window.location.hash.substring(1);
-                if(['passport', 'textpdf', 'pdf', 'crop', 'compress', 'social', 'format'].includes(tool)) {
-                    switchTool(tool, null);
-                }
+            let path = window.location.pathname;
+            if(pathMap[path]) {
+                switchTool(pathMap[path], null);
+            } else if (path !== '/') {
+                switchTool('passport', null); // Default
             }
         };
 
+        // Phone ka back button dabane pe sahi tool khule
         window.addEventListener('popstate', function() {
-            if(window.location.hash) {
-                let tool = window.location.hash.substring(1);
-                switchTool(tool, null);
+            let path = window.location.pathname;
+            if(pathMap[path]) {
+                switchTool(pathMap[path], null);
             } else {
                 switchTool('passport', null);
             }
@@ -531,7 +554,7 @@ HTML = '''
 </html>
 '''
 
-# --- BACKEND LOGIC ---
+# --- FLASK BACKEND LOGIC (With Multiple Routes for Clean URLs) ---
 
 def strict_passport_crop(img):
     h, w = img.shape[:2]
@@ -545,13 +568,20 @@ def strict_passport_crop(img):
         offset = int((h - new_h) * 0.15)
         return img[offset:offset+new_h, :]
 
+# Multiple Routes batati hain ki in saare naye links par 404 error na aaye
 @app.route('/', methods=['GET', 'POST'])
+@app.route('/passport-maker', methods=['GET', 'POST'])
+@app.route('/text-to-pdf', methods=['GET', 'POST'])
+@app.route('/image-to-pdf', methods=['GET', 'POST'])
+@app.route('/image-crop', methods=['GET', 'POST'])
+@app.route('/compress', methods=['GET', 'POST'])
+@app.route('/social-size', methods=['GET', 'POST'])
+@app.route('/convert-format', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
         try:
             tool_type = request.form.get('tool_type')
             
-            # Legacy Text to PDF backend (Now handled purely by Front-end JS for Rich Text)
             if tool_type == 'textpdf':
                 return "Use Client-Side PDF Generator", 400
 
