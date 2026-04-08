@@ -32,6 +32,8 @@ HTML = '''
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -50,56 +52,55 @@ HTML = '''
         "priceCurrency": "INR"
       },
       "image": "https://i.ibb.co/Q73xvDmw/46658.jpg",
-      "description": "Free online AI passport size photo maker, image to PDF converter, Text to PDF, crop tool, and compressor.",
-      "featureList": "Passport Photo Maker, Text to PDF, Image to PDF, Image Format Converter, Image Compressor, Social Media Resizer, Manual Crop"
+      "description": "Free online AI passport size photo maker, image to PDF converter, Text to PDF, crop tool, Image to Text (OCR), and compressor.",
+      "featureList": "Passport Photo Maker, Text to PDF, Image to Text, Image to PDF, Image Format Converter, Image Compressor, Social Media Resizer, Manual Crop"
     }
     </script>
 
     <style>
-        :root { --bg: #0f172a; --card: #1e293b; --accent: #3b82f6; --text: #f1f5f9; --border: #334155; --nav: #111827; --input: #0f172a; }
-        body.light-mode { --bg: #f8fafc; --card: #ffffff; --accent: #2563eb; --text: #1e293b; --border: #e2e8f0; --nav: #ffffff; --input: #ffffff; }
+        :root { --bg: #0f172a; --card: #1e293b; --accent: #3b82f6; --text: #f1f5f9; --border: #334155; }
+        body.light-mode { --bg: #f8fafc; --card: #ffffff; --accent: #2563eb; --text: #1e293b; --border: #e2e8f0; }
 
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; transition: 0.3s; }
         
-        .nav { background: var(--nav); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
-        .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); font-weight: bold; font-size: 1.3rem; }
+        .nav { background: #111827; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
+        .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: white; font-weight: bold; font-size: 1.3rem; }
         .nav-brand img { height: 35px; border-radius: 5px; }
 
-        .desktop-menu { display: flex; gap: 5px; }
-        .menu-btn { text-decoration: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 0.85rem; color: var(--text); opacity: 0.8; display: inline-block; }
-        .menu-btn:hover, .active-menu { background: var(--accent); color: white; opacity: 1; }
+        .desktop-menu { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
+        .menu-btn { text-decoration: none; padding: 8px 10px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 0.85rem; color: #cbd5e1; display: inline-block; white-space: nowrap; }
+        .menu-btn:hover, .active-menu { background: var(--accent); color: white; }
 
         .mobile-toggle { display: none; font-size: 1.5rem; cursor: pointer; color: var(--accent); }
-        .sidebar { width: 250px; height: 100vh; background: var(--nav); position: fixed; left: -250px; top: 0; transition: 0.3s; z-index: 2000; padding: 20px; box-sizing: border-box; overflow-y: auto; }
+        .sidebar { width: 250px; height: 100vh; background: #111827; position: fixed; left: -250px; top: 0; transition: 0.3s; z-index: 2000; padding: 20px; box-sizing: border-box; overflow-y: auto; }
         .sidebar.active { left: 0; }
-        .sidebar .menu-btn { display: flex; text-decoration: none; align-items: center; gap: 15px; color: var(--text); border-radius: 8px; margin-bottom: 10px; transition: 0.2s; padding: 15px; font-size: 1rem; }
+        .sidebar .menu-btn { display: flex; text-decoration: none; align-items: center; gap: 15px; color: #cbd5e1; border-radius: 8px; margin-bottom: 10px; transition: 0.2s; padding: 15px; font-size: 1rem; }
         .sidebar .menu-btn:hover, .sidebar .active-menu { background: var(--accent); color: white; }
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1500; }
         .overlay.active { display: block; }
 
         .main { padding: 50px 20px; display: flex; flex-direction: column; align-items: center; min-height: 85vh; }
         
-        /* TWO-COLUMN LAYOUT */
         .tool-wrapper { display: none; width: 100%; max-width: 1100px; gap: 40px; align-items: flex-start; justify-content: space-between; margin-bottom: 40px; }
         .tool-wrapper.active { display: flex; }
         
         .tool-content { flex: 1.2; text-align: left; }
-        .tool-content h1 { font-size: 2.2rem; color: var(--text); margin: 0 0 15px 0; background: linear-gradient(to right, #60a5fa, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .tool-content h1 { font-size: 2.2rem; color: white; margin: 0 0 15px 0; background: linear-gradient(to right, #60a5fa, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .tool-content p { font-size: 1.05rem; line-height: 1.6; opacity: 0.9; }
         
         .feature-list { list-style: none; padding: 0; margin: 25px 0; }
         .feature-list li { margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
         .feature-list i { color: #10b981; }
         
-        .visual-box { background: var(--nav); border: 1px solid var(--border); border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 20px; }
+        .visual-box { background: #111827; border: 1px solid var(--border); border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 20px; }
         
         .card { flex: 1; background: var(--card); padding: 35px; border-radius: 24px; width: 100%; max-width: 450px; box-shadow: 0 25px 50px rgba(0,0,0,0.3); border: 1px solid var(--border); }
-        .card h2 { margin-top: 0; text-align: center; font-size: 1.6rem; color: var(--text); }
+        .card h2 { margin-top: 0; text-align: center; font-size: 1.6rem; color: white; }
 
-        .upload-zone { border: 2px dashed var(--accent); padding: 40px 20px; border-radius: 18px; cursor: pointer; text-align: center; background: rgba(59,130,246,0.03); }
+        .upload-zone { border: 2px dashed var(--accent); padding: 40px 20px; border-radius: 18px; cursor: pointer; text-align: center; background: rgba(59,130,246,0.03); position: relative; }
         .preview-img { max-width: 100%; max-height: 250px; border-radius: 12px; display: none; margin-top: 15px; border: 2px solid var(--accent); }
 
-        input, select { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--input); color: var(--text); box-sizing: border-box; font-size: 1rem; }
+        input, select, textarea { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid var(--border); background: #0f172a; color: white; box-sizing: border-box; font-size: 1rem; }
         .row { display: flex; gap: 15px; margin: 20px 0; }
         .group { flex: 1; }
         label { display: block; font-size: 0.85rem; margin-bottom: 8px; opacity: 0.8; }
@@ -109,17 +110,21 @@ HTML = '''
 
         /* QUILL EDITOR CUSTOM STYLES */
         #toolbar-container { background: #e2e8f0; border-radius: 10px 10px 0 0; border: 1px solid var(--border); border-bottom: none; }
-        #editor-container { border-radius: 0 0 10px 10px; border: 1px solid var(--border); background: var(--input); color: var(--text); height: 250px; font-size: 1rem; font-family: 'Segoe UI', sans-serif; }
+        #editor-container { border-radius: 0 0 10px 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); height: 250px; font-size: 1rem; font-family: 'Segoe UI', sans-serif; }
         .ql-toolbar.ql-snow + .ql-container.ql-snow { border: 1px solid var(--border); }
         .ql-snow .ql-stroke { stroke: #334155; }
         .ql-snow .ql-fill { fill: #334155; }
         .ql-snow .ql-picker { color: #334155; }
 
+        /* OCR Loading Bar */
+        .progress-bar-container { width: 100%; background: #334155; border-radius: 10px; margin-top: 15px; display: none; overflow: hidden; }
+        .progress-bar { height: 8px; background: #10b981; width: 0%; transition: 0.3s; }
+
         /* Trust Stats */
         .trust-section { width: 100%; max-width: 900px; text-align: center; padding: 50px 0; border-top: 1px solid var(--border); margin-top: 20px; }
         .trust-stats { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-bottom: 30px; }
         .stat-item { display: flex; flex-direction: column; align-items: center; }
-        .stat-value { font-size: 2.5rem; font-weight: bold; color: var(--text); }
+        .stat-value { font-size: 2.5rem; font-weight: bold; color: white; }
         .stat-label { font-size: 0.9rem; color: #94a3b8; margin-top: 5px; }
 
         /* Testimonials */
@@ -128,7 +133,7 @@ HTML = '''
         .testi-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 30px; }
         .testi-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
         .testi-avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); }
-        .testi-info h4 { margin: 0; color: var(--text); }
+        .testi-info h4 { margin: 0; color: white; }
         .testi-info p { margin: 3px 0 0; color: #94a3b8; font-size: 0.9rem; }
 
         .footer { text-align: center; padding: 40px; border-top: 1px solid var(--border); width: 100%; max-width: 1100px; }
@@ -143,19 +148,20 @@ HTML = '''
         }
     </style>
 </head>
-<body class="light-mode">
+<body>
 
     <div class="nav">
         <a href="/" class="nav-brand"><img src="''' + LOGO_URL + '''"><span>Snapzo Pro</span></a>
         <div class="nav-right" style="display:flex; align-items:center; gap:15px;">
             <div class="desktop-menu">
                 <a href="/passport-maker" class="menu-btn active-menu" onclick="switchTool('passport', event)" id="d-passport">Passport Maker</a>
+                <a href="/image-to-text" class="menu-btn" onclick="switchTool('img2text', event)" id="d-img2text">Image to Text</a>
                 <a href="/text-to-pdf" class="menu-btn" onclick="switchTool('textpdf', event)" id="d-textpdf">Text to PDF</a>
                 <a href="/image-to-pdf" class="menu-btn" onclick="switchTool('pdf', event)" id="d-pdf">Image to PDF</a>
                 <a href="/image-crop" class="menu-btn" onclick="switchTool('crop', event)" id="d-crop">Crop</a>
                 <a href="/compress" class="menu-btn" onclick="switchTool('compress', event)" id="d-compress">Compress</a>
                 <a href="/social-size" class="menu-btn" onclick="switchTool('social', event)" id="d-social">Social Size</a>
-                <a href="/convert-format" class="menu-btn" onclick="switchTool('format', event)" id="d-format">Convert Format</a>
+                <a href="/convert-format" class="menu-btn" onclick="switchTool('format', event)" id="d-format">Convert</a>
             </div>
             <div onclick="toggleTheme()" style="cursor:pointer; color:var(--accent); font-size:1.3rem;"><i class="fas fa-adjust"></i></div>
             <i class="fas fa-bars mobile-toggle" onclick="toggleMenu()" style="margin-left: 10px;"></i>
@@ -166,6 +172,7 @@ HTML = '''
     <div class="sidebar" id="sidebar">
         <h3 style="color:var(--accent); margin-top:0;">Snapzo Menu</h3>
         <a href="/passport-maker" class="menu-btn active-menu" onclick="switchTool('passport', event)" id="m-passport"><i class="fas fa-id-badge"></i> Passport Maker</a>
+        <a href="/image-to-text" class="menu-btn" onclick="switchTool('img2text', event)" id="m-img2text"><i class="fas fa-file-word"></i> Image to Text (OCR)</a>
         <a href="/text-to-pdf" class="menu-btn" onclick="switchTool('textpdf', event)" id="m-textpdf"><i class="fas fa-file-alt"></i> Text to PDF</a>
         <a href="/image-to-pdf" class="menu-btn" onclick="switchTool('pdf', event)" id="m-pdf"><i class="fas fa-images"></i> Image to PDF</a>
         <a href="/image-crop" class="menu-btn" onclick="switchTool('crop', event)" id="m-crop"><i class="fas fa-crop-alt"></i> Manual Crop</a>
@@ -209,6 +216,44 @@ HTML = '''
                     </div>
                     <button class="btn"><i class="fas fa-bolt"></i> Generate Photo</button>
                 </form>
+            </div>
+        </div>
+
+        <div class="tool-wrapper" id="tool-img2text">
+            <div class="tool-content">
+                <h1>Image to Text (OCR)</h1>
+                <p>Kisi bhi photo (Notes, Books, Screenshots) mein likha hua text instantly extract karein. Copy karein aur kahin bhi use karein.</p>
+                <div class="visual-box">
+                    <div style="display:flex; align-items:center; justify-content:center; gap:20px; font-weight:bold; font-size:1.1rem;">
+                        <i class="fas fa-image" style="font-size: 2.5rem; color:#38bdf8;"></i>
+                        <i class="fas fa-arrow-right" style="color:var(--accent);"></i>
+                        <i class="fas fa-file-alt" style="font-size: 2.5rem; color:#10b981;"></i>
+                    </div>
+                    <p style="margin-top:10px; font-size:0.9rem;">Powered by Advanced AI Text Recognition.</p>
+                </div>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check-circle"></i> 100% Free Client-Side Processing</li>
+                    <li><i class="fas fa-check-circle"></i> Keeps your data completely private</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2>Extract Text</h2>
+                <div class="upload-zone" onclick="document.getElementById('f-ocr').click()">
+                    <input type="file" id="f-ocr" accept="image/*" hidden onchange="startOCR(this)">
+                    <div id="t-ocr"><i class="fas fa-font" style="font-size:3rem; color:var(--accent);"></i><p>Upload Image with Text</p></div>
+                    <img id="p-ocr" class="preview-img">
+                </div>
+                
+                <div id="ocr-loading" style="display:none; text-align:center; margin-top:15px; color:var(--accent); font-weight:bold;">
+                    Extracting Text... <span id="ocr-percent">0%</span>
+                    <div class="progress-bar-container" style="display:block;"><div class="progress-bar" id="ocr-bar"></div></div>
+                </div>
+
+                <textarea id="ocr-result" placeholder="Extracted text will appear here..." style="margin-top:20px; height:150px; display:none;" readonly></textarea>
+                
+                <button type="button" class="btn" id="btn-copy-ocr" style="display:none; background:#10b981; margin-top:15px;" onclick="copyOCRText()">
+                    <i class="fas fa-copy"></i> Copy Extracted Text
+                </button>
             </div>
         </div>
 
@@ -382,7 +427,7 @@ HTML = '''
                 </div>
                 <div class="testi-card">
                     <div class="testi-header"><img src="https://i.pravatar.cc/150?img=5" class="testi-avatar"><div><h4>Neha Verma</h4><p>College Student</p></div></div>
-                    <p>"Text to PDF ka naya editor kamaal ka hai. Assignments type karke turant download kar leti hoon."</p>
+                    <p>"Naya Image to Text OCR feature bahut kaam ka hai. Screenshots se notes nikalna bahut aasan ho gaya!"</p>
                 </div>
                 <div class="testi-card">
                     <div class="testi-header"><img src="https://i.pravatar.cc/150?img=60" class="testi-avatar"><div><h4>Arjun</h4><p>Freelancer</p></div></div>
@@ -410,6 +455,7 @@ HTML = '''
         // URL Mapping for Clean Paths
         const routeMap = {
             'passport': 'passport-maker',
+            'img2text': 'image-to-text',
             'textpdf': 'text-to-pdf',
             'pdf': 'image-to-pdf',
             'crop': 'image-crop',
@@ -420,6 +466,7 @@ HTML = '''
 
         const pathMap = {
             '/passport-maker': 'passport',
+            '/image-to-text': 'img2text',
             '/text-to-pdf': 'textpdf',
             '/image-to-pdf': 'pdf',
             '/image-crop': 'crop',
@@ -427,6 +474,63 @@ HTML = '''
             '/social-size': 'social',
             '/convert-format': 'format'
         };
+
+        // ====== OCR IMAGE TO TEXT LOGIC ======
+        function startOCR(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const reader = new FileReader();
+                reader.onload = e => {
+                    // Show Image Preview
+                    document.getElementById('p-ocr').src = e.target.result;
+                    document.getElementById('p-ocr').style.display = 'block';
+                    document.getElementById('t-ocr').style.display = 'none';
+
+                    // Setup UI for Loading
+                    const loadDiv = document.getElementById('ocr-loading');
+                    const resultArea = document.getElementById('ocr-result');
+                    const copyBtn = document.getElementById('btn-copy-ocr');
+                    const percentText = document.getElementById('ocr-percent');
+                    const bar = document.getElementById('ocr-bar');
+
+                    loadDiv.style.display = 'block';
+                    resultArea.style.display = 'none';
+                    copyBtn.style.display = 'none';
+                    bar.style.width = '0%';
+                    percentText.innerText = '0%';
+
+                    // Run Tesseract JS
+                    Tesseract.recognize(
+                      file,
+                      'eng',
+                      { logger: m => {
+                          if(m.status === 'recognizing text'){
+                              let p = Math.round(m.progress * 100);
+                              percentText.innerText = p + '%';
+                              bar.style.width = p + '%';
+                          }
+                      }}
+                    ).then(({ data: { text } }) => {
+                        loadDiv.style.display = 'none';
+                        resultArea.style.display = 'block';
+                        resultArea.value = text;
+                        if(text.trim().length > 0) {
+                            copyBtn.style.display = 'block';
+                        }
+                    }).catch(err => {
+                        loadDiv.innerHTML = "<span style='color:red;'>Error extracting text. Try a clearer image!</span>";
+                        console.error(err);
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function copyOCRText() {
+            const text = document.getElementById('ocr-result').value;
+            navigator.clipboard.writeText(text).then(() => alert("Extracted Text Copied Successfully!"));
+        }
+        // =====================================
 
         function downloadRichPDF() {
             var element = document.querySelector('.ql-editor');
@@ -462,7 +566,7 @@ HTML = '''
         function switchTool(name, event) {
             if(event) event.preventDefault(); 
             
-            const tools = ['passport', 'textpdf', 'pdf', 'crop', 'compress', 'social', 'format'];
+            const tools = ['passport', 'img2text', 'textpdf', 'pdf', 'crop', 'compress', 'social', 'format'];
             tools.forEach(t => {
                 const el = document.getElementById('tool-'+t);
                 if(el) el.style.display = (t === name) ? 'flex' : 'none';
@@ -475,7 +579,7 @@ HTML = '''
             });
             window.scrollTo(0,0);
             
-            // CLEAN URL MAGIC (No Hashtags)
+            // CLEAN URL MAGIC
             let targetPath = '/' + routeMap[name];
             if(window.location.pathname !== targetPath) {
                 window.history.pushState(null, null, targetPath);
@@ -487,17 +591,15 @@ HTML = '''
             }
         }
 
-        // Jab page load ho to URL path dekhe
         window.onload = function() {
             let path = window.location.pathname;
             if(pathMap[path]) {
                 switchTool(pathMap[path], null);
             } else if (path !== '/') {
-                switchTool('passport', null); // Default
+                switchTool('passport', null);
             }
         };
 
-        // Phone ka back button dabane pe sahi tool khule
         window.addEventListener('popstate', function() {
             let path = window.location.pathname;
             if(pathMap[path]) {
@@ -568,9 +670,10 @@ def strict_passport_crop(img):
         offset = int((h - new_h) * 0.15)
         return img[offset:offset+new_h, :]
 
-# Multiple Routes batati hain ki in saare naye links par 404 error na aaye
+# Naya route add kar diya Image to Text ke liye
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/passport-maker', methods=['GET', 'POST'])
+@app.route('/image-to-text', methods=['GET', 'POST'])
 @app.route('/text-to-pdf', methods=['GET', 'POST'])
 @app.route('/image-to-pdf', methods=['GET', 'POST'])
 @app.route('/image-crop', methods=['GET', 'POST'])
