@@ -16,6 +16,9 @@ HTML = '''
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="google-site-verification" content="YAHAN_APNA_CODE_PASTE_KAREIN" />
+
     <title>Snapzo Pro | Free AI Passport Photo Maker & Image Tools</title>
     
     <link rel="icon" type="image/png" href="''' + LOGO_URL + '''">
@@ -37,7 +40,6 @@ HTML = '''
         .menu-btn { padding: 8px 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 0.85rem; color: #cbd5e1; }
         .menu-btn:hover, .active-menu { background: var(--accent); color: white; }
 
-        /* MOBILE MENU CSS ADDED BACK */
         .mobile-toggle { display: none; font-size: 1.5rem; cursor: pointer; color: var(--accent); }
         .sidebar { width: 250px; height: 100vh; background: #111827; position: fixed; left: -250px; top: 0; transition: 0.3s; z-index: 2000; padding: 20px; box-sizing: border-box; overflow-y: auto; }
         .sidebar.active { left: 0; }
@@ -100,7 +102,7 @@ HTML = '''
             .tool-content { text-align: center; order: -1; } 
             .feature-list li { justify-content: center; } 
             .desktop-menu { display: none; } 
-            .mobile-toggle { display: block; } /* Mobile Menu icon visible now */
+            .mobile-toggle { display: block; }
         }
     </style>
 </head>
