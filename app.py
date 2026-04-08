@@ -23,8 +23,14 @@ HTML = '''
     
     <link rel="icon" type="image/png" href="''' + LOGO_URL + '''">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <script type="application/ld+json">
     {
@@ -93,13 +99,21 @@ HTML = '''
         .upload-zone { border: 2px dashed var(--accent); padding: 40px 20px; border-radius: 18px; cursor: pointer; text-align: center; background: rgba(59,130,246,0.03); }
         .preview-img { max-width: 100%; max-height: 250px; border-radius: 12px; display: none; margin-top: 15px; border: 2px solid var(--accent); }
 
-        textarea, input, select { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid var(--border); background: #0f172a; color: white; box-sizing: border-box; font-size: 1rem; }
+        input, select { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid var(--border); background: #0f172a; color: white; box-sizing: border-box; font-size: 1rem; }
         .row { display: flex; gap: 15px; margin: 20px 0; }
         .group { flex: 1; }
         label { display: block; font-size: 0.85rem; margin-bottom: 8px; opacity: 0.8; }
         
         .btn { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(59,130,246,0.4); }
+
+        /* QUILL EDITOR CUSTOM STYLES */
+        #toolbar-container { background: #e2e8f0; border-radius: 10px 10px 0 0; border: 1px solid var(--border); border-bottom: none; }
+        #editor-container { border-radius: 0 0 10px 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); height: 250px; font-size: 1rem; font-family: 'Segoe UI', sans-serif; }
+        .ql-toolbar.ql-snow + .ql-container.ql-snow { border: 1px solid var(--border); }
+        .ql-snow .ql-stroke { stroke: #334155; }
+        .ql-snow .ql-fill { fill: #334155; }
+        .ql-snow .ql-picker { color: #334155; }
 
         /* Trust Stats */
         .trust-section { width: 100%; max-width: 900px; text-align: center; padding: 50px 0; border-top: 1px solid var(--border); margin-top: 20px; }
@@ -200,20 +214,38 @@ HTML = '''
 
         <div class="tool-wrapper" id="tool-textpdf">
             <div class="tool-content">
-                <h1>Text to PDF Converter</h1>
-                <p>Type your notes or letters and convert them into a clean PDF document instantly. Best for students.</p>
+                <h1>Rich Text to PDF</h1>
+                <p>Type your notes, format them like MS Word (Bold, Italic, Lists) and convert them into a beautiful PDF document instantly.</p>
                 <ul class="feature-list">
-                    <li><i class="fas fa-check-circle"></i> Professional A4 Formatting</li>
-                    <li><i class="fas fa-check-circle"></i> High Quality PDF Output</li>
+                    <li><i class="fas fa-check-circle"></i> Advance Text Formatting Options</li>
+                    <li><i class="fas fa-check-circle"></i> Superfast Client-Side PDF Creation</li>
                 </ul>
             </div>
-            <div class="card">
-                <h2>Type Content</h2>
-                <form method="POST">
-                    <input type="hidden" name="tool_type" value="textpdf">
-                    <textarea name="pdf_text" placeholder="Start typing here..." required></textarea>
-                    <button class="btn"><i class="fas fa-file-pdf"></i> Create PDF</button>
-                </form>
+            <div class="card" style="max-width: 550px;">
+                <h2>Document Editor</h2>
+                <div style="margin-bottom: 20px;">
+                    <div id="toolbar-container">
+                        <span class="ql-formats">
+                            <select class="ql-header"></select>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-bold"></button>
+                            <button class="ql-italic"></button>
+                            <button class="ql-underline"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-list" value="ordered"></button>
+                            <button class="ql-list" value="bullet"></button>
+                            <button class="ql-indent" value="-1"></button>
+                            <button class="ql-indent" value="+1"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <select class="ql-align"></select>
+                        </span>
+                    </div>
+                    <div id="editor-container"></div>
+                </div>
+                <button type="button" class="btn" onclick="downloadRichPDF()"><i class="fas fa-file-pdf"></i> Download PDF Document</button>
             </div>
         </div>
 
@@ -350,7 +382,7 @@ HTML = '''
                 </div>
                 <div class="testi-card">
                     <div class="testi-header"><img src="https://i.pravatar.cc/150?img=5" class="testi-avatar"><div><h4>Neha Verma</h4><p>College Student</p></div></div>
-                    <p>"Multiple marksheets ki PDF banani thi securely, bahut jaldi ho gaya. Interface bahut clean hai."</p>
+                    <p>"Text to PDF ka naya editor kamaal ka hai. Assignments type karke turant download kar leti hoon."</p>
                 </div>
                 <div class="testi-card">
                     <div class="testi-header"><img src="https://i.pravatar.cc/150?img=60" class="testi-avatar"><div><h4>Arjun</h4><p>Freelancer</p></div></div>
@@ -368,6 +400,39 @@ HTML = '''
     <script>
         let cropper;
 
+        // Initialize Rich Text Editor
+        var quill = new Quill('#editor-container', {
+            modules: { toolbar: '#toolbar-container' },
+            placeholder: 'Start typing your document here...',
+            theme: 'snow'
+        });
+
+        // Function to create PDF directly from Editor (Client-Side)
+        function downloadRichPDF() {
+            var element = document.querySelector('.ql-editor');
+            if (element.innerText.trim().length === 0) {
+                alert("Please type some text first!");
+                return;
+            }
+            var opt = {
+                margin:       0.8,
+                filename:     'Snapzo_Document.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+            
+            // Create temporary container for clean PDF print
+            var tempDiv = document.createElement('div');
+            tempDiv.innerHTML = element.innerHTML;
+            tempDiv.style.color = 'black'; 
+            tempDiv.style.background = 'white';
+            tempDiv.style.fontSize = '12pt';
+            tempDiv.style.fontFamily = 'Arial, sans-serif';
+            
+            html2pdf().set(opt).from(tempDiv).save();
+        }
+
         function toggleTheme() { document.body.classList.toggle('light-mode'); }
         
         function toggleMenu() {
@@ -375,9 +440,8 @@ HTML = '''
             document.getElementById('overlay').classList.toggle('active');
         }
 
-        // URL Update aur Menu switch logic
         function switchTool(name, event) {
-            if(event) event.preventDefault(); // Default link jump ko rokta hai
+            if(event) event.preventDefault(); 
             
             const tools = ['passport', 'textpdf', 'pdf', 'crop', 'compress', 'social', 'format'];
             tools.forEach(t => {
@@ -392,7 +456,6 @@ HTML = '''
             });
             window.scrollTo(0,0);
             
-            // Auto URL Update Magic (SEO Feature)
             if(window.location.hash !== '#' + name) {
                 window.history.pushState(null, null, '#' + name);
             }
@@ -403,7 +466,6 @@ HTML = '''
             }
         }
 
-        // Jab user direct kisi link se aaye (Jaise google se /#crop par click karke)
         window.onload = function() {
             if(window.location.hash) {
                 let tool = window.location.hash.substring(1);
@@ -413,13 +475,12 @@ HTML = '''
             }
         };
 
-        // Window ke "Back/Forward" button press karne par tool switch ho
         window.addEventListener('popstate', function() {
             if(window.location.hash) {
                 let tool = window.location.hash.substring(1);
                 switchTool(tool, null);
             } else {
-                switchTool('passport', null); // Default page
+                switchTool('passport', null);
             }
         });
 
@@ -490,15 +551,9 @@ def home():
         try:
             tool_type = request.form.get('tool_type')
             
+            # Legacy Text to PDF backend (Now handled purely by Front-end JS for Rich Text)
             if tool_type == 'textpdf':
-                text = request.form.get('pdf_text', '')
-                pdf_io = io.BytesIO()
-                c = pdf_canvas.Canvas(pdf_io, pagesize=A4)
-                y = 800
-                for line in text.split('\\n'):
-                    c.drawString(50, y, line); y -= 20
-                c.save(); pdf_io.seek(0)
-                return send_file(pdf_io, mimetype='application/pdf', as_attachment=True, download_name='notes.pdf')
+                return "Use Client-Side PDF Generator", 400
 
             if tool_type == 'pdf':
                 files = request.files.getlist('file')
