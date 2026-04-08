@@ -19,6 +19,14 @@ HTML = '''
     
     <meta name="google-site-verification" content="TlhWO7oDD-Gp8H0gKFC3U7n7v213ccnwGp0C9OB_7Uc" />
 
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TJ3VTE8QJE"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-TJ3VTE8QJE');
+    </script>
     <title>{{ page_title }}</title>
     <meta name="description" content="{{ page_desc }}">
     
@@ -119,11 +127,10 @@ HTML = '''
 
         .main { padding: 40px 20px; display: flex; flex-direction: column; align-items: center; min-height: 85vh; width: 100%; }
         
-        .tool-wrapper { display: none; width: 100%; max-width: 1100px; gap: 40px; align-items: flex-start; justify-content: space-between; margin-bottom: 40px; flex-wrap: wrap; /* NEW: flex wrap for desktop layout */ }
+        .tool-wrapper { display: none; width: 100%; max-width: 1100px; gap: 40px; align-items: flex-start; justify-content: space-between; margin-bottom: 40px; flex-wrap: wrap; }
         .tool-wrapper.active { display: flex; }
         
-        /* Updated Desktop order for content */
-        .tool-content { flex: 1.2; text-align: left; order: 1; /* NEW: Default left on desktop */ }
+        .tool-content { flex: 1.2; text-align: left; order: 1; }
         .tool-content h1 { font-size: 2.2rem; color: var(--text); margin: 0 0 15px 0; background: linear-gradient(to right, #60a5fa, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .tool-content p { font-size: 1.05rem; line-height: 1.6; color: var(--text); opacity: 0.9; }
         
@@ -133,8 +140,7 @@ HTML = '''
         
         .visual-box { background: var(--box-bg); border: 1px solid var(--border); border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 20px; color: var(--text); }
         
-        /* NEW: INSTRUCTION SECTION STYLING (Spans full width on desktop) */
-        .how-to-use { width: 100%; margin-top: 40px; border-top: 1px solid var(--border); padding-top: 25px; order: 3; /* NEW: Always third */ }
+        .how-to-use { width: 100%; margin-top: 40px; border-top: 1px solid var(--border); padding-top: 25px; order: 3; }
         .how-to-use h3 { color: var(--text); font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 10px;}
         .step-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
         .step-card { background: var(--box-bg); padding: 12px; border-radius: 12px; text-align: center; border: 1px solid var(--border); }
@@ -142,8 +148,7 @@ HTML = '''
         .step-card h4 { margin: 0 0 5px 0; color: var(--accent); font-size: 0.95rem; }
         .step-card p { margin: 0; font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; }
 
-        /* Updated Desktop order for card */
-        .card { flex: 1; background: var(--card); padding: 30px; border-radius: 24px; width: 100%; max-width: 450px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid var(--border); order: 2; /* NEW: Default right on desktop */ }
+        .card { flex: 1; background: var(--card); padding: 30px; border-radius: 24px; width: 100%; max-width: 450px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid var(--border); order: 2; }
         .card h2 { margin-top: 0; text-align: center; font-size: 1.6rem; color: var(--text); margin-bottom: 20px; }
 
         .upload-zone { border: 2px dashed var(--accent); padding: 40px 20px; border-radius: 18px; cursor: pointer; text-align: center; background: rgba(59,130,246,0.05); position: relative; }
@@ -158,7 +163,6 @@ HTML = '''
         .btn { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top:10px; }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(59,130,246,0.4); }
 
-        /* QUILL EDITOR CUSTOM STYLES */
         #toolbar-container { background: var(--box-bg); border-radius: 10px 10px 0 0; border: 1px solid var(--border); border-bottom: none; }
         #editor-container { border-radius: 0 0 10px 10px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); height: 250px; font-size: 1rem; font-family: 'Segoe UI', sans-serif; }
         .ql-toolbar.ql-snow + .ql-container.ql-snow { border: 1px solid var(--border); }
@@ -202,12 +206,9 @@ HTML = '''
 
         @media (max-width: 900px) { 
             .tool-wrapper.active { flex-direction: column; align-items: center; gap: 30px; } 
-            
-            /* NEW: REORDERING FOR MOBILE */
-            .card { order: 1; width: 100%; max-width: 100%; padding: 30px 20px; margin-bottom: 0; } /* Card first */
-            .tool-content { order: 2; text-align: center; width: 100%; margin-bottom: 10px; flex: auto;} /* Desc second */
-            .how-to-use { order: 3; margin-top: 20px; text-align: center;} /* Instructions third */
-            
+            .card { order: 1; width: 100%; max-width: 100%; padding: 30px 20px; margin-bottom: 0; }
+            .tool-content { order: 2; text-align: center; width: 100%; margin-bottom: 10px; flex: auto;}
+            .how-to-use { order: 3; margin-top: 20px; text-align: center;}
             .feature-list li { justify-content: center; } 
             .visual-box { margin: 0 auto 25px auto; }
             .how-to-use h3 { justify-content: center; }
@@ -758,27 +759,6 @@ HTML = '''
             <div class="tool-content">
                 <h1>Social Media Resizer</h1>
                 <p>Perfect size for YouTube Thumbnails, Instagram or FB.</p>
-                
-                <div class="how-to-use">
-                    <h3><i class="fas fa-question-circle"></i> How to Resize Photo?</h3>
-                    <div class="step-grid">
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=300&q=80" alt="Upload Media">
-                            <h4>1. Upload Media</h4>
-                            <p>Select the image you want to resize for social media.</p>
-                        </div>
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&q=80" alt="Select Platform">
-                            <h4>2. Select Platform</h4>
-                            <p>Choose YouTube Thumbnail, Instagram Post, or Facebook Cover.</p>
-                        </div>
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=300&q=80" alt="Download Ready">
-                            <h4>3. Download Ready</h4>
-                            <p>Download the image with perfect dimensions, ready to upload.</p>
-                        </div>
-                    </div>
-                </div>
             </div>
             
             <div class="card">
@@ -796,6 +776,27 @@ HTML = '''
                     <p style="margin-bottom:5px;">Popular Searches:</p>
                     <a href="/youtube-thumbnail-resizer" onclick="switchTool('social', event)">YouTube Thumbnail Resizer</a> | 
                     <a href="/instagram-photo-resizer" onclick="switchTool('social', event)">Instagram Photo Resizer</a>
+                </div>
+            </div>
+
+            <div class="how-to-use">
+                <h3><i class="fas fa-question-circle"></i> How to Resize Photo?</h3>
+                <div class="step-grid">
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=300&q=80" alt="Upload Media">
+                        <h4>1. Upload Media</h4>
+                        <p>Select the image you want to resize for social media.</p>
+                    </div>
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&q=80" alt="Select Platform">
+                        <h4>2. Select Platform</h4>
+                        <p>Choose YouTube Thumbnail, Instagram Post, or Facebook Cover.</p>
+                    </div>
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=300&q=80" alt="Download Ready">
+                        <h4>3. Download Ready</h4>
+                        <p>Download the image with perfect dimensions, ready to upload.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1152,7 +1153,7 @@ HTML = '''
 </html>
 '''
 
-# --- FLASK BACKEND LOGIC (UNCHANGED) ---
+# --- FLASK BACKEND LOGIC ---
 
 def strict_passport_crop(img):
     h, w = img.shape[:2]
