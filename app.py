@@ -105,8 +105,21 @@ HTML = '''
 
         .main { padding: 40px 20px; display: flex; flex-direction: column; align-items: center; min-height: 85vh; width: 100%; }
         
-        .tool-wrapper { display: none; width: 100%; max-width: 1100px; gap: 40px; align-items: flex-start; justify-content: space-between; margin-bottom: 40px; }
-        .tool-wrapper.active { display: flex; }
+        /* THE PERFECT FIX FOR WRAPPERS */
+        .tool-wrapper { 
+            display: none; /* Har tool default hide rahega */
+            width: 100%; 
+            max-width: 1100px; 
+            gap: 40px; 
+            align-items: flex-start; 
+            justify-content: space-between; 
+            margin-bottom: 40px; 
+        }
+        
+        /* Sirf active class wala tool dikhega */
+        .tool-wrapper.active { 
+            display: flex; 
+        }
         
         .tool-content { flex: 1.2; text-align: left; }
         .tool-content h1 { font-size: 2.2rem; color: var(--text); margin: 0 0 15px 0; background: linear-gradient(to right, #60a5fa, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -160,27 +173,26 @@ HTML = '''
         .footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--border); width: 100%; max-width: 1100px; color: var(--text); }
         .insta-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: bold; margin-top: 15px; }
 
+        /* PERFECT MOBILE UI (No !important display bugs) */
         @media (max-width: 900px) { 
             .tool-wrapper.active { 
-                display: block !important; 
+                flex-direction: column; 
+                align-items: center; 
+                gap: 30px;
             } 
             .tool-content { 
-                display: block !important;
-                text-align: center !important; 
-                width: 100% !important; 
-                margin-bottom: 30px !important;
+                text-align: center; 
+                width: 100%; 
+                margin-bottom: 10px;
             } 
             .card { 
-                display: block !important;
-                width: 100% !important; 
-                max-width: 100% !important; 
-                padding: 30px 20px !important; 
-                margin: 0 auto !important;
+                width: 100%; 
+                max-width: 100%; 
+                padding: 30px 20px; 
             }
-            .feature-list li { justify-content: center !important; } 
-            .visual-box { margin: 0 auto 25px auto !important; }
-            .desktop-menu { display: none !important; } 
-            .mobile-toggle { display: block !important; }
+            .feature-list li { justify-content: center; } 
+            .desktop-menu { display: none; } 
+            .mobile-toggle { display: block; }
         }
     </style>
 </head>
@@ -507,7 +519,6 @@ HTML = '''
             '/convert-format': 'format'
         };
 
-        // NEW: Dynamically update JS Title when clicking menus
         const seoTitleMap = {
             'passport': 'Strict AI Passport Photo Maker | Snapzo Pro',
             'img2text': 'Image to Text (OCR) Converter | Snapzo Pro',
@@ -602,23 +613,40 @@ HTML = '''
             document.getElementById('overlay').classList.toggle('active');
         }
 
+        // ==========================================
+        // YAHAN HUA HAI PERFECT FIX!
+        // Ab inline style (display:block/none) ka use nahi hoga,
+        // sirf classList .active lagayega ya hatayega!
+        // ==========================================
         function switchTool(name, event) {
             if(event) event.preventDefault(); 
             
             const tools = ['passport', 'img2text', 'textpdf', 'pdf', 'crop', 'compress', 'social', 'format'];
             tools.forEach(t => {
                 const el = document.getElementById('tool-'+t);
-                if(el) el.style.display = (t === name) ? 'block' : 'none';
+                if(el) {
+                    if (t === name) {
+                        el.classList.add('active');
+                    } else {
+                        el.classList.remove('active');
+                    }
+                }
                 
                 const deskBtn = document.getElementById('d-'+t);
-                if(deskBtn) deskBtn.classList.toggle('active-menu', t === name);
+                if(deskBtn) {
+                    if (t === name) deskBtn.classList.add('active-menu');
+                    else deskBtn.classList.remove('active-menu');
+                }
                 
                 const mobBtn = document.getElementById('m-'+t);
-                if(mobBtn) mobBtn.classList.toggle('active-menu', t === name);
+                if(mobBtn) {
+                    if (t === name) mobBtn.classList.add('active-menu');
+                    else mobBtn.classList.remove('active-menu');
+                }
             });
+            
             window.scrollTo(0,0);
             
-            // SEO: Change document title on click
             if(seoTitleMap[name]) {
                 document.title = seoTitleMap[name];
             }
@@ -699,7 +727,7 @@ HTML = '''
 </html>
 '''
 
-# --- FLASK BACKEND LOGIC (With Dynamic SEO Rendering) ---
+# --- FLASK BACKEND LOGIC ---
 
 def strict_passport_crop(img):
     h, w = img.shape[:2]
@@ -791,7 +819,6 @@ def home():
 
         except Exception as e: return f"Error: {str(e)}", 500
 
-    # GET METHOD - DYNAMIC SEO Titles & Descriptions Based on URL Path
     path = request.path
     seo_data = {
         '/': ('Snapzo Pro | Free AI Passport Photo Maker & Image Tools', 'Free online AI passport size photo maker, image to PDF converter, Text to PDF, Image to Text (OCR), and compressor.'),
@@ -807,7 +834,6 @@ def home():
     
     page_title, page_desc = seo_data.get(path, seo_data['/'])
     
-    # Passing the dynamic variables to HTML
     return render_template_string(HTML, page_title=page_title, page_desc=page_desc)
 
 if __name__ == "__main__":
