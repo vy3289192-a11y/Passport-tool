@@ -104,7 +104,9 @@ HTML = '''
 
         .main { padding: 40px 20px; display: flex; flex-direction: column; align-items: center; min-height: 85vh; width: 100%; }
         
+        /* Tool Wrapper - Hidden by default */
         .tool-wrapper { display: none; width: 100%; max-width: 1100px; gap: 40px; align-items: flex-start; justify-content: space-between; margin-bottom: 40px; }
+        /* Tool Wrapper - Visible when active */
         .tool-wrapper.active { display: flex; }
         
         .tool-content { flex: 1.2; text-align: left; }
@@ -164,31 +166,26 @@ HTML = '''
         .insta-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: bold; margin-top: 15px; }
 
         /* ==================================================================== */
-        /* 🚀 BULLETPROOF MOBILE UI FIX 🚀 */
+        /* PERFECT MOBILE UI FIX (Active JS will work perfectly now) */
         /* ==================================================================== */
         @media (max-width: 900px) { 
             .tool-wrapper.active { 
-                display: block !important; /* Force block layout, no more flexbox side-by-side */
+                display: flex !important; 
+                flex-direction: column !important; 
+                align-items: center !important; 
+                gap: 30px !important;
             } 
             .tool-content { 
-                display: block !important;
                 text-align: center !important; 
                 width: 100% !important; 
-                margin-bottom: 30px !important;
+                margin-bottom: 10px !important;
             } 
             .card { 
-                display: block !important;
                 width: 100% !important; 
                 max-width: 100% !important; 
                 padding: 30px 20px !important; 
-                margin: 0 auto !important;
             }
-            .feature-list li { 
-                justify-content: center !important; 
-            } 
-            .visual-box {
-                margin: 0 auto 25px auto !important;
-            }
+            .feature-list li { justify-content: center !important; } 
             .desktop-menu { display: none !important; } 
             .mobile-toggle { display: block !important; }
         }
@@ -600,19 +597,32 @@ HTML = '''
             document.getElementById('overlay').classList.toggle('active');
         }
 
+        // =========================================================
+        // FIX: Menu Switching logic to use .active class perfectly
+        // =========================================================
         function switchTool(name, event) {
             if(event) event.preventDefault(); 
             
             const tools = ['passport', 'img2text', 'textpdf', 'pdf', 'crop', 'compress', 'social', 'format'];
             tools.forEach(t => {
+                // Safely toggle display by adding/removing 'active' class
                 const el = document.getElementById('tool-'+t);
-                if(el) el.style.display = (t === name) ? 'block' : 'none';
+                if(el) {
+                    if (t === name) el.classList.add('active');
+                    else el.classList.remove('active');
+                }
                 
                 const deskBtn = document.getElementById('d-'+t);
-                if(deskBtn) deskBtn.classList.toggle('active-menu', t === name);
+                if(deskBtn) {
+                    if (t === name) deskBtn.classList.add('active-menu');
+                    else deskBtn.classList.remove('active-menu');
+                }
                 
                 const mobBtn = document.getElementById('m-'+t);
-                if(mobBtn) mobBtn.classList.toggle('active-menu', t === name);
+                if(mobBtn) {
+                    if (t === name) mobBtn.classList.add('active-menu');
+                    else mobBtn.classList.remove('active-menu');
+                }
             });
             window.scrollTo(0,0);
             
