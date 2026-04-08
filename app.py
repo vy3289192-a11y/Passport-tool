@@ -22,7 +22,15 @@ HTML = '''
     <title>{{ page_title }}</title>
     <meta name="description" content="{{ page_desc }}">
     
-    <link rel="icon" type="image/png" href="''' + LOGO_URL + '''">
+    <meta property="og:site_name" content="Snapzo Pro" />
+    <meta property="og:title" content="{{ page_title }}" />
+    <meta property="og:description" content="{{ page_desc }}" />
+    <meta property="og:image" content="''' + LOGO_URL + '''" />
+    <meta property="og:url" content="https://snapzopro.online" />
+    
+    <link rel="icon" href="''' + LOGO_URL + '''">
+    <link rel="apple-touch-icon" href="''' + LOGO_URL + '''">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
@@ -34,6 +42,16 @@ HTML = '''
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Snapzo Pro",
+      "alternateName": "SnapzoPro",
+      "url": "https://snapzopro.online/"
+    }
+    </script>
 
     <script type="application/ld+json">
     {
@@ -52,7 +70,7 @@ HTML = '''
         "price": "0",
         "priceCurrency": "INR"
       },
-      "image": "https://i.ibb.co/Q73xvDmw/46658.jpg",
+      "image": "''' + LOGO_URL + '''",
       "description": "{{ page_desc }}",
       "featureList": "Passport Photo Maker, Text to PDF, Image to Text, Image to PDF, Image Format Converter, Image Compressor, Social Media Resizer, Manual Crop"
     }
@@ -105,9 +123,8 @@ HTML = '''
 
         .main { padding: 40px 20px; display: flex; flex-direction: column; align-items: center; min-height: 85vh; width: 100%; }
         
-        /* THE PERFECT FIX FOR WRAPPERS */
         .tool-wrapper { 
-            display: none; /* Har tool default hide rahega */
+            display: none; 
             width: 100%; 
             max-width: 1100px; 
             gap: 40px; 
@@ -116,10 +133,7 @@ HTML = '''
             margin-bottom: 40px; 
         }
         
-        /* Sirf active class wala tool dikhega */
-        .tool-wrapper.active { 
-            display: flex; 
-        }
+        .tool-wrapper.active { display: flex; }
         
         .tool-content { flex: 1.2; text-align: left; }
         .tool-content h1 { font-size: 2.2rem; color: var(--text); margin: 0 0 15px 0; background: linear-gradient(to right, #60a5fa, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -173,7 +187,6 @@ HTML = '''
         .footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--border); width: 100%; max-width: 1100px; color: var(--text); }
         .insta-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: bold; margin-top: 15px; }
 
-        /* PERFECT MOBILE UI (No !important display bugs) */
         @media (max-width: 900px) { 
             .tool-wrapper.active { 
                 flex-direction: column; 
@@ -191,6 +204,7 @@ HTML = '''
                 padding: 30px 20px; 
             }
             .feature-list li { justify-content: center; } 
+            .visual-box { margin: 0 auto 25px auto; }
             .desktop-menu { display: none; } 
             .mobile-toggle { display: block; }
         }
@@ -613,11 +627,6 @@ HTML = '''
             document.getElementById('overlay').classList.toggle('active');
         }
 
-        // ==========================================
-        // YAHAN HUA HAI PERFECT FIX!
-        // Ab inline style (display:block/none) ka use nahi hoga,
-        // sirf classList .active lagayega ya hatayega!
-        // ==========================================
         function switchTool(name, event) {
             if(event) event.preventDefault(); 
             
