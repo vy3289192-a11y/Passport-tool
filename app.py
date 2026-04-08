@@ -40,7 +40,6 @@ HTML = '''
     <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
 
     <script type="application/ld+json">
@@ -103,7 +102,6 @@ HTML = '''
 
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; width: 100vw; max-width: 100%; transition: background 0.3s, color 0.3s; }
         
-        /* Privacy Banner */
         .privacy-banner { background: #10b981; color: white; text-align: center; padding: 6px; font-size: 0.85rem; font-weight: bold; letter-spacing: 0.5px; }
 
         .nav { background: var(--nav); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
@@ -138,9 +136,10 @@ HTML = '''
         .visual-box { background: var(--box-bg); border: 1px solid var(--border); border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 20px; color: var(--text); }
         
         .card { flex: 1; background: var(--card); padding: 30px; border-radius: 24px; width: 100%; max-width: 450px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid var(--border); }
-        .card h2 { margin-top: 0; text-align: center; font-size: 1.6rem; color: var(--text); }
+        .card h2 { margin-top: 0; text-align: center; font-size: 1.6rem; color: var(--text); margin-bottom: 20px; }
 
         .upload-zone { border: 2px dashed var(--accent); padding: 40px 20px; border-radius: 18px; cursor: pointer; text-align: center; background: rgba(59,130,246,0.05); position: relative; }
+        .upload-zone.small { padding: 20px 10px; }
         .preview-img { max-width: 100%; max-height: 250px; border-radius: 12px; display: none; margin-top: 15px; border: 2px solid var(--accent); }
 
         input, select, textarea { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); font-size: 1rem; }
@@ -151,7 +150,6 @@ HTML = '''
         .btn { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top:10px; }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(59,130,246,0.4); }
 
-        /* QUILL EDITOR CUSTOM STYLES */
         #toolbar-container { background: var(--box-bg); border-radius: 10px 10px 0 0; border: 1px solid var(--border); border-bottom: none; }
         #editor-container { border-radius: 0 0 10px 10px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); height: 250px; font-size: 1rem; font-family: 'Segoe UI', sans-serif; }
         .ql-toolbar.ql-snow + .ql-container.ql-snow { border: 1px solid var(--border); }
@@ -183,7 +181,6 @@ HTML = '''
         .seo-links a { color: var(--accent); text-decoration: none; margin: 0 5px; font-weight: 500; }
         .seo-links a:hover { text-decoration: underline; }
 
-        /* Checkbox Styling */
         .check-container { display: flex; align-items: center; gap: 10px; margin-top: 15px; background: rgba(59,130,246,0.1); padding: 10px 15px; border-radius: 8px; }
         .check-container input { width: 20px; height: 20px; cursor: pointer; }
         .check-container label { margin-bottom: 0; cursor: pointer; opacity: 1; color: var(--accent); font-weight: bold; }
@@ -210,13 +207,13 @@ HTML = '''
         <div class="nav-right" style="display:flex; align-items:center; gap:15px;">
             <div class="desktop-menu">
                 <a href="/passport-maker" class="menu-btn active-menu" onclick="switchTool('passport', event)" id="d-passport">Passport Maker</a>
+                <a href="/id-card-print" class="menu-btn" onclick="switchTool('idcard', event)" id="d-idcard">ID Card Print</a>
+                <a href="/signature-cleaner" class="menu-btn" onclick="switchTool('sign', event)" id="d-sign">Sign Cleaner</a>
+                <a href="/photo-sign-joiner" class="menu-btn" onclick="switchTool('joiner', event)" id="d-joiner">Photo+Sign Join</a>
                 <a href="/image-to-text" class="menu-btn" onclick="switchTool('img2text', event)" id="d-img2text">Image to Text</a>
-                <a href="/text-to-pdf" class="menu-btn" onclick="switchTool('textpdf', event)" id="d-textpdf">Text to PDF</a>
                 <a href="/image-to-pdf" class="menu-btn" onclick="switchTool('pdf', event)" id="d-pdf">Image to PDF</a>
-                <a href="/image-crop" class="menu-btn" onclick="switchTool('crop', event)" id="d-crop">Crop</a>
                 <a href="/compress" class="menu-btn" onclick="switchTool('compress', event)" id="d-compress">Compress</a>
-                <a href="/social-size" class="menu-btn" onclick="switchTool('social', event)" id="d-social">Social Size</a>
-                <a href="/convert-format" class="menu-btn" onclick="switchTool('format', event)" id="d-format">Convert</a>
+                <a href="/social-size" class="menu-btn" onclick="switchTool('social', event)" id="d-social">More Tools <i class="fas fa-caret-down"></i></a>
             </div>
             <div onclick="toggleTheme()" style="cursor:pointer; color:var(--accent); font-size:1.3rem;"><i class="fas fa-adjust"></i></div>
             <i class="fas fa-bars mobile-toggle" onclick="toggleMenu()" style="margin-left: 10px;"></i>
@@ -227,6 +224,9 @@ HTML = '''
     <div class="sidebar" id="sidebar">
         <h3 style="color:var(--accent); margin-top:0;">Snapzo Menu</h3>
         <a href="/passport-maker" class="menu-btn active-menu" onclick="switchTool('passport', event)" id="m-passport"><i class="fas fa-id-badge"></i> Passport Maker</a>
+        <a href="/id-card-print" class="menu-btn" onclick="switchTool('idcard', event)" id="m-idcard"><i class="fas fa-address-card"></i> ID Card Print (Front+Back)</a>
+        <a href="/signature-cleaner" class="menu-btn" onclick="switchTool('sign', event)" id="m-sign"><i class="fas fa-signature"></i> Signature Cleaner</a>
+        <a href="/photo-sign-joiner" class="menu-btn" onclick="switchTool('joiner', event)" id="m-joiner"><i class="fas fa-object-group"></i> Photo + Sign Joiner</a>
         <a href="/image-to-text" class="menu-btn" onclick="switchTool('img2text', event)" id="m-img2text"><i class="fas fa-file-word"></i> Image to Text (OCR)</a>
         <a href="/text-to-pdf" class="menu-btn" onclick="switchTool('textpdf', event)" id="m-textpdf"><i class="fas fa-file-alt"></i> Text to PDF</a>
         <a href="/image-to-pdf" class="menu-btn" onclick="switchTool('pdf', event)" id="m-pdf"><i class="fas fa-images"></i> Image to PDF</a>
@@ -241,18 +241,17 @@ HTML = '''
         <div class="tool-wrapper active" id="tool-passport">
             <div class="tool-content">
                 <h1>Strict AI Passport Maker</h1>
-                <p>Turn a regular photo into an official passport photo fast. Hamara AI strictly 3.5x4.5 ratio use karta hai taaki SSC/RRB forms me koi galti na ho.</p>
+                <p>Turn a regular photo into an official passport photo fast. Hamara AI strictly 3.5x4.5 ratio use karta hai taaki forms me koi galti na ho.</p>
                 <div class="visual-box">
                     <div style="display:flex; align-items:center; justify-content:center; gap:20px;">
                         <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80" style="width:100px; height:100px; object-fit:cover; border-radius:12px;">
                         <i class="fas fa-arrow-right" style="font-size:1.5rem; color:var(--accent);"></i>
                         <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80" style="width:100px; height:128px; object-fit:cover; border:4px solid white; border-radius:2px;">
                     </div>
-                    <p style="margin-top:10px; font-size:0.9rem;">Auto-Crop + Optional Name & Date Plate.</p>
                 </div>
                 <ul class="feature-list">
                     <li><i class="fas fa-check-circle"></i> Permanent 413x531 Pixels (Official Size)</li>
-                    <li><i class="fas fa-check-circle"></i> <b style="color:var(--accent)">NEW:</b> Auto-Print Name & Date on Photo</li>
+                    <li><i class="fas fa-check-circle"></i> Auto-Print Name & Date on Photo</li>
                     <li><i class="fas fa-check-circle"></i> Multiple Copies Ready to Print</li>
                 </ul>
             </div>
@@ -265,18 +264,10 @@ HTML = '''
                         <div id="t-pass"><i class="fas fa-camera" style="font-size:3rem; color:var(--accent);"></i><p>Upload any Photo</p></div>
                         <img id="p-pass" class="preview-img">
                     </div>
-                    
                     <div class="row" style="margin-bottom:0;">
-                        <div class="group">
-                            <label>Print Name (Optional)</label>
-                            <input type="text" name="print_name" placeholder="E.g., VISHAL YADAV">
-                        </div>
-                        <div class="group">
-                            <label>Print Date (Optional)</label>
-                            <input type="text" name="print_date" placeholder="E.g., 10/04/2026">
-                        </div>
+                        <div class="group"><label>Print Name (Optional)</label><input type="text" name="print_name" placeholder="E.g., VISHAL YADAV"></div>
+                        <div class="group"><label>Print Date (Optional)</label><input type="text" name="print_date" placeholder="E.g., 10/04/2026"></div>
                     </div>
-
                     <div class="row">
                         <div class="group"><label>Quantity</label><input type="number" name="count" value="8"></div>
                         <div class="group"><label>Format</label><select name="type"><option value="jpg">JPG Image</option><option value="pdf">PDF Document</option></select></div>
@@ -291,18 +282,105 @@ HTML = '''
             </div>
         </div>
 
+        <div class="tool-wrapper" id="tool-idcard">
+            <div class="tool-content">
+                <h1>ID Card Print Studio</h1>
+                <p>Aadhar Card ya PAN Card ki Front aur Back photo ko ek perfect A4 size PDF mein merge karein. Cyber cafe jane ki zarurat nahi!</p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check-circle"></i> Perfect standard size alignment</li>
+                    <li><i class="fas fa-check-circle"></i> High Quality PDF output</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2>Aadhar/PAN Joiner</h2>
+                <form method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="tool_type" value="idcard">
+                    <div class="row">
+                        <div class="group">
+                            <label>Front Side</label>
+                            <div class="upload-zone small" onclick="document.getElementById('f-id-front').click()">
+                                <input type="file" id="f-id-front" name="front" hidden required onchange="handlePreview(this, 'p-id-front', 't-id-front')">
+                                <div id="t-id-front"><i class="fas fa-id-card" style="font-size:2rem; color:var(--accent);"></i><p style="margin:5px 0 0; font-size:0.8rem;">Upload Front</p></div>
+                                <img id="p-id-front" class="preview-img" style="margin-top:5px;">
+                            </div>
+                        </div>
+                        <div class="group">
+                            <label>Back Side</label>
+                            <div class="upload-zone small" onclick="document.getElementById('f-id-back').click()">
+                                <input type="file" id="f-id-back" name="back" hidden required onchange="handlePreview(this, 'p-id-back', 't-id-back')">
+                                <div id="t-id-back"><i class="fas fa-id-card-alt" style="font-size:2rem; color:var(--accent);"></i><p style="margin:5px 0 0; font-size:0.8rem;">Upload Back</p></div>
+                                <img id="p-id-back" class="preview-img" style="margin-top:5px;">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn"><i class="fas fa-print"></i> Generate Print PDF</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="tool-wrapper" id="tool-sign">
+            <div class="tool-content">
+                <h1>Auto-Signature Cleaner</h1>
+                <p>Copy par kiye gaye sign ko upload karein. Hamara AI background ko pure white aur pen ink ko dark black kar dega online forms ke liye.</p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check-circle"></i> Removes dark shadows automatically</li>
+                    <li><i class="fas fa-check-circle"></i> Official Bank/Govt size ready</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2>Clean Signature</h2>
+                <form method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="tool_type" value="sign">
+                    <div class="upload-zone" onclick="document.getElementById('f-sign').click()">
+                        <input type="file" id="f-sign" name="file" hidden required onchange="handlePreview(this, 'p-sign', 't-sign')">
+                        <div id="t-sign"><i class="fas fa-signature" style="font-size:3rem; color:var(--accent);"></i><p>Upload Raw Signature</p></div>
+                        <img id="p-sign" class="preview-img">
+                    </div>
+                    <button class="btn"><i class="fas fa-magic"></i> Clean & Resize</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="tool-wrapper" id="tool-joiner">
+            <div class="tool-content">
+                <h1>Photo + Sign Joiner</h1>
+                <p>Govt exams (UPSC/State forms) ke liye Passport Photo ke theek niche apna Signature merge karein sirf ek click mein.</p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check-circle"></i> Perfect ratio maintained</li>
+                    <li><i class="fas fa-check-circle"></i> No complex editing required</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2>Merge Photo & Sign</h2>
+                <form method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="tool_type" value="joiner">
+                    <div class="row">
+                        <div class="group">
+                            <label>Passport Photo</label>
+                            <div class="upload-zone small" onclick="document.getElementById('f-join-photo').click()">
+                                <input type="file" id="f-join-photo" name="photo" hidden required onchange="handlePreview(this, 'p-join-photo', 't-join-photo')">
+                                <div id="t-join-photo"><i class="fas fa-user" style="font-size:2rem; color:var(--accent);"></i><p style="margin:5px 0 0; font-size:0.8rem;">Upload Photo</p></div>
+                                <img id="p-join-photo" class="preview-img" style="margin-top:5px;">
+                            </div>
+                        </div>
+                        <div class="group">
+                            <label>Signature</label>
+                            <div class="upload-zone small" onclick="document.getElementById('f-join-sign').click()">
+                                <input type="file" id="f-join-sign" name="sign" hidden required onchange="handlePreview(this, 'p-join-sign', 't-join-sign')">
+                                <div id="t-join-sign"><i class="fas fa-signature" style="font-size:2rem; color:var(--accent);"></i><p style="margin:5px 0 0; font-size:0.8rem;">Upload Sign</p></div>
+                                <img id="p-join-sign" class="preview-img" style="margin-top:5px;">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn"><i class="fas fa-object-group"></i> Merge Together</button>
+                </form>
+            </div>
+        </div>
+
         <div class="tool-wrapper" id="tool-img2text">
             <div class="tool-content">
                 <h1>Image to Text (OCR)</h1>
                 <p>Kisi bhi photo (Notes, Books, Screenshots) mein likha hua text instantly extract karein. Copy karein aur kahin bhi use karein.</p>
-                <div class="visual-box">
-                    <div style="display:flex; align-items:center; justify-content:center; gap:20px; font-weight:bold; font-size:1.1rem;">
-                        <i class="fas fa-image" style="font-size: 2.5rem; color:#38bdf8;"></i>
-                        <i class="fas fa-arrow-right" style="color:var(--accent);"></i>
-                        <i class="fas fa-file-alt" style="font-size: 2.5rem; color:#10b981;"></i>
-                    </div>
-                    <p style="margin-top:10px; font-size:0.9rem;">Powered by Advanced AI Text Recognition.</p>
-                </div>
                 <ul class="feature-list">
                     <li><i class="fas fa-check-circle"></i> 100% Free Client-Side Processing</li>
                     <li><i class="fas fa-check-circle"></i> Keeps your data completely private</li>
@@ -322,7 +400,6 @@ HTML = '''
                 </div>
 
                 <textarea id="ocr-result" placeholder="Extracted text will appear here..." style="margin-top:20px; height:150px; display:none;" readonly></textarea>
-                
                 <button type="button" class="btn" id="btn-copy-ocr" style="display:none; background:#10b981; margin-top:15px;" onclick="copyOCRText()">
                     <i class="fas fa-copy"></i> Copy Extracted Text
                 </button>
@@ -379,14 +456,9 @@ HTML = '''
             <div class="tool-content">
                 <h1>Images to PDF (Scanner)</h1>
                 <p>Combine multiple marksheets or documents into a single PDF file securely.</p>
-                <div class="visual-box">
-                    <i class="fas fa-images" style="font-size:3rem; color:#38bdf8;"></i>
-                    <i class="fas fa-plus" style="margin:0 10px;"></i>
-                    <i class="fas fa-file-pdf" style="font-size:3rem; color:#ef4444;"></i>
-                </div>
                 <ul class="feature-list">
                     <li><i class="fas fa-check-circle"></i> Secure Offline Conversion</li>
-                    <li><i class="fas fa-check-circle"></i> <b style="color:var(--accent)">NEW:</b> Magic Scan (Cleans dark shadows)</li>
+                    <li><i class="fas fa-check-circle"></i> Magic Scan (Cleans dark shadows)</li>
                 </ul>
             </div>
             <div class="card">
@@ -398,12 +470,10 @@ HTML = '''
                         <div id="t-pdf"><i class="fas fa-file-upload" style="font-size:3rem; color:var(--accent);"></i><p>Select Multiple Photos</p></div>
                         <div id="pdf-count" style="display:none; font-weight:bold; color:var(--accent);"></div>
                     </div>
-                    
                     <div class="check-container">
                         <input type="checkbox" id="magic_scan" name="magic_scan" value="yes">
-                        <label for="magic_scan">Apply "Magic Scan" Filter (For clear dark documents)</label>
+                        <label for="magic_scan">Apply "Magic Scan" Filter (For clear B&W documents)</label>
                     </div>
-
                     <button class="btn">Generate PDF</button>
                 </form>
                 <div class="seo-links">
@@ -439,7 +509,7 @@ HTML = '''
                 <h1>Smart Image Compressor</h1>
                 <p>Reduce photo size accurately for online form uploads without losing visual quality.</p>
                 <ul class="feature-list">
-                    <li><i class="fas fa-check-circle"></i> <b style="color:var(--accent)">NEW:</b> Auto-Target Size (Just type desired KB)</li>
+                    <li><i class="fas fa-check-circle"></i> Auto-Target Size (Just type desired KB)</li>
                     <li><i class="fas fa-check-circle"></i> Best for SSC, UPSC, IBPS Forms</li>
                 </ul>
             </div>
@@ -451,14 +521,12 @@ HTML = '''
                         <div id="t-comp"><i class="fas fa-compress-arrows-alt" style="font-size:3rem; color:var(--accent);"></i><p>Upload Photo</p></div>
                         <img id="p-comp" class="preview-img">
                     </div>
-                    
                     <div class="row">
                         <div class="group">
                             <label>Target File Size (In KB)</label>
                             <input type="number" name="target_kb" value="50" placeholder="E.g., 50">
                         </div>
                     </div>
-                    
                     <button class="btn">Smart Compress</button>
                 </form>
                 <div class="seo-links">
@@ -494,15 +562,6 @@ HTML = '''
             <div class="tool-content">
                 <h1>Format Converter</h1>
                 <p>Convert any image format instantly. Supports JPG, PNG, WEBP, BMP, and TIFF.</p>
-                <div class="visual-box">
-                    <div style="display:flex; align-items:center; justify-content:center; gap:15px; font-weight:bold; font-size:1.1rem; flex-wrap:wrap;">
-                        <span>.JPG</span>
-                        <i class="fas fa-sync-alt" style="color:var(--accent);"></i>
-                        <span>.PNG</span>
-                        <i class="fas fa-sync-alt" style="color:var(--accent);"></i>
-                        <span>.WEBP</span>
-                    </div>
-                </div>
             </div>
             <div class="card">
                 <form method="POST" enctype="multipart/form-data">
@@ -547,24 +606,6 @@ HTML = '''
             </div>
         </div>
 
-        <div class="testimonials">
-            <h2>What Users Say ⭐⭐⭐⭐⭐</h2>
-            <div class="testi-grid">
-                <div class="testi-card">
-                    <div class="testi-header"><img src="https://i.pravatar.cc/150?img=11" class="testi-avatar"><div><h4>Ravi Sharma</h4><p>Govt. Job Aspirant</p></div></div>
-                    <p>"Bhai strictly strict size fix hai! NTPC form ke liye exact passport ban gayi aur Name Date bhi chhap gaya."</p>
-                </div>
-                <div class="testi-card">
-                    <div class="testi-header"><img src="https://i.pravatar.cc/150?img=5" class="testi-avatar"><div><h4>Neha Verma</h4><p>College Student</p></div></div>
-                    <p>"Naya Image to Text OCR feature bahut kaam ka hai. Aur Magic Scanner se Notes bilkul clear ho jate hain PDF me!"</p>
-                </div>
-                <div class="testi-card">
-                    <div class="testi-header"><img src="https://i.pravatar.cc/150?img=60" class="testi-avatar"><div><h4>Arjun</h4><p>Govt Job Aspirant</p></div></div>
-                    <p>"Bhai ka Target KB compressor kamaal hai. Sidha 45KB likho aur file upload form ke hisab se set! Sabse best!"</p>
-                </div>
-            </div>
-        </div>
-
         <div class="footer">
             <p>Built with ❤️ by <b>Vishal</b></p>
             <a href="https://www.instagram.com/rry.vishal?igsh=YnhweDR6eDhoNXV3" target="_blank" class="insta-btn"><i class="fab fa-instagram"></i> Follow on Instagram</a>
@@ -581,6 +622,9 @@ HTML = '''
 
         const routeMap = {
             'passport': 'passport-maker',
+            'idcard': 'id-card-print',
+            'sign': 'signature-cleaner',
+            'joiner': 'photo-sign-joiner',
             'img2text': 'image-to-text',
             'textpdf': 'text-to-pdf',
             'pdf': 'image-to-pdf',
@@ -592,6 +636,9 @@ HTML = '''
 
         const pathMap = {
             '/passport-maker': 'passport',
+            '/id-card-print': 'idcard',
+            '/signature-cleaner': 'sign',
+            '/photo-sign-joiner': 'joiner',
             '/image-to-text': 'img2text',
             '/text-to-pdf': 'textpdf',
             '/image-to-pdf': 'pdf',
@@ -619,6 +666,9 @@ HTML = '''
 
         const seoTitleMap = {
             'passport': 'Strict AI Passport Photo Maker | Snapzo Pro',
+            'idcard': 'Aadhar & PAN Card Front Back PDF Joiner | Snapzo Pro',
+            'sign': 'Auto-Signature Cleaner & Resizer | Snapzo Pro',
+            'joiner': 'Merge Photo and Signature Online | Snapzo Pro',
             'img2text': 'Image to Text (OCR) Converter | Snapzo Pro',
             'textpdf': 'Rich Text to PDF Converter Online | Snapzo Pro',
             'pdf': 'Image to PDF Converter | Combine Photos | Snapzo Pro',
@@ -699,7 +749,7 @@ HTML = '''
 
         function switchTool(name, event, autoFormat = null) {
             if(event) event.preventDefault(); 
-            const tools = ['passport', 'img2text', 'textpdf', 'pdf', 'crop', 'compress', 'social', 'format'];
+            const tools = ['passport', 'idcard', 'sign', 'joiner', 'img2text', 'textpdf', 'pdf', 'crop', 'compress', 'social', 'format'];
             tools.forEach(t => {
                 const el = document.getElementById('tool-'+t);
                 if(el) { if (t === name) el.classList.add('active'); else el.classList.remove('active'); }
@@ -800,11 +850,11 @@ HTML = '''
 </html>
 '''
 
-# --- FLASK BACKEND LOGIC (WITH NEW KILLER FEATURES) ---
+# --- FLASK BACKEND LOGIC ---
 
 def strict_passport_crop(img):
     h, w = img.shape[:2]
-    target_ratio = 0.777 # 3.5 x 4.5 ratio
+    target_ratio = 0.777 
     if (w/h) > target_ratio:
         new_w = int(h * target_ratio)
         offset = (w - new_w) // 2
@@ -816,6 +866,9 @@ def strict_passport_crop(img):
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/passport-maker', methods=['GET', 'POST'])
+@app.route('/id-card-print', methods=['GET', 'POST'])
+@app.route('/signature-cleaner', methods=['GET', 'POST'])
+@app.route('/photo-sign-joiner', methods=['GET', 'POST'])
 @app.route('/image-to-text', methods=['GET', 'POST'])
 @app.route('/text-to-pdf', methods=['GET', 'POST'])
 @app.route('/image-to-pdf', methods=['GET', 'POST'])
@@ -846,24 +899,77 @@ def home():
             if tool_type == 'textpdf':
                 return "Use Client-Side PDF Generator", 400
 
-            # 3. MAGIC SCANNER FEATURE
+            # NEW 1: ID CARD PRINT (Merge Front and Back on A4)
+            if tool_type == 'idcard':
+                f_front = request.files.get('front')
+                f_back = request.files.get('back')
+                img_f = cv2.imdecode(np.frombuffer(f_front.read(), np.uint8), cv2.IMREAD_COLOR)
+                img_b = cv2.imdecode(np.frombuffer(f_back.read(), np.uint8), cv2.IMREAD_COLOR)
+                
+                pdf_io = io.BytesIO()
+                c = pdf_canvas.Canvas(pdf_io, pagesize=A4)
+                
+                _, buf_f = cv2.imencode('.jpg', img_f)
+                _, buf_b = cv2.imencode('.jpg', img_b)
+                
+                # Draw exactly like a cyber cafe A4 page (Center aligned)
+                c.drawImage(ImageReader(io.BytesIO(buf_f)), 150, 500, width=300, height=190)
+                c.drawImage(ImageReader(io.BytesIO(buf_b)), 150, 290, width=300, height=190)
+                c.showPage()
+                c.save(); pdf_io.seek(0)
+                return send_file(pdf_io, mimetype='application/pdf', as_attachment=True, download_name='id_card_print.pdf')
+
+            # NEW 2: SIGNATURE CLEANER
+            if tool_type == 'sign':
+                file = request.files.get('file')
+                img = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
+                gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+                # Otsu's thresholding to remove shadow and make it B&W
+                _, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                
+                # Find non-white pixels to crop perfectly
+                coords = cv2.findNonZero(255 - thresh)
+                x, y, w, h = cv2.boundingRect(coords)
+                cropped = thresh[y:y+h, x:x+w]
+                
+                # Add a little padding
+                cropped = cv2.copyMakeBorder(cropped, 20, 20, 20, 20, cv2.BORDER_CONSTANT, value=[255, 255, 255])
+                _, buf = cv2.imencode('.png', cropped)
+                return send_file(io.BytesIO(buf), mimetype='image/png', as_attachment=True, download_name='clean_signature.png')
+
+            # NEW 3: PHOTO + SIGN JOINER
+            if tool_type == 'joiner':
+                f_photo = request.files.get('photo')
+                f_sign = request.files.get('sign')
+                img_p = cv2.imdecode(np.frombuffer(f_photo.read(), np.uint8), cv2.IMREAD_COLOR)
+                img_s = cv2.imdecode(np.frombuffer(f_sign.read(), np.uint8), cv2.IMREAD_COLOR)
+                
+                # Resize Photo to standard width (413px)
+                face = cv2.resize(strict_passport_crop(img_p), (413, 531))
+                
+                # Resize Signature to match photo width (413px) and fixed height (150px)
+                sign_resized = cv2.resize(img_s, (413, 150))
+                
+                # Merge Top and Bottom
+                merged = np.vstack((face, sign_resized))
+                _, buf = cv2.imencode('.jpg', merged)
+                return send_file(io.BytesIO(buf), mimetype='image/jpeg', as_attachment=True, download_name='photo_sign_merged.jpg')
+
+            # --- PREVIOUS TOOLS ---
             if tool_type == 'pdf':
                 files = request.files.getlist('file')
                 apply_magic = request.form.get('magic_scan') == 'yes'
                 pdf_io = io.BytesIO()
                 c = pdf_canvas.Canvas(pdf_io, pagesize=A4)
-                
                 for f in files:
                     img = cv2.imdecode(np.frombuffer(f.read(), np.uint8), cv2.IMREAD_COLOR)
                     if img is not None:
                         if apply_magic:
-                            # Convert to B&W High Contrast (CamScanner Effect)
                             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
                             clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
                             enhanced = clahe.apply(gray)
                             _, img = cv2.threshold(enhanced, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-                            img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR) # Back to 3 channels for PDF
-                            
+                            img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR) 
                         _, buf = cv2.imencode('.jpg', img)
                         c.drawImage(ImageReader(io.BytesIO(buf)), 50, 50, width=500, height=700)
                         c.showPage()
@@ -873,20 +979,14 @@ def home():
             file = request.files.get('file')
             img = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
 
-            # 1. NAME & DATE PASSPORT FEATURE
             if tool_type == 'passport':
-                face = cv2.resize(strict_passport_crop(img), (413, 531)) # Official Size
-                
+                face = cv2.resize(strict_passport_crop(img), (413, 531)) 
                 print_name = request.form.get("print_name", "").strip().upper()
                 print_date = request.form.get("print_date", "").strip()
-                
                 if print_name or print_date:
-                    # Draw White Strip at bottom (Height 80px)
                     cv2.rectangle(face, (0, 531-80), (413, 531), (255,255,255), -1)
                     font = cv2.FONT_HERSHEY_SIMPLEX
-                    
                     if print_name and print_date:
-                        # Center Align Text
                         n_size = cv2.getTextSize(print_name, font, 0.7, 2)[0]
                         d_size = cv2.getTextSize(print_date, font, 0.6, 2)[0]
                         cv2.putText(face, print_name, ((413-n_size[0])//2, 531-45), font, 0.7, (0,0,0), 2)
@@ -902,13 +1002,11 @@ def home():
                 bh, bw = bordered.shape[:2]
                 canvas = np.ones((2500, 1800, 3), dtype=np.uint8) * 255
                 count = int(request.form.get("count", 8))
-                
                 for i in range(min(count, 12)):
                     r, c = i // 3, i % 3
                     canvas[r*(bh+40)+70:r*(bh+40)+70+bh, c*(bw+30)+70:c*(bw+30)+70+bw] = bordered
                 final = canvas[:((count-1)//3+1)*(bh+40)+100, :(3 if count>=3 else count)*(bw+30)+100]
                 _, buf = cv2.imencode('.jpg', final)
-                
                 if request.form.get("type") == "pdf":
                     pdf_io = io.BytesIO()
                     c = pdf_canvas.Canvas(pdf_io, pagesize=A4)
@@ -923,22 +1021,16 @@ def home():
                 _, buffer = cv2.imencode('.jpg', cropped)
                 return send_file(io.BytesIO(buffer), mimetype='image/jpeg', as_attachment=True, download_name='cropped.jpg')
 
-            # 2. TARGET KB COMPRESSOR FEATURE
             elif tool_type == 'compress':
                 target_kb = int(request.form.get("target_kb", 50))
                 target_bytes = target_kb * 1024
-                
                 quality = 95
                 encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), quality]
                 _, buffer = cv2.imencode('.jpg', img, encode_param)
-                
-                # Step 1: Reduce Quality
                 while len(buffer) > target_bytes and quality > 15:
                     quality -= 5
                     encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), quality]
                     _, buffer = cv2.imencode('.jpg', img, encode_param)
-                
-                # Step 2: Resize Image if still too large
                 scale = 1.0
                 while len(buffer) > target_bytes and scale > 0.1:
                     scale -= 0.1
@@ -946,7 +1038,6 @@ def home():
                     new_h = int(img.shape[0] * scale)
                     resized = cv2.resize(img, (new_w, new_h), interpolation=cv2.INTER_AREA)
                     _, buffer = cv2.imencode('.jpg', resized, encode_param)
-
                 return send_file(io.BytesIO(buffer), mimetype='image/jpeg', as_attachment=True, download_name=f'compressed_{target_kb}kb.jpg')
 
             elif tool_type == 'social':
@@ -968,6 +1059,9 @@ def home():
     seo_data = {
         '/': ('Snapzo Pro | Free AI Passport Photo Maker & Image Tools', 'Free online AI passport size photo maker, image to PDF converter, Text to PDF, Image to Text (OCR), and compressor.'),
         '/passport-maker': ('Strict AI Passport Photo Maker | Snapzo Pro', 'Create exact 3.5x4.5 passport photos for SSC, RRB, and NTPC forms automatically.'),
+        '/id-card-print': ('Aadhar & PAN Card Front Back PDF Joiner | Snapzo Pro', 'Merge Front and Back side of Aadhar or PAN card into a perfect A4 size PDF for printing.'),
+        '/signature-cleaner': ('Auto-Signature Cleaner & Resizer | Snapzo Pro', 'Clean signature background automatically for official government forms.'),
+        '/photo-sign-joiner': ('Merge Photo and Signature Online | Snapzo Pro', 'Combine passport size photo and signature into a single image vertically for state exams.'),
         '/image-to-text': ('Image to Text (OCR) Converter | Snapzo Pro', 'Extract text from images, notes, and screenshots instantly for free.'),
         '/text-to-pdf': ('Rich Text to PDF Converter Online | Snapzo Pro', 'Type and format your notes and convert them into a beautiful PDF.'),
         '/image-to-pdf': ('Image to PDF Converter | Combine Photos | Snapzo Pro', 'Combine multiple images and marksheets into a single PDF document securely.'),
@@ -991,6 +1085,7 @@ def home():
         '/youtube-thumbnail-resizer': ('YouTube Thumbnail Resizer | Snapzo Pro', 'Resize images perfectly for YouTube thumbnails (1280x720) in one click.'),
         '/instagram-photo-resizer': ('Instagram Photo Resizer | Snapzo Pro', 'Resize images perfectly for Instagram Posts (1080x1080) for free.')
     }
+    
     page_title, page_desc = seo_data.get(path, seo_data['/'])
     return render_template_string(HTML, page_title=page_title, page_desc=page_desc)
 
