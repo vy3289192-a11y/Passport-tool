@@ -19,7 +19,8 @@ HTML = '''
     
     <meta name="google-site-verification" content="TlhWO7oDD-Gp8H0gKFC3U7n7v213ccnwGp0C9OB_7Uc" />
 
-    <title>Snapzo Pro | Free AI Passport Photo Maker & Image Tools</title>
+    <title>{{ page_title }}</title>
+    <meta name="description" content="{{ page_desc }}">
     
     <link rel="icon" type="image/png" href="''' + LOGO_URL + '''">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -52,7 +53,7 @@ HTML = '''
         "priceCurrency": "INR"
       },
       "image": "https://i.ibb.co/Q73xvDmw/46658.jpg",
-      "description": "Free online AI passport size photo maker, image to PDF converter, Text to PDF, crop tool, Image to Text (OCR), and compressor.",
+      "description": "{{ page_desc }}",
       "featureList": "Passport Photo Maker, Text to PDF, Image to Text, Image to PDF, Image Format Converter, Image Compressor, Social Media Resizer, Manual Crop"
     }
     </script>
@@ -104,9 +105,7 @@ HTML = '''
 
         .main { padding: 40px 20px; display: flex; flex-direction: column; align-items: center; min-height: 85vh; width: 100%; }
         
-        /* Tool Wrapper - Hidden by default */
         .tool-wrapper { display: none; width: 100%; max-width: 1100px; gap: 40px; align-items: flex-start; justify-content: space-between; margin-bottom: 40px; }
-        /* Tool Wrapper - Visible when active */
         .tool-wrapper.active { display: flex; }
         
         .tool-content { flex: 1.2; text-align: left; }
@@ -134,7 +133,6 @@ HTML = '''
         .btn { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(59,130,246,0.4); }
 
-        /* QUILL EDITOR CUSTOM STYLES */
         #toolbar-container { background: var(--box-bg); border-radius: 10px 10px 0 0; border: 1px solid var(--border); border-bottom: none; }
         #editor-container { border-radius: 0 0 10px 10px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); height: 250px; font-size: 1rem; font-family: 'Segoe UI', sans-serif; }
         .ql-toolbar.ql-snow + .ql-container.ql-snow { border: 1px solid var(--border); }
@@ -142,18 +140,15 @@ HTML = '''
         .ql-snow .ql-fill { fill: var(--text); }
         .ql-snow .ql-picker { color: var(--text); }
 
-        /* OCR Loading Bar */
         .progress-bar-container { width: 100%; background: var(--border); border-radius: 10px; margin-top: 15px; display: none; overflow: hidden; }
         .progress-bar { height: 8px; background: #10b981; width: 0%; transition: 0.3s; }
 
-        /* Trust Stats */
         .trust-section { width: 100%; max-width: 900px; text-align: center; padding: 50px 0; border-top: 1px solid var(--border); margin-top: 20px; }
         .trust-stats { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-bottom: 30px; }
         .stat-item { display: flex; flex-direction: column; align-items: center; }
         .stat-value { font-size: 2.5rem; font-weight: bold; color: var(--text); }
         .stat-label { font-size: 0.9rem; color: var(--text-muted); margin-top: 5px; }
 
-        /* Testimonials */
         .testimonials { width: 100%; max-width: 1100px; margin: 40px auto; padding: 0 10px; }
         .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
         .testi-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 30px; }
@@ -165,27 +160,25 @@ HTML = '''
         .footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--border); width: 100%; max-width: 1100px; color: var(--text); }
         .insta-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: bold; margin-top: 15px; }
 
-        /* ==================================================================== */
-        /* PERFECT MOBILE UI FIX (Active JS will work perfectly now) */
-        /* ==================================================================== */
         @media (max-width: 900px) { 
             .tool-wrapper.active { 
-                display: flex !important; 
-                flex-direction: column !important; 
-                align-items: center !important; 
-                gap: 30px !important;
+                display: block !important; 
             } 
             .tool-content { 
+                display: block !important;
                 text-align: center !important; 
                 width: 100% !important; 
-                margin-bottom: 10px !important;
+                margin-bottom: 30px !important;
             } 
             .card { 
+                display: block !important;
                 width: 100% !important; 
                 max-width: 100% !important; 
                 padding: 30px 20px !important; 
+                margin: 0 auto !important;
             }
             .feature-list li { justify-content: center !important; } 
+            .visual-box { margin: 0 auto 25px auto !important; }
             .desktop-menu { display: none !important; } 
             .mobile-toggle { display: block !important; }
         }
@@ -514,6 +507,18 @@ HTML = '''
             '/convert-format': 'format'
         };
 
+        // NEW: Dynamically update JS Title when clicking menus
+        const seoTitleMap = {
+            'passport': 'Strict AI Passport Photo Maker | Snapzo Pro',
+            'img2text': 'Image to Text (OCR) Converter | Snapzo Pro',
+            'textpdf': 'Rich Text to PDF Converter Online | Snapzo Pro',
+            'pdf': 'Image to PDF Converter | Combine Photos | Snapzo Pro',
+            'crop': 'Free Image Cropper Online | Snapzo Pro',
+            'compress': 'Image Compressor | Reduce Photo Size in KB | Snapzo Pro',
+            'social': 'Social Media Image Resizer | Snapzo Pro',
+            'format': 'JPG to PNG Converter | Convert Image Formats | Snapzo Pro'
+        };
+
         function startOCR(input) {
             if (input.files && input.files[0]) {
                 const file = input.files[0];
@@ -597,34 +602,26 @@ HTML = '''
             document.getElementById('overlay').classList.toggle('active');
         }
 
-        // =========================================================
-        // FIX: Menu Switching logic to use .active class perfectly
-        // =========================================================
         function switchTool(name, event) {
             if(event) event.preventDefault(); 
             
             const tools = ['passport', 'img2text', 'textpdf', 'pdf', 'crop', 'compress', 'social', 'format'];
             tools.forEach(t => {
-                // Safely toggle display by adding/removing 'active' class
                 const el = document.getElementById('tool-'+t);
-                if(el) {
-                    if (t === name) el.classList.add('active');
-                    else el.classList.remove('active');
-                }
+                if(el) el.style.display = (t === name) ? 'block' : 'none';
                 
                 const deskBtn = document.getElementById('d-'+t);
-                if(deskBtn) {
-                    if (t === name) deskBtn.classList.add('active-menu');
-                    else deskBtn.classList.remove('active-menu');
-                }
+                if(deskBtn) deskBtn.classList.toggle('active-menu', t === name);
                 
                 const mobBtn = document.getElementById('m-'+t);
-                if(mobBtn) {
-                    if (t === name) mobBtn.classList.add('active-menu');
-                    else mobBtn.classList.remove('active-menu');
-                }
+                if(mobBtn) mobBtn.classList.toggle('active-menu', t === name);
             });
             window.scrollTo(0,0);
+            
+            // SEO: Change document title on click
+            if(seoTitleMap[name]) {
+                document.title = seoTitleMap[name];
+            }
             
             let targetPath = '/' + routeMap[name];
             if(window.location.pathname !== targetPath) {
@@ -702,7 +699,7 @@ HTML = '''
 </html>
 '''
 
-# --- FLASK BACKEND LOGIC ---
+# --- FLASK BACKEND LOGIC (With Dynamic SEO Rendering) ---
 
 def strict_passport_crop(img):
     h, w = img.shape[:2]
@@ -793,7 +790,25 @@ def home():
                 return send_file(io.BytesIO(buffer), mimetype=mime, as_attachment=True, download_name=f'converted.{f}')
 
         except Exception as e: return f"Error: {str(e)}", 500
-    return render_template_string(HTML)
+
+    # GET METHOD - DYNAMIC SEO Titles & Descriptions Based on URL Path
+    path = request.path
+    seo_data = {
+        '/': ('Snapzo Pro | Free AI Passport Photo Maker & Image Tools', 'Free online AI passport size photo maker, image to PDF converter, Text to PDF, Image to Text (OCR), and compressor.'),
+        '/passport-maker': ('Strict AI Passport Photo Maker | Snapzo Pro', 'Create exact 3.5x4.5 passport photos for SSC, RRB, and NTPC forms automatically.'),
+        '/image-to-text': ('Image to Text (OCR) Converter | Snapzo Pro', 'Extract text from images, notes, and screenshots instantly for free.'),
+        '/text-to-pdf': ('Rich Text to PDF Converter Online | Snapzo Pro', 'Type and format your notes and convert them into a beautiful PDF.'),
+        '/image-to-pdf': ('Image to PDF Converter | Combine Photos | Snapzo Pro', 'Combine multiple images and marksheets into a single PDF document securely.'),
+        '/image-crop': ('Free Image Cropper Online | Snapzo Pro', 'Crop your photos manually with full control online.'),
+        '/compress': ('Image Compressor | Reduce Photo Size in KB | Snapzo Pro', 'Reduce photo file size in KB for online form uploads without losing quality.'),
+        '/social-size': ('Social Media Image Resizer | Snapzo Pro', 'Resize images perfectly for YouTube thumbnails, Instagram posts, and Facebook.'),
+        '/convert-format': ('JPG to PNG Converter | Convert Image Formats | Snapzo Pro', 'Convert images to JPG, PNG, WEBP, BMP, and TIFF formats instantly for free.')
+    }
+    
+    page_title, page_desc = seo_data.get(path, seo_data['/'])
+    
+    # Passing the dynamic variables to HTML
+    return render_template_string(HTML, page_title=page_title, page_desc=page_desc)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
