@@ -119,10 +119,11 @@ HTML = '''
 
         .main { padding: 40px 20px; display: flex; flex-direction: column; align-items: center; min-height: 85vh; width: 100%; }
         
-        .tool-wrapper { display: none; width: 100%; max-width: 1100px; gap: 40px; align-items: flex-start; justify-content: space-between; margin-bottom: 40px; }
+        .tool-wrapper { display: none; width: 100%; max-width: 1100px; gap: 40px; align-items: flex-start; justify-content: space-between; margin-bottom: 40px; flex-wrap: wrap; /* NEW: flex wrap for desktop layout */ }
         .tool-wrapper.active { display: flex; }
         
-        .tool-content { flex: 1.2; text-align: left; }
+        /* Updated Desktop order for content */
+        .tool-content { flex: 1.2; text-align: left; order: 1; /* NEW: Default left on desktop */ }
         .tool-content h1 { font-size: 2.2rem; color: var(--text); margin: 0 0 15px 0; background: linear-gradient(to right, #60a5fa, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .tool-content p { font-size: 1.05rem; line-height: 1.6; color: var(--text); opacity: 0.9; }
         
@@ -132,8 +133,8 @@ HTML = '''
         
         .visual-box { background: var(--box-bg); border: 1px solid var(--border); border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 20px; color: var(--text); }
         
-        /* NEW: INSTRUCTION SECTION STYLING */
-        .how-to-use { margin-top: 30px; width: 100%; }
+        /* NEW: INSTRUCTION SECTION STYLING (Spans full width on desktop) */
+        .how-to-use { width: 100%; margin-top: 40px; border-top: 1px solid var(--border); padding-top: 25px; order: 3; /* NEW: Always third */ }
         .how-to-use h3 { color: var(--text); font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 10px;}
         .step-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
         .step-card { background: var(--box-bg); padding: 12px; border-radius: 12px; text-align: center; border: 1px solid var(--border); }
@@ -141,7 +142,8 @@ HTML = '''
         .step-card h4 { margin: 0 0 5px 0; color: var(--accent); font-size: 0.95rem; }
         .step-card p { margin: 0; font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; }
 
-        .card { flex: 1; background: var(--card); padding: 30px; border-radius: 24px; width: 100%; max-width: 450px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid var(--border); }
+        /* Updated Desktop order for card */
+        .card { flex: 1; background: var(--card); padding: 30px; border-radius: 24px; width: 100%; max-width: 450px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid var(--border); order: 2; /* NEW: Default right on desktop */ }
         .card h2 { margin-top: 0; text-align: center; font-size: 1.6rem; color: var(--text); margin-bottom: 20px; }
 
         .upload-zone { border: 2px dashed var(--accent); padding: 40px 20px; border-radius: 18px; cursor: pointer; text-align: center; background: rgba(59,130,246,0.05); position: relative; }
@@ -156,6 +158,7 @@ HTML = '''
         .btn { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top:10px; }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(59,130,246,0.4); }
 
+        /* QUILL EDITOR CUSTOM STYLES */
         #toolbar-container { background: var(--box-bg); border-radius: 10px 10px 0 0; border: 1px solid var(--border); border-bottom: none; }
         #editor-container { border-radius: 0 0 10px 10px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); height: 250px; font-size: 1rem; font-family: 'Segoe UI', sans-serif; }
         .ql-toolbar.ql-snow + .ql-container.ql-snow { border: 1px solid var(--border); }
@@ -199,9 +202,14 @@ HTML = '''
 
         @media (max-width: 900px) { 
             .tool-wrapper.active { flex-direction: column; align-items: center; gap: 30px; } 
-            .tool-content { text-align: center; width: 100%; margin-bottom: 10px; } 
-            .card { width: 100%; max-width: 100%; padding: 30px 20px; }
+            
+            /* NEW: REORDERING FOR MOBILE */
+            .card { order: 1; width: 100%; max-width: 100%; padding: 30px 20px; margin-bottom: 0; } /* Card first */
+            .tool-content { order: 2; text-align: center; width: 100%; margin-bottom: 10px; flex: auto;} /* Desc second */
+            .how-to-use { order: 3; margin-top: 20px; text-align: center;} /* Instructions third */
+            
             .feature-list li { justify-content: center; } 
+            .visual-box { margin: 0 auto 25px auto; }
             .how-to-use h3 { justify-content: center; }
             .step-grid { grid-template-columns: 1fr; gap: 10px; }
             .desktop-menu { display: none; } 
@@ -239,7 +247,7 @@ HTML = '''
     <div class="sidebar" id="sidebar">
         <h3 style="color:var(--accent); margin-top:0;">Snapzo Menu</h3>
         <a href="/passport-maker" class="menu-btn active-menu" onclick="switchTool('passport', event)" id="m-passport"><i class="fas fa-id-badge"></i> Passport Maker</a>
-        <a href="/id-card-print" class="menu-btn" onclick="switchTool('idcard', event)" id="m-idcard"><i class="fas fa-address-card"></i> ID Card Print</a>
+        <a href="/id-card-print" class="menu-btn" onclick="switchTool('idcard', event)" id="m-idcard"><i class="fas fa-address-card"></i> ID Card Print (Front+Back)</a>
         <a href="/signature-cleaner" class="menu-btn" onclick="switchTool('sign', event)" id="m-sign"><i class="fas fa-signature"></i> Signature Cleaner</a>
         <a href="/photo-sign-joiner" class="menu-btn" onclick="switchTool('joiner', event)" id="m-joiner"><i class="fas fa-object-group"></i> Photo + Sign Joiner</a>
         <a href="/image-to-text" class="menu-btn" onclick="switchTool('img2text', event)" id="m-img2text"><i class="fas fa-file-word"></i> Image to Text (OCR)</a>
@@ -260,29 +268,10 @@ HTML = '''
                 <ul class="feature-list">
                     <li><i class="fas fa-check-circle"></i> Permanent 413x531 Pixels (Official Size)</li>
                     <li><i class="fas fa-check-circle"></i> Auto-Print Name & Date on Photo</li>
+                    <li><i class="fas fa-check-circle"></i> Multiple Copies Ready to Print</li>
                 </ul>
-                
-                <div class="how-to-use">
-                    <h3><i class="fas fa-question-circle"></i> How to Use Passport Maker?</h3>
-                    <div class="step-grid">
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=300&q=80" alt="Upload Photo">
-                            <h4>1. Upload Photo</h4>
-                            <p>Select any normal front-facing photo from your mobile gallery.</p>
-                        </div>
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&q=80" alt="Enter Details">
-                            <h4>2. Add Name & Date</h4>
-                            <p>Type your Name and Date. Our AI will print it perfectly on the photo.</p>
-                        </div>
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=300&q=80" alt="Download">
-                            <h4>3. Download Print</h4>
-                            <p>Select quantity and download ready-to-print A4 PDF instantly.</p>
-                        </div>
-                    </div>
-                </div>
             </div>
+            
             <div class="card">
                 <h2>Passport Studio</h2>
                 <form method="POST" enctype="multipart/form-data">
@@ -308,6 +297,27 @@ HTML = '''
                     <a href="/rrb-photo-maker" onclick="switchTool('passport', event)">RRB Photo Maker</a>
                 </div>
             </div>
+
+            <div class="how-to-use">
+                <h3><i class="fas fa-question-circle"></i> How to Use Passport Maker?</h3>
+                <div class="step-grid">
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=300&q=80" alt="Upload Photo">
+                        <h4>1. Upload Photo</h4>
+                        <p>Select any normal front-facing photo from your mobile gallery.</p>
+                    </div>
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&q=80" alt="Enter Details">
+                        <h4>2. Add Name & Date</h4>
+                        <p>Type your Name and Date. Our AI will print it perfectly on the photo.</p>
+                    </div>
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=300&q=80" alt="Download">
+                        <h4>3. Download Print</h4>
+                        <p>Select quantity and download ready-to-print A4 PDF instantly.</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="tool-wrapper" id="tool-idcard">
@@ -316,29 +326,10 @@ HTML = '''
                 <p>Aadhar Card ya PAN Card ki Front aur Back photo ko ek perfect A4 size PDF mein merge karein. Cyber cafe jane ki zarurat nahi!</p>
                 <ul class="feature-list">
                     <li><i class="fas fa-check-circle"></i> Perfect standard size alignment</li>
+                    <li><i class="fas fa-check-circle"></i> High Quality PDF output</li>
                 </ul>
-
-                <div class="how-to-use">
-                    <h3><i class="fas fa-question-circle"></i> How to Use ID Card Joiner?</h3>
-                    <div class="step-grid">
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=300&q=80" alt="Upload Front and Back">
-                            <h4>1. Upload 2 Photos</h4>
-                            <p>Upload the Front side and Back side of your Aadhar/PAN card.</p>
-                        </div>
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&q=80" alt="AI Align">
-                            <h4>2. AI Processing</h4>
-                            <p>Our tool will automatically resize and align them like a Cyber Cafe print.</p>
-                        </div>
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=300&q=80" alt="Download">
-                            <h4>3. Get A4 PDF</h4>
-                            <p>Download the final A4 size PDF and print it directly anywhere.</p>
-                        </div>
-                    </div>
-                </div>
             </div>
+            
             <div class="card">
                 <h2>Aadhar/PAN Joiner</h2>
                 <form method="POST" enctype="multipart/form-data">
@@ -364,6 +355,27 @@ HTML = '''
                     <button class="btn"><i class="fas fa-print"></i> Generate Print PDF</button>
                 </form>
             </div>
+
+            <div class="how-to-use">
+                <h3><i class="fas fa-question-circle"></i> How to Use ID Card Joiner?</h3>
+                <div class="step-grid">
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=300&q=80" alt="Upload Front and Back">
+                        <h4>1. Upload 2 Photos</h4>
+                        <p>Upload the Front side and Back side of your Aadhar/PAN card.</p>
+                    </div>
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&q=80" alt="AI Align">
+                        <h4>2. AI Processing</h4>
+                        <p>Our tool will automatically resize and align them like a Cyber Cafe print.</p>
+                    </div>
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=300&q=80" alt="Download">
+                        <h4>3. Get A4 PDF</h4>
+                        <p>Download the final A4 size PDF and print it directly anywhere.</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="tool-wrapper" id="tool-sign">
@@ -372,29 +384,10 @@ HTML = '''
                 <p>Copy par kiye gaye sign ko upload karein. Hamara AI background ko pure white aur pen ink ko dark black kar dega online forms ke liye.</p>
                 <ul class="feature-list">
                     <li><i class="fas fa-check-circle"></i> Removes dark shadows automatically</li>
+                    <li><i class="fas fa-check-circle"></i> Official Bank/Govt size ready</li>
                 </ul>
-
-                <div class="how-to-use">
-                    <h3><i class="fas fa-question-circle"></i> How to Clean Signature?</h3>
-                    <div class="step-grid">
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=300&q=80" alt="Upload Raw Sign">
-                            <h4>1. Upload Raw Sign</h4>
-                            <p>Sign on a blank paper, click a photo with your phone and upload it.</p>
-                        </div>
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&q=80" alt="AI Magic">
-                            <h4>2. Background Removal</h4>
-                            <p>AI will remove shadows, grey background, and make pen ink pure black.</p>
-                        </div>
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=300&q=80" alt="Download">
-                            <h4>3. Download Official Sign</h4>
-                            <p>Download the perfectly cropped, clean B&W signature for exams.</p>
-                        </div>
-                    </div>
-                </div>
             </div>
+            
             <div class="card">
                 <h2>Clean Signature</h2>
                 <form method="POST" enctype="multipart/form-data">
@@ -407,6 +400,27 @@ HTML = '''
                     <button class="btn"><i class="fas fa-magic"></i> Clean & Resize</button>
                 </form>
             </div>
+
+            <div class="how-to-use">
+                <h3><i class="fas fa-question-circle"></i> How to Clean Signature?</h3>
+                <div class="step-grid">
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=300&q=80" alt="Upload Raw Sign">
+                        <h4>1. Upload Raw Sign</h4>
+                        <p>Sign on a blank paper, click a photo with your phone and upload it.</p>
+                    </div>
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&q=80" alt="AI Magic">
+                        <h4>2. Background Removal</h4>
+                        <p>AI will remove shadows, grey background, and make pen ink pure black.</p>
+                    </div>
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=300&q=80" alt="Download">
+                        <h4>3. Download Official Sign</h4>
+                        <p>Download the perfectly cropped, clean B&W signature for exams.</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="tool-wrapper" id="tool-joiner">
@@ -415,29 +429,10 @@ HTML = '''
                 <p>Govt exams (UPSC/State forms) ke liye Passport Photo ke theek niche apna Signature merge karein sirf ek click mein.</p>
                 <ul class="feature-list">
                     <li><i class="fas fa-check-circle"></i> Perfect ratio maintained</li>
+                    <li><i class="fas fa-check-circle"></i> No complex editing required</li>
                 </ul>
-
-                <div class="how-to-use">
-                    <h3><i class="fas fa-question-circle"></i> How to Merge Photo & Sign?</h3>
-                    <div class="step-grid">
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=300&q=80" alt="Upload Images">
-                            <h4>1. Upload Files</h4>
-                            <p>Upload your Passport Photo in first box and Signature in second box.</p>
-                        </div>
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&q=80" alt="Auto Merge">
-                            <h4>2. Auto Alignment</h4>
-                            <p>System automatically resizes the signature and attaches it below the photo.</p>
-                        </div>
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=300&q=80" alt="Download Result">
-                            <h4>3. Download Image</h4>
-                            <p>Download the combined single JPG image, ready for form upload.</p>
-                        </div>
-                    </div>
-                </div>
             </div>
+            
             <div class="card">
                 <h2>Merge Photo & Sign</h2>
                 <form method="POST" enctype="multipart/form-data">
@@ -463,6 +458,27 @@ HTML = '''
                     <button class="btn"><i class="fas fa-object-group"></i> Merge Together</button>
                 </form>
             </div>
+
+            <div class="how-to-use">
+                <h3><i class="fas fa-question-circle"></i> How to Merge Photo & Sign?</h3>
+                <div class="step-grid">
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=300&q=80" alt="Upload Images">
+                        <h4>1. Upload Files</h4>
+                        <p>Upload your Passport Photo in first box and Signature in second box.</p>
+                    </div>
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&q=80" alt="Auto Merge">
+                        <h4>2. Auto Alignment</h4>
+                        <p>System automatically resizes the signature and attaches it below the photo.</p>
+                    </div>
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=300&q=80" alt="Download Result">
+                        <h4>3. Download Image</h4>
+                        <p>Download the combined single JPG image, ready for form upload.</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="tool-wrapper" id="tool-img2text">
@@ -471,29 +487,10 @@ HTML = '''
                 <p>Kisi bhi photo (Notes, Books, Screenshots) mein likha hua text instantly extract karein. Copy karein aur kahin bhi use karein.</p>
                 <ul class="feature-list">
                     <li><i class="fas fa-check-circle"></i> 100% Free Client-Side Processing</li>
+                    <li><i class="fas fa-check-circle"></i> Keeps your data completely private</li>
                 </ul>
-
-                <div class="how-to-use">
-                    <h3><i class="fas fa-question-circle"></i> How to Extract Text from Image?</h3>
-                    <div class="step-grid">
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=300&q=80" alt="Upload Image">
-                            <h4>1. Upload Image</h4>
-                            <p>Select a screenshot, book page, or any image containing text.</p>
-                        </div>
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&q=80" alt="OCR Scan">
-                            <h4>2. Automatic Scan</h4>
-                            <p>Our advanced OCR scanner will read and extract characters securely in browser.</p>
-                        </div>
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=300&q=80" alt="Copy Text">
-                            <h4>3. Copy & Paste</h4>
-                            <p>The extracted text will appear in the box. Click 'Copy' to use it anywhere.</p>
-                        </div>
-                    </div>
-                </div>
             </div>
+            
             <div class="card">
                 <h2>Extract Text</h2>
                 <div class="upload-zone" onclick="document.getElementById('f-ocr').click()">
@@ -517,6 +514,27 @@ HTML = '''
                     <a href="/picture-to-text" onclick="switchTool('img2text', event)">Picture to Text</a>
                 </div>
             </div>
+
+            <div class="how-to-use">
+                <h3><i class="fas fa-question-circle"></i> How to Extract Text from Image?</h3>
+                <div class="step-grid">
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=300&q=80" alt="Upload Image">
+                        <h4>1. Upload Image</h4>
+                        <p>Select a screenshot, book page, or any image containing text.</p>
+                    </div>
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&q=80" alt="OCR Scan">
+                        <h4>2. Automatic Scan</h4>
+                        <p>Our advanced OCR scanner will read and extract characters securely in browser.</p>
+                    </div>
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=300&q=80" alt="Copy Text">
+                        <h4>3. Copy & Paste</h4>
+                        <p>The extracted text will appear in the box. Click 'Copy' to use it anywhere.</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="tool-wrapper" id="tool-textpdf">
@@ -525,29 +543,10 @@ HTML = '''
                 <p>Type your notes, format them like MS Word (Bold, Italic, Lists) and convert them into a beautiful PDF document instantly.</p>
                 <ul class="feature-list">
                     <li><i class="fas fa-check-circle"></i> Advance Text Formatting Options</li>
+                    <li><i class="fas fa-check-circle"></i> Superfast Client-Side PDF Creation</li>
                 </ul>
-
-                <div class="how-to-use">
-                    <h3><i class="fas fa-question-circle"></i> How to Convert Text to PDF?</h3>
-                    <div class="step-grid">
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=300&q=80" alt="Type Text">
-                            <h4>1. Type / Paste Text</h4>
-                            <p>Write your assignments, notes, or essays in our rich document editor.</p>
-                        </div>
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&q=80" alt="Format Text">
-                            <h4>2. Add Formatting</h4>
-                            <p>Make headings, bold texts, or bullet points using the top toolbar.</p>
-                        </div>
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=300&q=80" alt="Download PDF">
-                            <h4>3. Download PDF</h4>
-                            <p>Click 'Download PDF' and get your formatted file instantly.</p>
-                        </div>
-                    </div>
-                </div>
             </div>
+            
             <div class="card" style="max-width: 100%;">
                 <h2>Document Editor</h2>
                 <div style="margin-bottom: 20px;">
@@ -578,6 +577,27 @@ HTML = '''
                     <a href="/text-to-pdf-converter" onclick="switchTool('textpdf', event)">Text to PDF Converter</a>
                 </div>
             </div>
+
+            <div class="how-to-use">
+                <h3><i class="fas fa-question-circle"></i> How to Convert Text to PDF?</h3>
+                <div class="step-grid">
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=300&q=80" alt="Type Text">
+                        <h4>1. Type / Paste Text</h4>
+                        <p>Write your assignments, notes, or essays in our rich document editor.</p>
+                    </div>
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&q=80" alt="Format Text">
+                        <h4>2. Add Formatting</h4>
+                        <p>Make headings, bold texts, or bullet points using the top toolbar.</p>
+                    </div>
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=300&q=80" alt="Download PDF">
+                        <h4>3. Download PDF</h4>
+                        <p>Click 'Download PDF' and get your formatted file instantly.</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="tool-wrapper" id="tool-pdf">
@@ -585,30 +605,11 @@ HTML = '''
                 <h1>Images to PDF (Scanner)</h1>
                 <p>Combine multiple marksheets or documents into a single PDF file securely.</p>
                 <ul class="feature-list">
+                    <li><i class="fas fa-check-circle"></i> Secure Offline Conversion</li>
                     <li><i class="fas fa-check-circle"></i> Magic Scan (Cleans dark shadows)</li>
                 </ul>
-
-                <div class="how-to-use">
-                    <h3><i class="fas fa-question-circle"></i> How to Make Image to PDF?</h3>
-                    <div class="step-grid">
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=300&q=80" alt="Select Multiple Images">
-                            <h4>1. Select Images</h4>
-                            <p>Click upload and select one or multiple photos/marksheets from gallery.</p>
-                        </div>
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&q=80" alt="Magic Scan">
-                            <h4>2. Apply Filter (Optional)</h4>
-                            <p>Check the "Magic Scan" box if you want a clear Black & White scanned look.</p>
-                        </div>
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=300&q=80" alt="Download PDF">
-                            <h4>3. Generate PDF</h4>
-                            <p>Click generate and all your images will be securely combined into one PDF.</p>
-                        </div>
-                    </div>
-                </div>
             </div>
+            
             <div class="card">
                 <h2>Select Files</h2>
                 <form method="POST" enctype="multipart/form-data">
@@ -630,34 +631,35 @@ HTML = '''
                     <a href="/png-to-pdf" onclick="switchTool('pdf', event)">PNG to PDF</a>
                 </div>
             </div>
+
+            <div class="how-to-use">
+                <h3><i class="fas fa-question-circle"></i> How to Make Image to PDF?</h3>
+                <div class="step-grid">
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=300&q=80" alt="Select Multiple Images">
+                        <h4>1. Select Images</h4>
+                        <p>Click upload and select one or multiple photos/marksheets from gallery.</p>
+                    </div>
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&q=80" alt="Magic Scan">
+                        <h4>2. Apply Filter (Optional)</h4>
+                        <p>Check the "Magic Scan" box if you want a clear Black & White scanned look.</p>
+                    </div>
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=300&q=80" alt="Download PDF">
+                        <h4>3. Generate PDF</h4>
+                        <p>Click generate and all your images will be securely combined into one PDF.</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="tool-wrapper" id="tool-crop">
             <div class="tool-content">
                 <h1>Manual Crop Studio</h1>
                 <p>Cut unwanted parts from your photo with full control online.</p>
-                
-                <div class="how-to-use">
-                    <h3><i class="fas fa-question-circle"></i> How to Crop Photo?</h3>
-                    <div class="step-grid">
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=300&q=80" alt="Upload Image">
-                            <h4>1. Upload Image</h4>
-                            <p>Select the image you want to cut or crop.</p>
-                        </div>
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&q=80" alt="Adjust Box">
-                            <h4>2. Adjust Crop Box</h4>
-                            <p>Drag the edges of the blue box over the area you want to keep.</p>
-                        </div>
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=300&q=80" alt="Save Image">
-                            <h4>3. Crop & Save</h4>
-                            <p>Click 'Crop Now' and download your perfectly cropped picture.</p>
-                        </div>
-                    </div>
-                </div>
             </div>
+            
             <div class="card">
                 <form method="POST" enctype="multipart/form-data" id="cropForm">
                     <input type="hidden" name="tool_type" value="crop">
@@ -674,6 +676,27 @@ HTML = '''
                     <a href="/crop-photo-online" onclick="switchTool('crop', event)">Crop Photo Online</a>
                 </div>
             </div>
+
+            <div class="how-to-use">
+                <h3><i class="fas fa-question-circle"></i> How to Crop Photo?</h3>
+                <div class="step-grid">
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=300&q=80" alt="Upload Image">
+                        <h4>1. Upload Image</h4>
+                        <p>Select the image you want to cut or crop.</p>
+                    </div>
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&q=80" alt="Adjust Box">
+                        <h4>2. Adjust Crop Box</h4>
+                        <p>Drag the edges of the blue box over the area you want to keep.</p>
+                    </div>
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=300&q=80" alt="Save Image">
+                        <h4>3. Crop & Save</h4>
+                        <p>Click 'Crop Now' and download your perfectly cropped picture.</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="tool-wrapper" id="tool-compress">
@@ -682,29 +705,10 @@ HTML = '''
                 <p>Reduce photo size accurately for online form uploads without losing visual quality.</p>
                 <ul class="feature-list">
                     <li><i class="fas fa-check-circle"></i> Auto-Target Size (Just type desired KB)</li>
+                    <li><i class="fas fa-check-circle"></i> Best for SSC, UPSC, IBPS Forms</li>
                 </ul>
-
-                <div class="how-to-use">
-                    <h3><i class="fas fa-question-circle"></i> How to Compress Image Size?</h3>
-                    <div class="step-grid">
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=300&q=80" alt="Upload Large File">
-                            <h4>1. Upload Large Photo</h4>
-                            <p>Select your heavy MB photo that is getting rejected in forms.</p>
-                        </div>
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&q=80" alt="Type Target KB">
-                            <h4>2. Type Target KB</h4>
-                            <p>Enter the exact KB size you want (Example: 50 KB).</p>
-                        </div>
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=300&q=80" alt="Compress">
-                            <h4>3. Smart Compress</h4>
-                            <p>Our AI will compress it below your target size without making it blurry.</p>
-                        </div>
-                    </div>
-                </div>
             </div>
+            
             <div class="card">
                 <form method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="tool_type" value="compress">
@@ -725,6 +729,27 @@ HTML = '''
                     <p style="margin-bottom:5px;">Popular Searches:</p>
                     <a href="/reduce-image-size" onclick="switchTool('compress', event)">Reduce Image Size</a> | 
                     <a href="/compress-image-to-50kb" onclick="switchTool('compress', event)">Compress Image to 50KB</a>
+                </div>
+            </div>
+
+            <div class="how-to-use">
+                <h3><i class="fas fa-question-circle"></i> How to Compress Image Size?</h3>
+                <div class="step-grid">
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=300&q=80" alt="Upload Large File">
+                        <h4>1. Upload Large Photo</h4>
+                        <p>Select your heavy MB photo that is getting rejected in forms.</p>
+                    </div>
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&q=80" alt="Type Target KB">
+                        <h4>2. Type Target KB</h4>
+                        <p>Enter the exact KB size you want (Example: 50 KB).</p>
+                    </div>
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=300&q=80" alt="Compress">
+                        <h4>3. Smart Compress</h4>
+                        <p>Our AI will compress it below your target size without making it blurry.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -755,6 +780,7 @@ HTML = '''
                     </div>
                 </div>
             </div>
+            
             <div class="card">
                 <form method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="tool_type" value="social">
@@ -778,28 +804,8 @@ HTML = '''
             <div class="tool-content">
                 <h1>Format Converter</h1>
                 <p>Convert any image format instantly. Supports JPG, PNG, WEBP, BMP, and TIFF.</p>
-                
-                <div class="how-to-use">
-                    <h3><i class="fas fa-question-circle"></i> How to Convert Image Format?</h3>
-                    <div class="step-grid">
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=300&q=80" alt="Upload File">
-                            <h4>1. Upload File</h4>
-                            <p>Upload your WEBP, PNG, or any image file.</p>
-                        </div>
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&q=80" alt="Choose Format">
-                            <h4>2. Choose Format</h4>
-                            <p>Select the new format you need (like JPG or PNG) from the dropdown.</p>
-                        </div>
-                        <div class="step-card">
-                            <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=300&q=80" alt="Convert">
-                            <h4>3. Convert & Download</h4>
-                            <p>Click Convert and get your newly formatted image instantly.</p>
-                        </div>
-                    </div>
-                </div>
             </div>
+            
             <div class="card">
                 <form method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="tool_type" value="format">
@@ -833,6 +839,27 @@ HTML = '''
                     <a href="/webp-to-jpg" onclick="switchTool('format', event, 'jpg')">WEBP to JPG</a>
                 </div>
             </div>
+
+            <div class="how-to-use">
+                <h3><i class="fas fa-question-circle"></i> How to Convert Image Format?</h3>
+                <div class="step-grid">
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=300&q=80" alt="Upload File">
+                        <h4>1. Upload File</h4>
+                        <p>Upload your WEBP, PNG, or any image file.</p>
+                    </div>
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&q=80" alt="Choose Format">
+                        <h4>2. Choose Format</h4>
+                        <p>Select the new format you need (like JPG or PNG) from the dropdown.</p>
+                    </div>
+                    <div class="step-card">
+                        <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=300&q=80" alt="Convert">
+                        <h4>3. Convert & Download</h4>
+                        <p>Click Convert and get your newly formatted image instantly.</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="trust-section">
@@ -840,6 +867,24 @@ HTML = '''
                 <div class="stat-item"><div class="stat-value">4.9 ⭐</div><div class="stat-label">User Rating</div></div>
                 <div class="stat-item"><div class="stat-value">80M+</div><div class="stat-label">Total Users</div></div>
                 <div class="stat-item"><div class="stat-value">12M+</div><div class="stat-label">Worldwide Trusted</div></div>
+            </div>
+        </div>
+
+        <div class="testimonials">
+            <h2>What Users Say ⭐⭐⭐⭐⭐</h2>
+            <div class="testi-grid">
+                <div class="testi-card">
+                    <div class="testi-header"><img src="https://i.pravatar.cc/150?img=11" class="testi-avatar"><div><h4>Ravi Sharma</h4><p>Govt. Job Aspirant</p></div></div>
+                    <p>"Bhai strictly strict size fix hai! NTPC form ke liye exact passport ban gayi aur Name Date bhi chhap gaya."</p>
+                </div>
+                <div class="testi-card">
+                    <div class="testi-header"><img src="https://i.pravatar.cc/150?img=5" class="testi-avatar"><div><h4>Neha Verma</h4><p>College Student</p></div></div>
+                    <p>"Naya Image to Text OCR feature bahut kaam ka hai. Aur Magic Scanner se Notes bilkul clear ho jate hain PDF me!"</p>
+                </div>
+                <div class="testi-card">
+                    <div class="testi-header"><img src="https://i.pravatar.cc/150?img=60" class="testi-avatar"><div><h4>Arjun</h4><p>Govt Job Aspirant</p></div></div>
+                    <p>"Bhai ka Target KB compressor kamaal hai. Sidha 45KB likho aur file upload form ke hisab se set! Sabse best!"</p>
+                </div>
             </div>
         </div>
 
@@ -1107,7 +1152,7 @@ HTML = '''
 </html>
 '''
 
-# --- FLASK BACKEND LOGIC ---
+# --- FLASK BACKEND LOGIC (UNCHANGED) ---
 
 def strict_passport_crop(img):
     h, w = img.shape[:2]
