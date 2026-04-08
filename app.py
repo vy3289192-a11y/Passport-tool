@@ -15,7 +15,7 @@ HTML = '''
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <meta name="google-site-verification" content="TlhWO7oDD-Gp8H0gKFC3U7n7v213ccnwGp0C9OB_7Uc" />
 
@@ -58,10 +58,8 @@ HTML = '''
     </script>
 
     <style>
-        /* FIX: Sabhi elements box k andar rahenge, screen se bahar nahi jayenge */
         * { box-sizing: border-box; }
 
-        /* FIX: By Default LIGHT MODE colors */
         :root { 
             --bg: #f8fafc; 
             --card: #ffffff; 
@@ -74,7 +72,6 @@ HTML = '''
             --input-bg: #ffffff;
         }
 
-        /* DARK MODE colors */
         body.dark-mode { 
             --bg: #0f172a; 
             --card: #1e293b; 
@@ -166,13 +163,36 @@ HTML = '''
         .footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--border); width: 100%; max-width: 1100px; color: var(--text); }
         .insta-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: bold; margin-top: 15px; }
 
+        /* ==================================================================== */
+        /* MOBILE UI FIX - Yeh rule guarantee karta hai ki mobile par design ek ke neeche ek aayega */
+        /* ==================================================================== */
         @media (max-width: 900px) { 
-            .tool-wrapper.active { flex-direction: column; align-items: center; } 
-            .tool-content { text-align: center; order: -1; } 
-            .feature-list li { justify-content: center; } 
-            .desktop-menu { display: none; } 
-            .mobile-toggle { display: block; }
-            .card { padding: 25px 20px; }
+            .tool-wrapper.active { 
+                flex-direction: column !important; 
+                align-items: center !important; 
+                gap: 30px !important;
+            } 
+            .tool-content { 
+                text-align: center !important; 
+                width: 100% !important; 
+                margin-bottom: 10px !important;
+            } 
+            .feature-list li { 
+                justify-content: center !important; 
+            } 
+            .visual-box {
+                margin: 0 auto 25px auto !important;
+            }
+            .desktop-menu { display: none !important; } 
+            .mobile-toggle { display: block !important; }
+            .card { 
+                width: 100% !important; 
+                max-width: 100% !important; 
+                padding: 30px 20px !important; 
+            }
+            .card h2 {
+                margin-top: 10px !important;
+            }
         }
     </style>
 </head>
@@ -294,7 +314,7 @@ HTML = '''
                     <li><i class="fas fa-check-circle"></i> Superfast Client-Side PDF Creation</li>
                 </ul>
             </div>
-            <div class="card" style="max-width: 550px;">
+            <div class="card" style="max-width: 100%;">
                 <h2>Document Editor</h2>
                 <div style="margin-bottom: 20px;">
                     <div id="toolbar-container">
@@ -575,7 +595,6 @@ HTML = '''
             html2pdf().set(opt).from(tempDiv).save();
         }
 
-        // FIX: Toggle dark-mode class correctly
         function toggleTheme() { document.body.classList.toggle('dark-mode'); }
         
         function toggleMenu() {
@@ -675,7 +694,7 @@ HTML = '''
 </html>
 '''
 
-# --- FLASK BACKEND ---
+# --- FLASK BACKEND LOGIC ---
 
 def strict_passport_crop(img):
     h, w = img.shape[:2]
