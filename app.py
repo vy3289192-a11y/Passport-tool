@@ -135,13 +135,13 @@ HTML = '''
         <a href="/" class="nav-brand"><img src="''' + LOGO_URL + '''"><span>Snapzo Pro</span></a>
         <div class="nav-right" style="display:flex; align-items:center; gap:15px;">
             <div class="desktop-menu">
-                <a href="#passport" class="menu-btn active-menu" onclick="switchTool('passport')" id="d-passport">Passport Maker</a>
-                <a href="#textpdf" class="menu-btn" onclick="switchTool('textpdf')" id="d-textpdf">Text to PDF</a>
-                <a href="#pdf" class="menu-btn" onclick="switchTool('pdf')" id="d-pdf">Image to PDF</a>
-                <a href="#crop" class="menu-btn" onclick="switchTool('crop')" id="d-crop">Crop</a>
-                <a href="#compress" class="menu-btn" onclick="switchTool('compress')" id="d-compress">Compress</a>
-                <a href="#social" class="menu-btn" onclick="switchTool('social')" id="d-social">Social Size</a>
-                <a href="#format" class="menu-btn" onclick="switchTool('format')" id="d-format">Convert Format</a>
+                <a href="#passport" class="menu-btn active-menu" onclick="switchTool('passport', event)" id="d-passport">Passport Maker</a>
+                <a href="#textpdf" class="menu-btn" onclick="switchTool('textpdf', event)" id="d-textpdf">Text to PDF</a>
+                <a href="#pdf" class="menu-btn" onclick="switchTool('pdf', event)" id="d-pdf">Image to PDF</a>
+                <a href="#crop" class="menu-btn" onclick="switchTool('crop', event)" id="d-crop">Crop</a>
+                <a href="#compress" class="menu-btn" onclick="switchTool('compress', event)" id="d-compress">Compress</a>
+                <a href="#social" class="menu-btn" onclick="switchTool('social', event)" id="d-social">Social Size</a>
+                <a href="#format" class="menu-btn" onclick="switchTool('format', event)" id="d-format">Convert Format</a>
             </div>
             <div onclick="toggleTheme()" style="cursor:pointer; color:var(--accent); font-size:1.3rem;"><i class="fas fa-adjust"></i></div>
             <i class="fas fa-bars mobile-toggle" onclick="toggleMenu()" style="margin-left: 10px;"></i>
@@ -151,13 +151,13 @@ HTML = '''
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
     <div class="sidebar" id="sidebar">
         <h3 style="color:var(--accent); margin-top:0;">Snapzo Menu</h3>
-        <a href="#passport" class="menu-btn active-menu" onclick="switchTool('passport')" id="m-passport"><i class="fas fa-id-badge"></i> Passport Maker</a>
-        <a href="#textpdf" class="menu-btn" onclick="switchTool('textpdf')" id="m-textpdf"><i class="fas fa-file-alt"></i> Text to PDF</a>
-        <a href="#pdf" class="menu-btn" onclick="switchTool('pdf')" id="m-pdf"><i class="fas fa-images"></i> Image to PDF</a>
-        <a href="#crop" class="menu-btn" onclick="switchTool('crop')" id="m-crop"><i class="fas fa-crop-alt"></i> Manual Crop</a>
-        <a href="#compress" class="menu-btn" onclick="switchTool('compress')" id="m-compress"><i class="fas fa-compress-arrows-alt"></i> Compress</a>
-        <a href="#social" class="menu-btn" onclick="switchTool('social')" id="m-social"><i class="fas fa-share-alt"></i> Social Size</a>
-        <a href="#format" class="menu-btn" onclick="switchTool('format')" id="m-format"><i class="fas fa-exchange-alt"></i> Convert Format</a>
+        <a href="#passport" class="menu-btn active-menu" onclick="switchTool('passport', event)" id="m-passport"><i class="fas fa-id-badge"></i> Passport Maker</a>
+        <a href="#textpdf" class="menu-btn" onclick="switchTool('textpdf', event)" id="m-textpdf"><i class="fas fa-file-alt"></i> Text to PDF</a>
+        <a href="#pdf" class="menu-btn" onclick="switchTool('pdf', event)" id="m-pdf"><i class="fas fa-images"></i> Image to PDF</a>
+        <a href="#crop" class="menu-btn" onclick="switchTool('crop', event)" id="m-crop"><i class="fas fa-crop-alt"></i> Manual Crop</a>
+        <a href="#compress" class="menu-btn" onclick="switchTool('compress', event)" id="m-compress"><i class="fas fa-compress-arrows-alt"></i> Compress</a>
+        <a href="#social" class="menu-btn" onclick="switchTool('social', event)" id="m-social"><i class="fas fa-share-alt"></i> Social Size</a>
+        <a href="#format" class="menu-btn" onclick="switchTool('format', event)" id="m-format"><i class="fas fa-exchange-alt"></i> Convert Format</a>
     </div>
 
     <div class="main">
@@ -375,7 +375,10 @@ HTML = '''
             document.getElementById('overlay').classList.toggle('active');
         }
 
-        function switchTool(name) {
+        // URL Update aur Menu switch logic
+        function switchTool(name, event) {
+            if(event) event.preventDefault(); // Default link jump ko rokta hai
+            
             const tools = ['passport', 'textpdf', 'pdf', 'crop', 'compress', 'social', 'format'];
             tools.forEach(t => {
                 const el = document.getElementById('tool-'+t);
@@ -389,21 +392,36 @@ HTML = '''
             });
             window.scrollTo(0,0);
             
+            // Auto URL Update Magic (SEO Feature)
+            if(window.location.hash !== '#' + name) {
+                window.history.pushState(null, null, '#' + name);
+            }
+            
             if(window.innerWidth <= 900) {
                 document.getElementById('sidebar').classList.remove('active');
                 document.getElementById('overlay').classList.remove('active');
             }
         }
 
-        // On Page Load: Read URL Hash to open correct tool (SEO Deep Linking)
+        // Jab user direct kisi link se aaye (Jaise google se /#crop par click karke)
         window.onload = function() {
             if(window.location.hash) {
                 let tool = window.location.hash.substring(1);
                 if(['passport', 'textpdf', 'pdf', 'crop', 'compress', 'social', 'format'].includes(tool)) {
-                    switchTool(tool);
+                    switchTool(tool, null);
                 }
             }
         };
+
+        // Window ke "Back/Forward" button press karne par tool switch ho
+        window.addEventListener('popstate', function() {
+            if(window.location.hash) {
+                let tool = window.location.hash.substring(1);
+                switchTool(tool, null);
+            } else {
+                switchTool('passport', null); // Default page
+            }
+        });
 
         function handlePreview(input, pId, tId) {
             if (input.files && input.files[0]) {
