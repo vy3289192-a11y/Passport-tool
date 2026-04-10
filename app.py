@@ -155,6 +155,15 @@ HTML = '''
         .card { flex: 1; background: var(--card); padding: 30px; border-radius: 24px; width: 100%; max-width: 450px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid var(--border); order: 2; }
         .card h2 { margin-top: 0; text-align: center; font-size: 1.6rem; color: var(--text); margin-bottom: 20px; }
 
+        /* 🟢 NEW CSS FOR TEXT PAGES (Privacy, Terms, About, Contact) 🟢 */
+        .text-page-card { background: var(--card); padding: 40px; border-radius: 24px; width: 100%; max-width: 900px; margin: 0 auto; box-shadow: 0 15px 35px rgba(0,0,0,0.05); border: 1px solid var(--border); color: var(--text); line-height: 1.8; text-align: left; }
+        .text-page-card h1 { color: var(--accent); margin-top: 0; font-size: 2.2rem; border-bottom: 2px solid var(--border); padding-bottom: 15px; margin-bottom: 20px;}
+        .text-page-card h2 { color: var(--text); margin-top: 25px; font-size: 1.4rem; }
+        .text-page-card p { color: var(--text-muted); font-size: 1.05rem; margin-bottom: 15px; }
+        .text-page-card ul { color: var(--text-muted); margin-bottom: 20px; }
+        .text-page-card a { color: var(--accent); text-decoration: none; font-weight: bold; }
+        .text-page-card a:hover { text-decoration: underline; }
+
         .upload-zone { border: 2px dashed var(--accent); padding: 40px 20px; border-radius: 18px; cursor: pointer; text-align: center; background: rgba(59,130,246,0.05); position: relative; }
         .upload-zone.small { padding: 20px 10px; }
         .preview-img { max-width: 100%; max-height: 250px; border-radius: 12px; display: none; margin-top: 15px; border: 2px solid var(--accent); }
@@ -217,6 +226,7 @@ HTML = '''
             .visual-box { margin: 0 auto 25px auto; }
             .how-to-use h3 { justify-content: center; }
             .step-grid { grid-template-columns: 1fr; gap: 10px; }
+            .text-page-card { padding: 30px 20px; }
             .desktop-menu { display: none; } 
             .mobile-toggle { display: block; }
         }
@@ -252,7 +262,7 @@ HTML = '''
     <div class="sidebar" id="sidebar">
         <h3 style="color:var(--accent); margin-top:0;">Snapzo Menu</h3>
         <a href="/passport-maker" class="menu-btn active-menu" onclick="switchTool('passport', event)" id="m-passport"><i class="fas fa-id-badge"></i> Passport Maker</a>
-        <a href="/id-card-print" class="menu-btn" onclick="switchTool('idcard', event)" id="m-idcard"><i class="fas fa-address-card"></i> ID Card Print (Front+Back)</a>
+        <a href="/id-card-print" class="menu-btn" onclick="switchTool('idcard', event)" id="m-idcard"><i class="fas fa-address-card"></i> ID Card Print</a>
         <a href="/signature-cleaner" class="menu-btn" onclick="switchTool('sign', event)" id="m-sign"><i class="fas fa-signature"></i> Signature Cleaner</a>
         <a href="/photo-sign-joiner" class="menu-btn" onclick="switchTool('joiner', event)" id="m-joiner"><i class="fas fa-object-group"></i> Photo + Sign Joiner</a>
         <a href="/image-to-text" class="menu-btn" onclick="switchTool('img2text', event)" id="m-img2text"><i class="fas fa-file-word"></i> Image to Text (OCR)</a>
@@ -867,29 +877,71 @@ HTML = '''
             </div>
         </div>
 
+        <div class="tool-wrapper" id="tool-about">
+            <div class="text-page-card">
+                <h1>About Us</h1>
+                <p>Welcome to <b>Snapzo Pro</b>, your number one source for all digital image and document tools. We're dedicated to providing you the very best of online utilities, with an emphasis on speed, privacy, and exact official requirements.</p>
+                <p>Founded in 2026 by <b>Vishal</b>, Snapzo Pro has come a long way from its beginnings. When Vishal first started out, his passion for helping students and job aspirants solve daily digital problems drove him to start this platform.</p>
+                <h2>Our Mission</h2>
+                <p>Our mission is to simplify digital tasks for everyone. Whether you are filling out a government exam form (SSC, RRB, UPSC) and need an exact passport-size photo with a date, or you need to extract text from a quick screenshot, Snapzo Pro is built to save your time and money.</p>
+                <p>We hope you enjoy our products as much as we enjoy offering them to you. If you have any questions or comments, please don't hesitate to contact us.</p>
+            </div>
+        </div>
+
+        <div class="tool-wrapper" id="tool-contact">
+            <div class="text-page-card">
+                <h1>Contact Us</h1>
+                <p>We would love to hear from you! Whether you have a question about our tools, need assistance with an error, or just want to give feedback, we are here to help.</p>
+                <h2>Get in Touch</h2>
+                <ul>
+                    <li><b>Email Support:</b> For all general inquiries, please email us directly at <i>contact@snapzopro.online</i>. We aim to respond within 24-48 hours.</li>
+                    <li><b>Social Media:</b> You can also reach out to the founder directly via Instagram. Send a direct message to <a href="https://www.instagram.com/rry.vishal?igsh=YnhweDR6eDhoNXV3" target="_blank">@rry.vishal</a>.</li>
+                </ul>
+                <p>We are constantly working to improve Snapzo Pro. If you want to suggest a new tool or feature, your ideas are always welcome!</p>
+            </div>
+        </div>
+
+        <div class="tool-wrapper" id="tool-privacy">
+            <div class="text-page-card">
+                <h1>Privacy Policy</h1>
+                <p>At Snapzo Pro, accessible from https://snapzopro.online, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by Snapzo Pro and how we use it.</p>
+                <h2>Data Security & File Processing</h2>
+                <p>We understand that you upload sensitive documents (ID Cards, Signatures, Photos). <b>Snapzo Pro does not store your files.</b></p>
+                <ul>
+                    <li>Most of our tools (like Image to Text OCR and Text to PDF) run entirely in your web browser. Your data never even leaves your device.</li>
+                    <li>For tools that require server processing (like Passport Maker, Image Compressor), your files are processed securely in temporary memory and are <b>automatically and permanently deleted</b> immediately after the process is complete. We do not keep logs of your images.</li>
+                </ul>
+                <h2>Cookies and Google Analytics</h2>
+                <p>Like any other website, Snapzo Pro uses 'cookies'. These cookies are used to store information including visitors' preferences, and the pages on the website that the visitor accessed or visited. We use <b>Google Analytics</b> to understand how users interact with our site to improve the user experience. Google Analytics may collect anonymous data about your device and location.</p>
+                <h2>Consent</h2>
+                <p>By using our website, you hereby consent to our Privacy Policy and agree to its Terms and Conditions.</p>
+            </div>
+        </div>
+
+        <div class="tool-wrapper" id="tool-terms">
+            <div class="text-page-card">
+                <h1>Terms and Conditions</h1>
+                <p>Welcome to Snapzo Pro!</p>
+                <p>These terms and conditions outline the rules and regulations for the use of Snapzo Pro's Website, located at https://snapzopro.online.</p>
+                <h2>License and Usage</h2>
+                <p>Unless otherwise stated, Snapzo Pro and/or its licensors own the intellectual property rights for all material on Snapzo Pro. All intellectual property rights are reserved. You may access this from Snapzo Pro for your own personal use subjected to restrictions set in these terms and conditions.</p>
+                <p>You must not:</p>
+                <ul>
+                    <li>Republish material from Snapzo Pro.</li>
+                    <li>Sell, rent or sub-license material from Snapzo Pro.</li>
+                    <li>Reproduce, duplicate or copy the core code logic of Snapzo Pro.</li>
+                    <li>Use our tools to forge, fake, or manipulate illegal documents.</li>
+                </ul>
+                <h2>Disclaimer</h2>
+                <p>The tools provided on this website are for general utility purposes. While we strive to provide exact dimensions for official forms (like SSC, RRB), Snapzo Pro takes no responsibility if an application is rejected due to formatting issues. Users are advised to verify their final documents before submission.</p>
+            </div>
+        </div>
+
         <div class="trust-section">
             <div class="trust-stats">
                 <div class="stat-item"><div class="stat-value">4.9 ⭐</div><div class="stat-label">User Rating</div></div>
                 <div class="stat-item"><div class="stat-value">80M+</div><div class="stat-label">Total Users</div></div>
                 <div class="stat-item"><div class="stat-value">12M+</div><div class="stat-label">Worldwide Trusted</div></div>
-            </div>
-        </div>
-
-        <div class="testimonials">
-            <h2>What Users Say ⭐⭐⭐⭐⭐</h2>
-            <div class="testi-grid">
-                <div class="testi-card">
-                    <div class="testi-header"><img src="https://i.pravatar.cc/150?img=11" class="testi-avatar"><div><h4>Ravi Sharma</h4><p>Govt. Job Aspirant</p></div></div>
-                    <p>"Bhai strictly strict size fix hai! NTPC form ke liye exact passport ban gayi aur Name Date bhi chhap gaya."</p>
-                </div>
-                <div class="testi-card">
-                    <div class="testi-header"><img src="https://i.pravatar.cc/150?img=5" class="testi-avatar"><div><h4>Neha Verma</h4><p>College Student</p></div></div>
-                    <p>"Naya Image to Text OCR feature bahut kaam ka hai. Aur Magic Scanner se Notes bilkul clear ho jate hain PDF me!"</p>
-                </div>
-                <div class="testi-card">
-                    <div class="testi-header"><img src="https://i.pravatar.cc/150?img=60" class="testi-avatar"><div><h4>Arjun</h4><p>Govt Job Aspirant</p></div></div>
-                    <p>"Bhai ka Target KB compressor kamaal hai. Sidha 45KB likho aur file upload form ke hisab se set! Sabse best!"</p>
-                </div>
             </div>
         </div>
 
@@ -911,6 +963,16 @@ HTML = '''
                 </div>
             </div>
             
+            <div class="footer-links" style="margin-top: 30px;">
+                <h4>Legal & Info</h4>
+                <div class="f-grid">
+                    <a href="/about" onclick="switchTool('about', event)">About Us</a>
+                    <a href="/contact" onclick="switchTool('contact', event)">Contact Us</a>
+                    <a href="/privacy" onclick="switchTool('privacy', event)">Privacy Policy</a>
+                    <a href="/terms" onclick="switchTool('terms', event)">Terms & Conditions</a>
+                </div>
+            </div>
+
             <div style="border-top: 1px solid var(--border); padding-top: 25px; margin-top: 10px;">
                 <p>Built with ❤️ by <b>Vishal</b></p>
                 <a href="https://www.instagram.com/rry.vishal?igsh=YnhweDR6eDhoNXV3" target="_blank" class="insta-btn"><i class="fab fa-instagram"></i> Follow on Instagram</a>
@@ -926,6 +988,7 @@ HTML = '''
             theme: 'snow'
         });
 
+        // 🟢 ADDED NEW PAGES TO ROUTEMAP 🟢
         const routeMap = {
             'passport': 'passport-maker',
             'idcard': 'id-card-print',
@@ -937,9 +1000,14 @@ HTML = '''
             'crop': 'image-crop',
             'compress': 'compress',
             'social': 'social-size',
-            'format': 'convert-format'
+            'format': 'convert-format',
+            'about': 'about',
+            'contact': 'contact',
+            'privacy': 'privacy',
+            'terms': 'terms'
         };
 
+        // 🟢 ADDED NEW PAGES TO PATHMAP 🟢
         const pathMap = {
             '/passport-maker': 'passport',
             '/id-card-print': 'idcard',
@@ -952,6 +1020,10 @@ HTML = '''
             '/compress': 'compress',
             '/social-size': 'social',
             '/convert-format': 'format',
+            '/about': 'about',
+            '/contact': 'contact',
+            '/privacy': 'privacy',
+            '/terms': 'terms',
             
             '/jpg-to-png': 'format',   
             '/png-to-jpg': 'format',   
@@ -968,20 +1040,6 @@ HTML = '''
             '/compress-image-to-50kb': 'compress',
             '/youtube-thumbnail-resizer': 'social',
             '/instagram-photo-resizer': 'social'
-        };
-
-        const seoTitleMap = {
-            'passport': 'Strict AI Passport Photo Maker | Snapzo Pro',
-            'idcard': 'Aadhar & PAN Card Front Back PDF Joiner | Snapzo Pro',
-            'sign': 'Auto-Signature Cleaner & Resizer | Snapzo Pro',
-            'joiner': 'Merge Photo and Signature Online | Snapzo Pro',
-            'img2text': 'Image to Text (OCR) Converter | Snapzo Pro',
-            'textpdf': 'Rich Text to PDF Converter Online | Snapzo Pro',
-            'pdf': 'Image to PDF Converter | Combine Photos | Snapzo Pro',
-            'crop': 'Free Image Cropper Online | Snapzo Pro',
-            'compress': 'Image Compressor | Reduce Photo Size in KB | Snapzo Pro',
-            'social': 'Social Media Image Resizer | Snapzo Pro',
-            'format': 'Image Format Converter | Snapzo Pro'
         };
 
         function startOCR(input) {
@@ -1055,7 +1113,8 @@ HTML = '''
 
         function switchTool(name, event, autoFormat = null) {
             if(event) event.preventDefault(); 
-            const tools = ['passport', 'idcard', 'sign', 'joiner', 'img2text', 'textpdf', 'pdf', 'crop', 'compress', 'social', 'format'];
+            // 🟢 ADDED NEW PAGES TO SWITCH ARRAY 🟢
+            const tools = ['passport', 'idcard', 'sign', 'joiner', 'img2text', 'textpdf', 'pdf', 'crop', 'compress', 'social', 'format', 'about', 'contact', 'privacy', 'terms'];
             tools.forEach(t => {
                 const el = document.getElementById('tool-'+t);
                 if(el) { if (t === name) el.classList.add('active'); else el.classList.remove('active'); }
@@ -1171,6 +1230,7 @@ def strict_passport_crop(img):
         offset = int((h - new_h) * 0.15)
         return img[offset:offset+new_h, :]
 
+# 🟢 ADDED NEW ROUTES FOR PAGES 🟢
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/passport-maker', methods=['GET', 'POST'])
 @app.route('/id-card-print', methods=['GET', 'POST'])
@@ -1183,6 +1243,10 @@ def strict_passport_crop(img):
 @app.route('/compress', methods=['GET', 'POST'])
 @app.route('/social-size', methods=['GET', 'POST'])
 @app.route('/convert-format', methods=['GET', 'POST'])
+@app.route('/about', methods=['GET', 'POST'])
+@app.route('/contact', methods=['GET', 'POST'])
+@app.route('/privacy', methods=['GET', 'POST'])
+@app.route('/terms', methods=['GET', 'POST'])
 @app.route('/jpg-to-png', methods=['GET', 'POST'])
 @app.route('/png-to-jpg', methods=['GET', 'POST'])
 @app.route('/webp-to-jpg', methods=['GET', 'POST'])
@@ -1360,6 +1424,10 @@ def home():
         '/compress': ('Image Compressor | Reduce Photo Size in KB | Snapzo Pro', 'Reduce photo file size in KB for online form uploads without losing quality.'),
         '/social-size': ('Social Media Image Resizer | Snapzo Pro', 'Resize images perfectly for YouTube thumbnails, Instagram posts, and Facebook.'),
         '/convert-format': ('Image Format Converter | Snapzo Pro', 'Convert images to JPG, PNG, WEBP, BMP, and TIFF formats instantly for free.'),
+        '/about': ('About Us | Snapzo Pro', 'Learn more about Snapzo Pro and our mission to provide free, fast, and secure image utility tools for students and professionals.'),
+        '/contact': ('Contact Us | Snapzo Pro', 'Get in touch with the Snapzo Pro team for support, feedback, and queries.'),
+        '/privacy': ('Privacy Policy | Snapzo Pro', 'Read our privacy policy to understand how we protect your data. Snapzo Pro does not store your files permanently.'),
+        '/terms': ('Terms & Conditions | Snapzo Pro', 'Read the terms and conditions for using Snapzo Pro tools.'),
         '/jpg-to-png': ('JPG to PNG Converter Online | Snapzo Pro', 'Convert JPG images to transparent PNG format online for free without losing quality.'),
         '/png-to-jpg': ('PNG to JPG Converter Online | Snapzo Pro', 'Convert PNG images to standard JPG format online for free instantly.'),
         '/webp-to-jpg': ('WEBP to JPG Converter Online | Snapzo Pro', 'Convert WEBP web images to standard JPG format online for free.'),
@@ -1379,7 +1447,6 @@ def home():
     
     page_title, page_desc = seo_data.get(path, seo_data['/'])
     
-    # 🟢 DYNAMIC BREADCRUMB LOGIC 🟢
     breadcrumb_schema = ""
     if path != '/':
         tool_name = page_title.split(' | ')[0]
