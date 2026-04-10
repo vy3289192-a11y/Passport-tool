@@ -5,6 +5,7 @@ import io
 from reportlab.pdfgen import canvas as pdf_canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.utils import ImageReader
+import json
 
 app = Flask(__name__)
 
@@ -24,9 +25,9 @@ HTML = '''
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-TJ3VTE8QJE');
     </script>
+
     <title>{{ page_title }}</title>
     <meta name="description" content="{{ page_desc }}">
     
@@ -34,7 +35,7 @@ HTML = '''
     <meta property="og:title" content="{{ page_title }}" />
     <meta property="og:description" content="{{ page_desc }}" />
     <meta property="og:image" content="''' + LOGO_URL + '''" />
-    <meta property="og:url" content="https://snapzopro.online" />
+    <meta property="og:url" content="https://snapzopro.online{{ request_path }}" />
     
     <link rel="icon" href="''' + LOGO_URL + '''">
     <link rel="apple-touch-icon" href="''' + LOGO_URL + '''">
@@ -56,6 +57,9 @@ HTML = '''
       "url": "https://snapzopro.online/"
     }
     </script>
+
+    {{ breadcrumb_schema | safe }}
+
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -1374,7 +1378,32 @@ def home():
     }
     
     page_title, page_desc = seo_data.get(path, seo_data['/'])
-    return render_template_string(HTML, page_title=page_title, page_desc=page_desc)
+    
+    # 🟢 DYNAMIC BREADCRUMB LOGIC 🟢
+    breadcrumb_schema = ""
+    if path != '/':
+        tool_name = page_title.split(' | ')[0]
+        breadcrumb_schema = f'''
+        <script type="application/ld+json">
+        {{
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [{{
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://snapzopro.online/"
+          }},{{
+            "@type": "ListItem",
+            "position": 2,
+            "name": "{tool_name}",
+            "item": "https://snapzopro.online{path}"
+          }}]
+        }}
+        </script>
+        '''
+        
+    return render_template_string(HTML, page_title=page_title, page_desc=page_desc, request_path=path, breadcrumb_schema=breadcrumb_schema)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
