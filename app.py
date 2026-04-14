@@ -1278,6 +1278,8 @@ def home():
                 f_back = request.files.get('back')
                 img_f = cv2.imdecode(np.frombuffer(f_front.read(), np.uint8), cv2.IMREAD_COLOR)
                 img_b = cv2.imdecode(np.frombuffer(f_back.read(), np.uint8), cv2.IMREAD_COLOR)
+                if not allowed_file(f_front.filename) or not allowed_file(f_back.filename):
+    return "Invalid file", 400
                 
                 pdf_io = io.BytesIO()
                 c = pdf_canvas.Canvas(pdf_io, pagesize=A4)
@@ -1307,6 +1309,8 @@ def home():
                 f_sign = request.files.get('sign')
                 img_p = cv2.imdecode(np.frombuffer(f_photo.read(), np.uint8), cv2.IMREAD_COLOR)
                 img_s = cv2.imdecode(np.frombuffer(f_sign.read(), np.uint8), cv2.IMREAD_COLOR)
+                if not allowed_file(f_photo.filename) or not allowed_file(f_sign.filename):
+    return "Invalid file", 400
                 
                 face = cv2.resize(strict_passport_crop(img_p), (413, 531))
                 sign_resized = cv2.resize(img_s, (413, 150))
@@ -1323,7 +1327,7 @@ def home():
                 c = pdf_canvas.Canvas(pdf_io, pagesize=A4)
                 for f in files:
                     img = cv2.imdecode(np.frombuffer(f.read(), np.uint8), cv2.IMREAD_COLOR)
-                    if img is not None and img.shape[1] > 1500:
+                   if img is not None and img.shape[1] > 1500:
     img = cv2.resize(img, (1000, int(img.shape[0]*1000/img.shape[1])))
                     if img is not None:
                         if apply_magic:
@@ -1339,7 +1343,7 @@ def home():
                 return send_file(pdf_io, mimetype='application/pdf', as_attachment=True, download_name='snapzo_scanned.pdf')
 
             file = request.files.get('file')
-            if file and not allowed_file(file.filename):
+           if file and not allowed_file(file.filename):
     return "Invalid file type", 400
             img = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
 
@@ -1378,19 +1382,22 @@ def home():
                     c.save(); pdf_io.seek(0)
                     return send_file(pdf_io, mimetype='application/pdf', as_attachment=True, download_name='passport_ready.pdf')
                 return send_file(io.BytesIO(buf), mimetype='image/jpeg', as_attachment=True, download_name='passport_ready.jpg')
+elif tool_type == 'crop':
+    x = int(request.form.get('x'))
+    y = int(request.form.get('y'))
+    w = int(request.form.get('width'))
+    h = int(request.form.get('height'))
 
-            elif tool_type == 'crop':
-                h_img, w_img = img.shape[:2]
+    h_img, w_img = img.shape[:2]
 
-x = max(0, x)
-y = max(0, y)
-w = min(w, w_img - x)
-h = min(h, h_img - y)
-                x, y, w, h = int(request.form.get('x')), int(request.form.get('y')), int(request.form.get('width')), int(request.form.get('height'))
-                cropped = img[y:y+h, x:x+w]
-                _, buffer = cv2.imencode('.jpg', cropped)
-                return send_file(io.BytesIO(buffer), mimetype='image/jpeg', as_attachment=True, download_name='cropped.jpg')
+    x = max(0, x)
+    y = max(0, y)
+    w = min(w, w_img - x)
+    h = min(h, h_img - y)
 
+    cropped = img[y:y+h, x:x+w]
+    _, buffer = cv2.imencode('.jpg', cropped)
+    return send_file(io.BytesIO(buffer), mimetype='image/jpeg', as_attachment=True, download_name='cropped.jpg')
             elif tool_type == 'compress':
                 target_kb = int(request.form.get("target_kb", 50))
                 target_bytes = target_kb * 1024
