@@ -8,8 +8,11 @@ from reportlab.lib.utils import ImageReader
 import json
 
 app = Flask(__name__)
+app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
 
 LOGO_URL = "https://i.ibb.co/Q73xvDmw/46658.jpg"
+def allowed_file(filename):
+    return filename.lower().endswith(('.png','.jpg','.jpeg','.webp'))
 
 HTML = '''
 <!DOCTYPE html>
@@ -1313,11 +1316,15 @@ def home():
 
             if tool_type == 'pdf':
                 files = request.files.getlist('file')
+                if len(files) > 10:
+    return "Max 10 images allowed", 400
                 apply_magic = request.form.get('magic_scan') == 'yes'
                 pdf_io = io.BytesIO()
                 c = pdf_canvas.Canvas(pdf_io, pagesize=A4)
                 for f in files:
                     img = cv2.imdecode(np.frombuffer(f.read(), np.uint8), cv2.IMREAD_COLOR)
+                    if img is not None and img.shape[1] > 1500:
+    img = cv2.resize(img, (1000, int(img.shape[0]*1000/img.shape[1])))
                     if img is not None:
                         if apply_magic:
                             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -1332,6 +1339,8 @@ def home():
                 return send_file(pdf_io, mimetype='application/pdf', as_attachment=True, download_name='snapzo_scanned.pdf')
 
             file = request.files.get('file')
+            if file and not allowed_file(file.filename):
+    return "Invalid file type", 400
             img = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
 
             if tool_type == 'passport':
@@ -1371,6 +1380,12 @@ def home():
                 return send_file(io.BytesIO(buf), mimetype='image/jpeg', as_attachment=True, download_name='passport_ready.jpg')
 
             elif tool_type == 'crop':
+                h_img, w_img = img.shape[:2]
+
+x = max(0, x)
+y = max(0, y)
+w = min(w, w_img - x)
+h = min(h, h_img - y)
                 x, y, w, h = int(request.form.get('x')), int(request.form.get('y')), int(request.form.get('width')), int(request.form.get('height'))
                 cropped = img[y:y+h, x:x+w]
                 _, buffer = cv2.imencode('.jpg', cropped)
@@ -1387,7 +1402,7 @@ def home():
                     encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), quality]
                     _, buffer = cv2.imencode('.jpg', img, encode_param)
                 scale = 1.0
-                while len(buffer) > target_bytes and scale > 0.1:
+                for _ in range(10):
                     scale -= 0.1
                     new_w = int(img.shape[1] * scale)
                     new_h = int(img.shape[0] * scale)
@@ -1408,8 +1423,8 @@ def home():
                 mime = f'image/{f}' if f != 'jpg' else 'image/jpeg'
                 return send_file(io.BytesIO(buffer), mimetype=mime, as_attachment=True, download_name=f'converted.{f}')
 
-        except Exception as e: return f"Error: {str(e)}", 500
-
+        except Exception:
+    return "Server Error", 500
     path = request.path
     seo_data = {
         '/': ('Snapzo Pro | Free AI Passport Photo Maker & Image Tools', 'Free online AI passport size photo maker, image to PDF converter, Text to PDF, Image to Text (OCR), and compressor.'),
