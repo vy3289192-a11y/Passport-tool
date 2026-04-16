@@ -21,8 +21,8 @@ HTML = '''
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-   
     <meta name="google-site-verification" content="TlhWO7oDD-Gp8H0gKFC3U7n7v213ccnwGp0C9OB_7Uc" />
+    
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-TJ3VTE8QJE"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -30,15 +30,16 @@ HTML = '''
       gtag('js', new Date());
       gtag('config', 'G-TJ3VTE8QJE');
     </script>
-    <title> Snapzo Pro - Free AI Tools for SSC, RRB, UPSC | Passport Photo, Signature & Documents</title>
-    <meta name="description" content="{{ page_desc }}">
-   
+
+    <title>Snapzo Pro - Free AI Tools for SSC, RRB, UPSC | Passport Photo, Signature & Documents</title>
+    <meta name="description" content="Snapzo Pro - Free AI tools for SSC, RRB, UPSC & government exams. Passport size photo maker, signature cleaner, ID card joiner, image to PDF, compress and more. 100% Free & Private.">
+
     <meta property="og:site_name" content="Snapzo Pro" />
-    <meta property="og:title" content="{{ page_title }}" />
-    <meta property="og:description" content="{{ page_desc }}" />
+    <meta property="og:title" content="Snapzo Pro - Free AI Tools for SSC, RRB, UPSC" />
+    <meta property="og:description" content="Free AI passport photo maker, signature cleaner, ID card joiner and document tools for government exams. 100% Free & Private." />
     <meta property="og:image" content="''' + LOGO_URL + '''" />
     <meta property="og:url" content="https://snapzopro.online{{ request_path }}" />
-   
+
     <link rel="icon" href="''' + LOGO_URL + '''">
     <link rel="apple-touch-icon" href="''' + LOGO_URL + '''">
    
