@@ -9,8 +9,12 @@ import json
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
 LOGO_URL = "https://i.ibb.co/Q73xvDmw/46658.jpg"
+
+
 def allowed_file(filename):
-    return filename.lower().endswith(('.png','.jpg','.jpeg','.webp'))
+    return filename.lower().endswith(('.png', '.jpg', '.jpeg', '.webp'))
+
+
 HTML = '''
 <!DOCTYPE html>
 <html lang="en">
@@ -1161,6 +1165,8 @@ HTML = '''
 </html>
 '''
 # --- FLASK BACKEND LOGIC ---
+
+
 def strict_passport_crop(img):
     h, w = img.shape[:2]
     target_ratio = 0.777
@@ -1173,6 +1179,8 @@ def strict_passport_crop(img):
         offset = int((h - new_h) * 0.15)
         return img[offset:offset+new_h, :]
 # 🟢 ADDED NEW ROUTES FOR PAGES 🟢
+
+
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/passport-maker', methods=['GET', 'POST'])
 @app.route('/id-card-print', methods=['GET', 'POST'])
@@ -1208,24 +1216,28 @@ def home():
     if request.method == 'POST':
         try:
             tool_type = request.form.get('tool_type')
-           
+
             if tool_type == 'textpdf':
                 return "Use Client-Side PDF Generator", 400
             if tool_type == 'idcard':
                 f_front = request.files.get('front')
                 f_back = request.files.get('back')
-                img_f = cv2.imdecode(np.frombuffer(f_front.read(), np.uint8), cv2.IMREAD_COLOR)
-                img_b = cv2.imdecode(np.frombuffer(f_back.read(), np.uint8), cv2.IMREAD_COLOR)
+                img_f = cv2.imdecode(np.frombuffer(
+                    f_front.read(), np.uint8), cv2.IMREAD_COLOR)
+                img_b = cv2.imdecode(np.frombuffer(
+                    f_back.read(), np.uint8), cv2.IMREAD_COLOR)
                 if not allowed_file(f_front.filename) or not allowed_file(f_back.filename):
                     return "Invalid file", 400
-               
+
                 pdf_io = io.BytesIO()
                 c = pdf_canvas.Canvas(pdf_io, pagesize=A4)
                 _, buf_f = cv2.imencode('.jpg', img_f)
                 _, buf_b = cv2.imencode('.jpg', img_b)
-               
-                c.drawImage(ImageReader(io.BytesIO(buf_f)), 150, 500, width=300, height=190)
-                c.drawImage(ImageReader(io.BytesIO(buf_b)), 150, 290, width=300, height=190)
+
+                c.drawImage(ImageReader(io.BytesIO(buf_f)),
+                            150, 500, width=300, height=190)
+                c.drawImage(ImageReader(io.BytesIO(buf_b)),
+                            150, 290, width=300, height=190)
                 c.showPage()
                 c.save()
                 pdf_io.seek(0)
@@ -1235,9 +1247,11 @@ def home():
                 if not file or not allowed_file(file.filename):
                     return "Invalid or no file uploaded", 400
 
-                img = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
+                img = cv2.imdecode(np.frombuffer(
+                    file.read(), np.uint8), cv2.IMREAD_COLOR)
                 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-                _, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                _, thresh = cv2.threshold(
+                    gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
                 coords = cv2.findNonZero(255 - thresh)
 
                 if coords is None:
@@ -1246,18 +1260,21 @@ def home():
                 x, y, w, h = cv2.boundingRect(coords)
                 cropped = thresh[y:y+h, x:x+w]
                 # Better border for official use
-                cropped = cv2.copyMakeBorder(cropped, 40, 40, 40, 40, cv2.BORDER_CONSTANT, value=[255, 255, 255])
+                cropped = cv2.copyMakeBorder(
+                    cropped, 40, 40, 40, 40, cv2.BORDER_CONSTANT, value=[255, 255, 255])
                 _, buf = cv2.imencode('.png', cropped)
                 return send_file(io.BytesIO(buf), mimetype='image/png', as_attachment=True, download_name='clean_signature.png')
-            
+
             if tool_type == 'joiner':
                 f_photo = request.files.get('photo')
                 f_sign = request.files.get('sign')
-                img_p = cv2.imdecode(np.frombuffer(f_photo.read(), np.uint8), cv2.IMREAD_COLOR)
-                img_s = cv2.imdecode(np.frombuffer(f_sign.read(), np.uint8), cv2.IMREAD_COLOR)
+                img_p = cv2.imdecode(np.frombuffer(
+                    f_photo.read(), np.uint8), cv2.IMREAD_COLOR)
+                img_s = cv2.imdecode(np.frombuffer(
+                    f_sign.read(), np.uint8), cv2.IMREAD_COLOR)
                 if not allowed_file(f_photo.filename) or not allowed_file(f_sign.filename):
                     return "Invalid file", 400
-               
+
                 face = cv2.resize(strict_passport_crop(img_p), (413, 531))
                 sign_resized = cv2.resize(img_s, (413, 150))
                 merged = np.vstack((face, sign_resized))
@@ -1267,23 +1284,28 @@ def home():
                 files = request.files.getlist('file')
                 if len(files) > 10:
                     return "Max 10 images allowed", 400
-               
+
                 apply_magic = request.form.get('magic_scan') == 'yes'
                 pdf_io = io.BytesIO()
                 c = pdf_canvas.Canvas(pdf_io, pagesize=A4)
                 for f in files:
-                    img = cv2.imdecode(np.frombuffer(f.read(), np.uint8), cv2.IMREAD_COLOR)
+                    img = cv2.imdecode(np.frombuffer(
+                        f.read(), np.uint8), cv2.IMREAD_COLOR)
                     if img is not None and img.shape[1] > 1500:
-                        img = cv2.resize(img, (1000, int(img.shape[0]*1000/img.shape[1])))
+                        img = cv2.resize(
+                            img, (1000, int(img.shape[0]*1000/img.shape[1])))
                     if img is not None:
                         if apply_magic:
                             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-                            clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
+                            clahe = cv2.createCLAHE(
+                                clipLimit=2.0, tileGridSize=(8, 8))
                             enhanced = clahe.apply(gray)
-                            _, img = cv2.threshold(enhanced, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                            _, img = cv2.threshold(
+                                enhanced, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
                             img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
                         _, buf = cv2.imencode('.jpg', img)
-                        c.drawImage(ImageReader(io.BytesIO(buf)), 50, 50, width=500, height=700)
+                        c.drawImage(ImageReader(io.BytesIO(buf)),
+                                    50, 50, width=500, height=700)
                         c.showPage()
                 c.save()
                 pdf_io.seek(0)
@@ -1291,37 +1313,44 @@ def home():
             file = request.files.get('file')
             if file and not allowed_file(file.filename):
                 return "Invalid file type", 400
-           
-            img = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
-                                                if tool_type == 'passport':
+
+            img = cv2.imdecode(np.frombuffer(
+                file.read(), np.uint8), cv2.IMREAD_COLOR)
+            if tool_type == 'passport':
                 face = cv2.resize(strict_passport_crop(img), (413, 531))
                 print_name = request.form.get("print_name", "").strip().upper()
                 print_date = request.form.get("print_date", "").strip()
 
                 if print_name or print_date:
                     # Bottom white bar for text
-                    cv2.rectangle(face, (0, 531-90), (413, 531), (255,255,255), -1)
+                    cv2.rectangle(face, (0, 531-90), (413, 531),
+                                  (255, 255, 255), -1)
                     font = cv2.FONT_HERSHEY_SIMPLEX
 
                     if print_name and print_date:
                         # Name
                         n_size = cv2.getTextSize(print_name, font, 0.78, 2)[0]
-                        cv2.putText(face, print_name, ((413 - n_size[0])//2, 531-58), font, 0.78, (0,0,0), 2, cv2.LINE_AA)
+                        cv2.putText(face, print_name, ((
+                            413 - n_size[0])//2, 531-58), font, 0.78, (0, 0, 0), 2, cv2.LINE_AA)
                         # Date
                         d_size = cv2.getTextSize(print_date, font, 0.62, 2)[0]
-                        cv2.putText(face, print_date, ((413 - d_size[0])//2, 531-28), font, 0.62, (0,0,0), 2, cv2.LINE_AA)
+                        cv2.putText(face, print_date, ((
+                            413 - d_size[0])//2, 531-28), font, 0.62, (0, 0, 0), 2, cv2.LINE_AA)
 
                     elif print_name:
                         n_size = cv2.getTextSize(print_name, font, 0.82, 2)[0]
-                        cv2.putText(face, print_name, ((413 - n_size[0])//2, 531-45), font, 0.82, (0,0,0), 2, cv2.LINE_AA)
+                        cv2.putText(face, print_name, ((
+                            413 - n_size[0])//2, 531-45), font, 0.82, (0, 0, 0), 2, cv2.LINE_AA)
 
                     elif print_date:
                         d_size = cv2.getTextSize(print_date, font, 0.72, 2)[0]
-                        cv2.putText(face, print_date, ((413 - d_size[0])//2, 531-38), font, 0.72, (0,0,0), 2, cv2.LINE_AA)
+                        cv2.putText(face, print_date, ((
+                            413 - d_size[0])//2, 531-38), font, 0.72, (0, 0, 0), 2, cv2.LINE_AA)
 
                 # Nice border for better printing
-                bordered = cv2.copyMakeBorder(face, 12, 12, 12, 12, cv2.BORDER_CONSTANT, value=[245, 245, 245])
-                
+                bordered = cv2.copyMakeBorder(
+                    face, 12, 12, 12, 12, cv2.BORDER_CONSTANT, value=[245, 245, 245])
+
                 bh, bw = bordered.shape[:2]
                 canvas = np.ones((2500, 1800, 3), dtype=np.uint8) * 255
                 count = max(1, min(int(request.form.get("count", 8)), 12))
@@ -1330,35 +1359,42 @@ def home():
                     r, c = i // 3, i % 3
                     start_y = r * (bh + 40) + 70
                     start_x = c * (bw + 30) + 70
-                    canvas[start_y:start_y + bh, start_x:start_x + bw] = bordered
+                    canvas[start_y:start_y + bh,
+                           start_x:start_x + bw] = bordered
 
-                final = canvas[:((count-1)//3 + 1) * (bh + 40) + 100, :min(count, 3) * (bw + 30) + 100]
+                final = canvas[:((count-1)//3 + 1) * (bh + 40) +
+                               100, :min(count, 3) * (bw + 30) + 100]
 
                 _, buf = cv2.imencode('.jpg', final)
 
                 if request.form.get("type") == "pdf":
                     pdf_io = io.BytesIO()
                     c = pdf_canvas.Canvas(pdf_io, pagesize=A4)
-                    c.drawImage(ImageReader(io.BytesIO(buf)), 50, 100, width=500, height=650)
+                    c.drawImage(ImageReader(io.BytesIO(buf)),
+                                50, 100, width=500, height=650)
                     c.save()
                     pdf_io.seek(0)
                     return send_file(pdf_io, mimetype='application/pdf', as_attachment=True, download_name='passport_ready.pdf')
 
                 return send_file(io.BytesIO(buf), mimetype='image/jpeg', as_attachment=True, download_name='passport_ready.jpg')
-               
-                bordered = cv2.copyMakeBorder(face, 10, 10, 10, 10, cv2.BORDER_CONSTANT, value=[245, 245, 245])
+
+                bordered = cv2.copyMakeBorder(
+                    face, 10, 10, 10, 10, cv2.BORDER_CONSTANT, value=[245, 245, 245])
                 bh, bw = bordered.shape[:2]
                 canvas = np.ones((2500, 1800, 3), dtype=np.uint8) * 255
                 count = int(request.form.get("count", 8))
                 for i in range(min(count, 12)):
                     r, c = i // 3, i % 3
-                    canvas[r*(bh+40)+70:r*(bh+40)+70+bh, c*(bw+30)+70:c*(bw+30)+70+bw] = bordered
-                final = canvas[:((count-1)//3+1)*(bh+40)+100, :(3 if count>=3 else count)*(bw+30)+100]
+                    canvas[r*(bh+40)+70:r*(bh+40)+70+bh, c *
+                           (bw+30)+70:c*(bw+30)+70+bw] = bordered
+                final = canvas[:((count-1)//3+1)*(bh+40)+100,
+                               :(3 if count >= 3 else count)*(bw+30)+100]
                 _, buf = cv2.imencode('.jpg', final)
                 if request.form.get("type") == "pdf":
                     pdf_io = io.BytesIO()
                     c = pdf_canvas.Canvas(pdf_io, pagesize=A4)
-                    c.drawImage(ImageReader(io.BytesIO(buf)), 50, 100, width=500, height=650)
+                    c.drawImage(ImageReader(io.BytesIO(buf)),
+                                50, 100, width=500, height=650)
                     c.save()
                     pdf_io.seek(0)
                     return send_file(pdf_io, mimetype='application/pdf', as_attachment=True, download_name='passport_ready.pdf')
@@ -1391,12 +1427,14 @@ def home():
                     scale -= 0.1
                     new_w = int(img.shape[1] * scale)
                     new_h = int(img.shape[0] * scale)
-                    resized = cv2.resize(img, (new_w, new_h), interpolation=cv2.INTER_AREA)
+                    resized = cv2.resize(
+                        img, (new_w, new_h), interpolation=cv2.INTER_AREA)
                     _, buffer = cv2.imencode('.jpg', resized, encode_param)
                 return send_file(io.BytesIO(buffer), mimetype='image/jpeg', as_attachment=True, download_name=f'compressed_{target_kb}kb.jpg')
             elif tool_type == 'social':
                 p = request.form.get('platform')
-                dim = (1280, 720) if p=='yt' else (1080, 1080) if p=='insta' else (820, 312)
+                dim = (1280, 720) if p == 'yt' else (
+                    1080, 1080) if p == 'insta' else (820, 312)
                 res = cv2.resize(img, dim)
                 _, buffer = cv2.imencode('.jpg', res)
                 return send_file(io.BytesIO(buffer), mimetype='image/jpeg', as_attachment=True, download_name='social_resized.jpg')
@@ -1441,9 +1479,9 @@ def home():
         '/youtube-thumbnail-resizer': ('YouTube Thumbnail Resizer | Snapzo Pro', 'Resize images perfectly for YouTube thumbnails (1280x720) in one click.'),
         '/instagram-photo-resizer': ('Instagram Photo Resizer | Snapzo Pro', 'Resize images perfectly for Instagram Posts (1080x1080) for free.')
     }
-   
+
     page_title, page_desc = seo_data.get(path, seo_data['/'])
-   
+
     breadcrumb_schema = ""
     if path != '/':
         tool_name = page_title.split(' | ')[0]
@@ -1466,7 +1504,9 @@ def home():
         }}
         </script>
         '''
-       
+
     return render_template_string(HTML, page_title=page_title, page_desc=page_desc, request_path=path, breadcrumb_schema=breadcrumb_schema)
+
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
