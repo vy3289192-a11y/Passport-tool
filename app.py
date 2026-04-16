@@ -849,7 +849,7 @@ HTML = '''
             <div class="text-page-card">
                 <h1>About Us</h1>
                 <p>Welcome to <b>Snapzo Pro</b>, your number one source for all digital image and document tools. We're dedicated to providing you the very best of online utilities, with an emphasis on speed, privacy, and exact official requirements.</p>
-                <p>Founded in 2026 by <b>Vishal</b>, Snapzo Pro has come a long way from its beginnings. When Vishal first started out, his passion for helping students and job aspirants solve daily digital problems drove him to start this platform.</p>
+                <p>Founded in 2025 by <b>Vishal</b>, Snapzo Pro has come a long way from its beginnings. When Vishal first started out, his passion for helping students and job aspirants solve daily digital problems drove him to start this platform.</p>
                 <h2>Our Mission</h2>
                 <p>Our mission is to simplify digital tasks for everyone. Whether you are filling out a government exam form (SSC, RRB, UPSC) and need an exact passport-size photo with a date, or you need to extract text from a quick screenshot, Snapzo Pro is built to save your time and money.</p>
                 <p>We hope you enjoy our products as much as we enjoy offering them to you. If you have any questions or comments, please don't hesitate to contact us.</p>
@@ -1233,7 +1233,7 @@ def home():
             if tool_type == 'sign':
                 file = request.files.get('file')
                 if not file or not allowed_file(file.filename):
-                 return "Invalid or no file uploaded", 400
+                    return "Invalid or no file uploaded", 400
 
                 img = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
                 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -1241,13 +1241,15 @@ def home():
                 coords = cv2.findNonZero(255 - thresh)
 
                 if coords is None:
-                    return "Signature nahi detect hui. Clear aur bright photo upload karein.", 400
+                    return "Signature nahi detect hui. Clear aur bright background wali photo upload karein.", 400
 
                 x, y, w, h = cv2.boundingRect(coords)
                 cropped = thresh[y:y+h, x:x+w]
-                cropped = cv2.copyMakeBorder(cropped, 30, 30, 30, 30, cv2.BORDER_CONSTANT, value=[255, 255, 255])
+                # Better border for official use
+                cropped = cv2.copyMakeBorder(cropped, 40, 40, 40, 40, cv2.BORDER_CONSTANT, value=[255, 255, 255])
                 _, buf = cv2.imencode('.png', cropped)
                 return send_file(io.BytesIO(buf), mimetype='image/png', as_attachment=True, download_name='clean_signature.png')
+            
             if tool_type == 'joiner':
                 f_photo = request.files.get('photo')
                 f_sign = request.files.get('sign')
