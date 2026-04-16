@@ -1415,21 +1415,29 @@ def home():
             elif tool_type == 'compress':
                 target_kb = int(request.form.get("target_kb", 50))
                 target_bytes = target_kb * 1024
-                quality = 95
+                quality = 92
+
+                # First try with quality reduction
                 encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), quality]
                 _, buffer = cv2.imencode('.jpg', img, encode_param)
-                while len(buffer) > target_bytes and quality > 15:
+
+                # Reduce quality gradually
+                while len(buffer) > target_bytes and quality > 20:
                     quality -= 5
                     encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), quality]
                     _, buffer = cv2.imencode('.jpg', img, encode_param)
-                scale = 1.0
-                for _ in range(10):
-                    scale -= 0.1
-                    new_w = int(img.shape[1] * scale)
-                    new_h = int(img.shape[0] * scale)
-                    resized = cv2.resize(
-                        img, (new_w, new_h), interpolation=cv2.INTER_AREA)
-                    _, buffer = cv2.imencode('.jpg', resized, encode_param)
+
+                # If still bigger, then resize + quality
+                if len(buffer) > target_bytes:
+                    scale = 0.95
+                    while len(buffer) > target_bytes and scale > 0.4:
+                        scale -= 0.05
+                        new_w = int(img.shape[1] * scale)
+                        new_h = int(img.shape[0] * scale)
+                        resized = cv2.resize(
+                            img, (new_w, new_h), interpolation=cv2.INTER_AREA)
+                        _, buffer = cv2.imencode('.jpg', resized, encode_param)
+
                 return send_file(io.BytesIO(buffer), mimetype='image/jpeg', as_attachment=True, download_name=f'compressed_{target_kb}kb.jpg')
             elif tool_type == 'social':
                 p = request.form.get('platform')
