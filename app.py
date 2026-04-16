@@ -905,12 +905,25 @@ HTML = '''
                 <p>The tools provided on this website are for general utility purposes. While we strive to provide exact dimensions for official forms (like SSC, RRB), Snapzo Pro takes no responsibility if an application is rejected due to formatting issues. Users are advised to verify their final documents before submission.</p>
             </div>
         </div>
-        <div class="trust-section">
+                <div class="trust-section">
             <div class="trust-stats">
-                <div class="stat-item"><div class="stat-value">4.9 ⭐</div><div class="stat-label">User Rating</div></div>
-                <div class="stat-item"><div class="stat-value">80M+</div><div class="stat-label">Total Users</div></div>
-                <div class="stat-item"><div class="stat-value">12M+</div><div class="stat-label">Worldwide Trusted</div></div>
+                <div class="stat-item">
+                    <div class="stat-value">4.9 ⭐</div>
+                    <div class="stat-label">User Rating</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">Fast & Free</div>
+                    <div class="stat-label">No Login Required</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">100% Private</div>
+                    <div class="stat-label">Files Auto Delete</div>
+                </div>
             </div>
+            <p style="margin-top:25px; color:var(--text-muted); font-size:0.95rem;">
+                Made with ❤️ for Indian students by Vishal (Varanasi)
+            </p>
+        </div>
         </div>
         <div class="footer">
             <div class="footer-links">
@@ -1222,22 +1235,31 @@ def home():
             if tool_type == 'idcard':
                 f_front = request.files.get('front')
                 f_back = request.files.get('back')
+
+                if not f_front or not f_back:
+                    return "Both front and back sides are required", 400
+
                 img_f = cv2.imdecode(np.frombuffer(
                     f_front.read(), np.uint8), cv2.IMREAD_COLOR)
                 img_b = cv2.imdecode(np.frombuffer(
                     f_back.read(), np.uint8), cv2.IMREAD_COLOR)
-                if not allowed_file(f_front.filename) or not allowed_file(f_back.filename):
-                    return "Invalid file", 400
+
+                if img_f is None or img_b is None:
+                    return "Invalid image files", 400
 
                 pdf_io = io.BytesIO()
                 c = pdf_canvas.Canvas(pdf_io, pagesize=A4)
-                _, buf_f = cv2.imencode('.jpg', img_f)
-                _, buf_b = cv2.imencode('.jpg', img_b)
 
+                # Front Side - better positioning
+                _, buf_f = cv2.imencode('.jpg', img_f)
                 c.drawImage(ImageReader(io.BytesIO(buf_f)),
-                            150, 500, width=300, height=190)
+                            120, 520, width=340, height=210)
+
+                # Back Side - better spacing
+                _, buf_b = cv2.imencode('.jpg', img_b)
                 c.drawImage(ImageReader(io.BytesIO(buf_b)),
-                            150, 290, width=300, height=190)
+                            120, 280, width=340, height=210)
+
                 c.showPage()
                 c.save()
                 pdf_io.seek(0)
