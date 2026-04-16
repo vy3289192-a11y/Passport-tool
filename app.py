@@ -277,13 +277,6 @@ HTML = '''
            
             <div class="card">
                 <h2>Passport Studio</h2>
-               
-                <div class="tool-card">
-                    <i class="fas fa-keyboard" style="font-size: 2.5rem; color: #2563eb;"></i>
-                    <h3>Hindi Typing Studio</h3>
-                    <p>Kruti Dev, Unicode Converter aur English-to-Hindi typing ek hi jagah.</p>
-                    <a href="https://typing.snapzopro.online" class="btn" style="background:#ffde59; color:#000;">Typing Shuru Karein</a>
-                </div>
                 <form method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="tool_type" value="passport">
                     <div class="upload-zone" onclick="document.getElementById('f-pass').click()">
