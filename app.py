@@ -192,7 +192,7 @@ HTML = '''
         .testi-avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); }
         .testi-info h4 { margin: 0; color: var(--text); }
         .testi-info p { margin: 3px 0 0; color: var(--text-muted); font-size: 0.9rem; }
-        .footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--border); width: 100%; max-width: 1100px; color: var(--text); margin-top: 20px; }
+       .footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--border); width: 100%; max-width: 1100px; color: var(--text); margin: 20px auto 0 auto; /* Ye pure footer box ko screen ke center me lock kar dega */}
         .insta-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: bold; margin-top: 15px; }
         .seo-links { margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border); text-align: center; font-size: 0.85rem; color: var(--text-muted); line-height: 1.8; }
         .seo-links a { color: var(--accent); text-decoration: none; margin: 0 5px; font-weight: 500; }
