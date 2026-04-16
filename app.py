@@ -932,12 +932,11 @@ HTML = '''
             
             <div style="border-top:1px solid var(--border); padding:25px 20px; font-size:0.9rem; color:var(--text-muted); text-align:center;">
                 <p>© 2026 Snapzo Pro • All tools are completely free</p>
-                <p style="margin-top:10px;">
-                    <a href="/about" style="color:var(--accent); margin:0 12px;">About</a>
-                    <a href="/privacy" style="color:var(--accent); margin:0 12px;">Privacy</a>
-                    <a href="/terms" style="color:var(--accent); margin:0 12px;">Terms</a>
-                </p>
-            </div>
+               <div style="text-align: center; width: 100%; margin-top: 10px;">
+    <a href="/about" style="margin: 0 15px; text-decoration: none; color: var(--accent); font-weight: 500;">About</a>
+    <a href="/privacy" style="margin: 0 15px; text-decoration: none; color: var(--accent); font-weight: 500;">Privacy</a>
+    <a href="/terms" style="margin: 0 15px; text-decoration: none; color: var(--accent); font-weight: 500;">Terms</a>
+</div>
         </div>
         </div>
     </div>
