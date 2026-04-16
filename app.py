@@ -99,7 +99,17 @@ HTML = '''
             --box-bg: #f1f5f9;
             --input-bg: #ffffff;
         }
+.typing-link {
+    background: #ffde59 !important; /* पीला रंग ताकि तुरंत दिखे */
+    color: #000 !important;
+    font-weight: bold;
+    border: 2px solid #eab308;
+}
 
+.typing-link:hover {
+    background: #facc15 !important;
+    transform: scale(1.05);
+}
         body.dark-mode { 
             --bg: #0f172a; 
             --card: #1e293b; 
@@ -245,6 +255,12 @@ HTML = '''
         <a href="/" class="nav-brand"><img src="''' + LOGO_URL + '''"><span>Snapzo Pro</span></a>
         <div class="nav-right" style="display:flex; align-items:center; gap:15px;">
             <div class="desktop-menu">
+            <a href="https://typing.snapzopro.online" class="menu-btn typing-link">
+    <i class="fas fa-keyboard"></i> Hindi Typing
+    </a>
+<a href="https://typing.snapzopro.online" class="menu-btn typing-link">
+    <i class="fas fa-keyboard"></i> Hindi Typing
+    </a>
                 <a href="/passport-maker" class="menu-btn active-menu" onclick="switchTool('passport', event)" id="d-passport">Passport Maker</a>
                 <a href="/id-card-print" class="menu-btn" onclick="switchTool('idcard', event)" id="d-idcard">ID Card Print</a>
                 <a href="/signature-cleaner" class="menu-btn" onclick="switchTool('sign', event)" id="d-sign">Sign Cleaner</a>
@@ -299,6 +315,12 @@ HTML = '''
                         <div id="t-pass"><i class="fas fa-camera" style="font-size:3rem; color:var(--accent);"></i><p>Upload any Photo</p></div>
                         <img id="p-pass" class="preview-img">
                     </div>
+                    <div class="tool-card">
+    <i class="fas fa-keyboard" style="font-size: 2.5rem; color: #2563eb;"></i>
+    <h3>Hindi Typing Studio</h3>
+    <p>Kruti Dev, Unicode Converter aur English-to-Hindi typing ek hi jagah.</p>
+    <a href="https://typing.snapzopro.online" class="btn">Typing Shuru Karein</a>
+</div>
                     <div class="row" style="margin-bottom:0;">
                         <div class="group"><label>Print Name (Optional)</label><input type="text" name="print_name" placeholder="E.g., VISHAL YADAV"></div>
                         <div class="group"><label>Print Date (Optional)</label><input type="text" name="print_date" placeholder="E.g., 10/04/2026"></div>
