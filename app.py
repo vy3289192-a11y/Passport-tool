@@ -1293,24 +1293,58 @@ def home():
                 return "Invalid file type", 400
            
             img = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
-            if tool_type == 'passport':
+                        if tool_type == 'passport':
                 face = cv2.resize(strict_passport_crop(img), (413, 531))
                 print_name = request.form.get("print_name", "").strip().upper()
                 print_date = request.form.get("print_date", "").strip()
+
                 if print_name or print_date:
-                    cv2.rectangle(face, (0, 531-80), (413, 531), (255,255,255), -1)
+                    # Bottom white bar for text
+                    cv2.rectangle(face, (0, 531-90), (413, 531), (255,255,255), -1)
                     font = cv2.FONT_HERSHEY_SIMPLEX
+
                     if print_name and print_date:
-                        n_size = cv2.getTextSize(print_name, font, 0.7, 2)[0]
-                        d_size = cv2.getTextSize(print_date, font, 0.6, 2)[0]
-                        cv2.putText(face, print_name, ((413-n_size[0])//2, 531-45), font, 0.7, (0,0,0), 2)
-                        cv2.putText(face, print_date, ((413-d_size[0])//2, 531-15), font, 0.6, (0,0,0), 2)
+                        # Name (bigger and bold)
+                        n_size = cv2.getTextSize(print_name, font, 0.78, 2)[0]
+                        cv2.putText(face, print_name, ((413 - n_size[0])//2, 531-58), font, 0.78, (0,0,0), 2, cv2.LINE_AA)
+                        # Date (smaller)
+                        d_size = cv2.getTextSize(print_date, font, 0.62, 2)[0]
+                        cv2.putText(face, print_date, ((413 - d_size[0])//2, 531-28), font, 0.62, (0,0,0), 2, cv2.LINE_AA)
+
                     elif print_name:
-                        n_size = cv2.getTextSize(print_name, font, 0.8, 2)[0]
-                        cv2.putText(face, print_name, ((413-n_size[0])//2, 531-30), font, 0.8, (0,0,0), 2)
+                        n_size = cv2.getTextSize(print_name, font, 0.82, 2)[0]
+                        cv2.putText(face, print_name, ((413 - n_size[0])//2, 531-45), font, 0.82, (0,0,0), 2, cv2.LINE_AA)
+
                     elif print_date:
-                        d_size = cv2.getTextSize(print_date, font, 0.8, 2)[0]
-                        cv2.putText(face, print_date, ((413-d_size[0])//2, 531-30), font, 0.8, (0,0,0), 2)
+                        d_size = cv2.getTextSize(print_date, font, 0.7, 2)[0]
+                        cv2.putText(face, print_date, ((413 - d_size[0])//2, 531-45), font, 0.7, (0,0,0), 2, cv2.LINE_AA)
+
+                # Nice border for print ready look
+                bordered = cv2.copyMakeBorder(face, 12, 12, 12, 12, cv2.BORDER_CONSTANT, value=[245, 245, 245])
+                
+                bh, bw = bordered.shape[:2]
+                canvas = np.ones((2500, 1800, 3), dtype=np.uint8) * 255
+                count = max(1, min(int(request.form.get("count", 8)), 12))
+
+                for i in range(count):
+                    r, c = i // 3, i % 3
+                    start_y = r*(bh + 40) + 70
+                    start_x = c*(bw + 30) + 70
+                    canvas[start_y:start_y + bh, start_x:start_x + bw] = bordered
+
+                final = canvas[:((count-1)//3 + 1)*(bh + 40) + 100, :min(count, 3)*(bw + 30) + 100]
+
+                _, buf = cv2.imencode('.jpg', final)
+
+                if request.form.get("type") == "pdf":
+                    pdf_io = io.BytesIO()
+                    c = pdf_canvas.Canvas(pdf_io, pagesize=A4)
+                    c.drawImage(ImageReader(io.BytesIO(buf)), 50, 100, width=500, height=650)
+                    c.save()
+                    pdf_io.seek(0)
+                    return send_file(pdf_io, mimetype='application/pdf', as_attachment=True, download_name='passport_ready.pdf')
+
+                return send_file(io.BytesIO(buf), mimetype='image/jpeg', as_attachment=True, download_name='passport_ready.jpg')
                
                 bordered = cv2.copyMakeBorder(face, 10, 10, 10, 10, cv2.BORDER_CONSTANT, value=[245, 245, 245])
                 bh, bw = bordered.shape[:2]
