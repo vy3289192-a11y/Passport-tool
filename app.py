@@ -30,7 +30,7 @@ HTML = '''
       gtag('js', new Date());
       gtag('config', 'G-TJ3VTE8QJE');
     </script>
-    <title>Snapzo Pro - Free AI Passport Photo Maker & Exam Tools</title>
+    <title> Snapzo Pro - Free AI Tools for SSC, RRB, UPSC | Passport Photo, Signature & Documents</title>
     <meta name="description" content="{{ page_desc }}">
    
     <meta property="og:site_name" content="Snapzo Pro" />
