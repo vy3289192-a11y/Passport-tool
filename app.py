@@ -19,6 +19,7 @@ HTML = '''
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="google-site-verification" content="TlhWO7oDD-Gp8H0gKFC3U7n7v213ccnwGp0C9OB_7Uc" />
@@ -31,18 +32,17 @@ HTML = '''
       gtag('config', 'G-TJ3VTE8QJE');
     </script>
 
-    <title>Snapzo Pro - Free AI Tools for SSC, RRB, UPSC | Passport Photo, Signature & Documents</title>
-    <meta name="description" content="Snapzo Pro - Free AI tools for SSC, RRB, UPSC & government exams. Passport size photo maker, signature cleaner, ID card joiner, image to PDF, compress and more. 100% Free & Private.">
+    <title>{{ page_title }}</title>
+    <meta name="description" content="{{ page_desc }}">
 
     <meta property="og:site_name" content="Snapzo Pro" />
-    <meta property="og:title" content="Snapzo Pro - Free AI Tools for SSC, RRB, UPSC" />
-    <meta property="og:description" content="Free AI passport photo maker, signature cleaner, ID card joiner and document tools for government exams. 100% Free & Private." />
+    <meta property="og:title" content="{{ page_title }}" />
+    <meta property="og:description" content="{{ page_desc }}" />
     <meta property="og:image" content="''' + LOGO_URL + '''" />
     <meta property="og:url" content="https://snapzopro.online{{ request_path }}" />
 
     <link rel="icon" href="''' + LOGO_URL + '''">
     <link rel="apple-touch-icon" href="''' + LOGO_URL + '''">
-   
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
@@ -1460,7 +1460,7 @@ def home():
             return "Server Error", 500
     path = request.path
     seo_data = {
-        '/': ('Snapzo Pro | Free AI Passport Photo Maker & Image Tools', 'Free online AI passport size photo maker, image to PDF converter, Text to PDF, Image to Text (OCR), and compressor.'),
+       '/': ('Snapzo Pro - Free AI Tools for SSC, RRB, UPSC | Passport Photo, Signature & Documents', 'Snapzo Pro - Free AI tools for SSC, RRB, UPSC & government exams. Passport size photo maker, signature cleaner, ID card joiner, image to PDF, compress and more. 100% Free & Private.'),
         '/passport-maker': ('Strict AI Passport Photo Maker | Snapzo Pro', 'Create exact 3.5x4.5 passport photos for SSC, RRB, and NTPC forms automatically.'),
         '/id-card-print': ('Aadhar & PAN Card Front Back PDF Joiner | Snapzo Pro', 'Merge Front and Back side of Aadhar or PAN card into a perfect A4 size PDF for printing.'),
         '/signature-cleaner': ('Auto-Signature Cleaner & Resizer | Snapzo Pro', 'Clean signature background automatically for official government forms.'),
