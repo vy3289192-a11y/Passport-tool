@@ -920,42 +920,31 @@ HTML = '''
                     <div class="stat-label">Files Auto Delete</div>
                 </div>
             </div>
-            <p style="margin-top:25px; color:var(--text-muted); font-size:0.95rem;">
-                Made with ❤️ for Indian students by Vishal (Varanasi)
-            </p>
         </div>
         </div>
-        <div class="footer">
-            <div class="footer-links">
-                <h4>All Snapzo Pro Tools</h4>
-                <div class="f-grid">
-                    <a href="/passport-maker" onclick="switchTool('passport', event)">Passport Maker</a>
-                    <a href="/id-card-print" onclick="switchTool('idcard', event)">ID Card Print Studio</a>
-                    <a href="/signature-cleaner" onclick="switchTool('sign', event)">Signature Cleaner</a>
-                    <a href="/photo-sign-joiner" onclick="switchTool('joiner', event)">Photo + Sign Joiner</a>
-                    <a href="/image-to-text" onclick="switchTool('img2text', event)">Image to Text (OCR)</a>
-                    <a href="/text-to-pdf" onclick="switchTool('textpdf', event)">Text to PDF Maker</a>
-                    <a href="/image-to-pdf" onclick="switchTool('pdf', event)">Image to PDF Converter</a>
-                    <a href="/image-crop" onclick="switchTool('crop', event)">Manual Crop Studio</a>
-                    <a href="/compress" onclick="switchTool('compress', event)">Smart Image Compressor</a>
-                    <a href="/social-size" onclick="switchTool('social', event)">Social Media Resizer</a>
-                    <a href="/convert-format" onclick="switchTool('format', event)">Image Format Converter</a>
-                </div>
+                <div class="footer">
+            <div style="max-width:1100px; margin:0 auto; padding:30px 20px; text-align:center;">
+                <p style="font-size:1.1rem; margin-bottom:10px;">
+                    Built with ❤️ by <b>Vishal</b> from Varanasi
+                </p>
+                <p style="color:var(--text-muted); margin-bottom:25px;">
+                    Free AI tools for SSC, RRB, UPSC, PAN, Aadhaar and other government forms
+                </p>
+                
+                <a href="https://www.instagram.com/rry.vishal" target="_blank" class="insta-btn">
+                    <i class="fab fa-instagram"></i> Follow on Instagram @rry.vishal
+                </a>
             </div>
-           
-            <div class="footer-links" style="margin-top: 30px;">
-                <h4>Legal & Info</h4>
-                <div class="f-grid">
-                    <a href="/about" onclick="switchTool('about', event)">About Us</a>
-                    <a href="/contact" onclick="switchTool('contact', event)">Contact Us</a>
-                    <a href="/privacy" onclick="switchTool('privacy', event)">Privacy Policy</a>
-                    <a href="/terms" onclick="switchTool('terms', event)">Terms & Conditions</a>
-                </div>
+            
+            <div style="border-top:1px solid var(--border); padding:25px 20px; font-size:0.9rem; color:var(--text-muted); text-align:center;">
+                <p>© 2026 Snapzo Pro • All tools are completely free</p>
+                <p style="margin-top:10px;">
+                    <a href="/about" style="color:var(--accent); margin:0 12px;">About</a>
+                    <a href="/privacy" style="color:var(--accent); margin:0 12px;">Privacy</a>
+                    <a href="/terms" style="color:var(--accent); margin:0 12px;">Terms</a>
+                </p>
             </div>
-            <div style="border-top: 1px solid var(--border); padding-top: 25px; margin-top: 10px;">
-                <p>Built with ❤️ by <b>Vishal</b></p>
-                <a href="https://www.instagram.com/rry.vishal?igsh=YnhweDR6eDhoNXV3" target="_blank" class="insta-btn"><i class="fab fa-instagram"></i> Follow on Instagram</a>
-            </div>
+        </div>
         </div>
     </div>
     <script>
