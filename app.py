@@ -1293,7 +1293,7 @@ def home():
                 return "Invalid file type", 400
            
             img = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
-                        if tool_type == 'passport':
+                                                if tool_type == 'passport':
                 face = cv2.resize(strict_passport_crop(img), (413, 531))
                 print_name = request.form.get("print_name", "").strip().upper()
                 print_date = request.form.get("print_date", "").strip()
@@ -1304,10 +1304,10 @@ def home():
                     font = cv2.FONT_HERSHEY_SIMPLEX
 
                     if print_name and print_date:
-                        # Name (bigger and bold)
+                        # Name
                         n_size = cv2.getTextSize(print_name, font, 0.78, 2)[0]
                         cv2.putText(face, print_name, ((413 - n_size[0])//2, 531-58), font, 0.78, (0,0,0), 2, cv2.LINE_AA)
-                        # Date (smaller)
+                        # Date
                         d_size = cv2.getTextSize(print_date, font, 0.62, 2)[0]
                         cv2.putText(face, print_date, ((413 - d_size[0])//2, 531-28), font, 0.62, (0,0,0), 2, cv2.LINE_AA)
 
@@ -1316,10 +1316,10 @@ def home():
                         cv2.putText(face, print_name, ((413 - n_size[0])//2, 531-45), font, 0.82, (0,0,0), 2, cv2.LINE_AA)
 
                     elif print_date:
-                        d_size = cv2.getTextSize(print_date, font, 0.7, 2)[0]
-                        cv2.putText(face, print_date, ((413 - d_size[0])//2, 531-45), font, 0.7, (0,0,0), 2, cv2.LINE_AA)
+                        d_size = cv2.getTextSize(print_date, font, 0.72, 2)[0]
+                        cv2.putText(face, print_date, ((413 - d_size[0])//2, 531-38), font, 0.72, (0,0,0), 2, cv2.LINE_AA)
 
-                # Nice border for print ready look
+                # Nice border for better printing
                 bordered = cv2.copyMakeBorder(face, 12, 12, 12, 12, cv2.BORDER_CONSTANT, value=[245, 245, 245])
                 
                 bh, bw = bordered.shape[:2]
@@ -1328,11 +1328,11 @@ def home():
 
                 for i in range(count):
                     r, c = i // 3, i % 3
-                    start_y = r*(bh + 40) + 70
-                    start_x = c*(bw + 30) + 70
+                    start_y = r * (bh + 40) + 70
+                    start_x = c * (bw + 30) + 70
                     canvas[start_y:start_y + bh, start_x:start_x + bw] = bordered
 
-                final = canvas[:((count-1)//3 + 1)*(bh + 40) + 100, :min(count, 3)*(bw + 30) + 100]
+                final = canvas[:((count-1)//3 + 1) * (bh + 40) + 100, :min(count, 3) * (bw + 30) + 100]
 
                 _, buf = cv2.imencode('.jpg', final)
 
