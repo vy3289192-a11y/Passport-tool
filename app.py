@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template_string, send_file
+from flask import Flask, request, render_template_string, send_file, Response
 import cv2
 import numpy as np
 import io
@@ -1520,6 +1520,50 @@ def home():
 
     return render_template_string(HTML, page_title=page_title, page_desc=page_desc, request_path=path, breadcrumb_schema=breadcrumb_schema)
 
+# --- SEO: SITEMAP & ROBOTS.TXT ---
 
+@app.route('/robots.txt')
+def robots():
+    lines = [
+        "User-agent: *",
+        "Allow: /",
+        "Sitemap: https://snapzopro.online/sitemap.xml"
+    ]
+    return Response("\n".join(lines), mimetype="text/plain")
+
+@app.route('/sitemap.xml')
+def sitemap():
+    pages = [
+        '/', '/passport-maker', '/id-card-print', '/signature-cleaner',
+        '/photo-sign-joiner', '/image-to-text', '/text-to-pdf', '/image-to-pdf',
+        '/image-crop', '/compress', '/social-size', '/convert-format',
+        '/about', '/contact', '/privacy', '/terms',
+        '/jpg-to-png', '/png-to-jpg', '/webp-to-jpg', '/ssc-photo-maker',
+        '/rrb-photo-maker', '/extract-text-from-image', '/picture-to-text',
+        '/text-to-pdf-converter', '/jpg-to-pdf', '/png-to-pdf', '/crop-photo-online',
+        '/reduce-image-size', '/compress-image-to-50kb', '/youtube-thumbnail-resizer',
+        '/instagram-photo-resizer'
+    ]
+    
+    xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    
+    # Main website pages
+    for page in pages:
+        xml += '  <url>\n'
+        xml += f'    <loc>https://snapzopro.online{page}</loc>\n'
+        xml += '    <changefreq>weekly</changefreq>\n'
+        xml += '    <priority>0.8</priority>\n'
+        xml += '  </url>\n'
+        
+    # Typing sub-domain
+    xml += '  <url>\n'
+    xml += '    <loc>https://typing.snapzopro.online/</loc>\n'
+    xml += '    <changefreq>weekly</changefreq>\n'
+    xml += '    <priority>0.9</priority>\n'
+    xml += '  </url>\n'
+    
+    xml += '</urlset>'
+    return Response(xml, mimetype="application/xml")
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
