@@ -6,20 +6,18 @@ from reportlab.pdfgen import canvas as pdf_canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.utils import ImageReader
 import json
+
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
 LOGO_URL = "https://i.ibb.co/Q73xvDmw/46658.jpg"
 
-
 def allowed_file(filename):
-    return filename.lower().endswith(('.png', '.jpg', '.jpeg', '.webp'))
-
+    return filename.lower().endswith(('.png', '.jpg', '.jpeg', '.webp', '.heic'))
 
 HTML = '''
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="google-site-verification" content="TlhWO7oDD-Gp8H0gKFC3U7n7v213ccnwGp0C9OB_7Uc" />
@@ -116,7 +114,7 @@ HTML = '''
             --input-bg: #0f172a;
         }
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; width: 100vw; max-width: 100%; transition: background 0.3s, color 0.3s; }
-       
+        
         .privacy-banner { background: #10b981; color: white; text-align: center; padding: 6px; font-size: 0.85rem; font-weight: bold; letter-spacing: 0.5px; }
         .nav { background: var(--nav); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
         .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); font-weight: bold; font-size: 1.3rem; }
@@ -132,20 +130,20 @@ HTML = '''
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1500; }
         .overlay.active { display: block; }
         .main { padding: 40px 20px; display: flex; flex-direction: column; align-items: center; min-height: 85vh; width: 100%; }
-       
+        
         .tool-wrapper { display: none; width: 100%; max-width: 1100px; gap: 40px; align-items: flex-start; justify-content: space-between; margin-bottom: 40px; flex-wrap: wrap; }
         .tool-wrapper.active { display: flex; }
-       
+        
         .tool-content { flex: 1.2; text-align: left; order: 1; }
         .tool-content h1 { font-size: 2.2rem; color: var(--text); margin: 0 0 15px 0; background: linear-gradient(to right, #60a5fa, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .tool-content p { font-size: 1.05rem; line-height: 1.6; color: var(--text); opacity: 0.9; }
-       
+        
         .feature-list { list-style: none; padding: 0; margin: 15px 0; }
         .feature-list li { margin-bottom: 12px; display: flex; align-items: center; gap: 10px; color: var(--text); }
         .feature-list i { color: #10b981; }
-       
+        
         .visual-box { background: var(--box-bg); border: 1px solid var(--border); border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 20px; color: var(--text); }
-       
+        
         .how-to-use { width: 100%; margin-top: 40px; border-top: 1px solid var(--border); padding-top: 25px; order: 3; }
         .how-to-use h3 { color: var(--text); font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 10px;}
         .step-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
@@ -169,7 +167,7 @@ HTML = '''
         .row { display: flex; gap: 15px; margin: 20px 0; width: 100%; }
         .group { flex: 1; }
         label { display: block; font-size: 0.85rem; margin-bottom: 8px; color: var(--text); opacity: 0.8; font-weight: 500;}
-       
+        
         .btn { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top:10px; }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(59,130,246,0.4); }
         #toolbar-container { background: var(--box-bg); border-radius: 10px 10px 0 0; border: 1px solid var(--border); border-bottom: none; }
@@ -192,7 +190,7 @@ HTML = '''
         .testi-avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); }
         .testi-info h4 { margin: 0; color: var(--text); }
         .testi-info p { margin: 3px 0 0; color: var(--text-muted); font-size: 0.9rem; }
-       .footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--border); width: 100%; max-width: 1100px; color: var(--text); margin: 20px auto 0 auto; /* Ye pure footer box ko screen ke center me lock kar dega */}
+        .footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--border); width: 100%; max-width: 1100px; color: var(--text); margin: 20px auto 0 auto;}
         .insta-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: bold; margin-top: 15px; }
         .seo-links { margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border); text-align: center; font-size: 0.85rem; color: var(--text-muted); line-height: 1.8; }
         .seo-links a { color: var(--accent); text-decoration: none; margin: 0 5px; font-weight: 500; }
@@ -264,18 +262,18 @@ HTML = '''
         <a href="/convert-format" class="menu-btn" onclick="switchTool('format', event)" id="m-format"><i class="fas fa-exchange-alt"></i> Convert Format</a>
     </div>
     <div class="main">
-       
+        
         <div class="tool-wrapper active" id="tool-passport">
             <div class="tool-content">
-                <h1>Strict AI Passport Maker</h1>
-                <p>Turn a regular photo into an official passport photo fast. Hamara AI strictly 3.5x4.5 ratio use karta hai taaki SSC/RRB forms me koi galti na ho.</p>
+                <h1>{{ passport_h1 | default('Strict AI Passport Maker') }}</h1>
+                <p>{{ passport_p | default('Turn a regular photo into an official passport photo fast. Hamara AI strictly 3.5x4.5 ratio use karta hai taaki SSC/RRB forms me koi galti na ho.') }}</p>
                 <ul class="feature-list">
                     <li><i class="fas fa-check-circle"></i> Permanent 413x531 Pixels (Official Size)</li>
                     <li><i class="fas fa-check-circle"></i> Auto-Print Name & Date on Photo</li>
                     <li><i class="fas fa-check-circle"></i> Multiple Copies Ready to Print</li>
                 </ul>
             </div>
-           
+            
             <div class="card">
                 <h2>Passport Studio</h2>
                 <form method="POST" enctype="multipart/form-data">
@@ -331,7 +329,7 @@ HTML = '''
                     <li><i class="fas fa-check-circle"></i> High Quality PDF output</li>
                 </ul>
             </div>
-           
+            
             <div class="card">
                 <h2>Aadhar/PAN Joiner</h2>
                 <form method="POST" enctype="multipart/form-data">
@@ -387,7 +385,7 @@ HTML = '''
                     <li><i class="fas fa-check-circle"></i> Official Bank/Govt size ready</li>
                 </ul>
             </div>
-           
+            
             <div class="card">
                 <h2>Clean Signature</h2>
                 <form method="POST" enctype="multipart/form-data">
@@ -430,7 +428,7 @@ HTML = '''
                     <li><i class="fas fa-check-circle"></i> No complex editing required</li>
                 </ul>
             </div>
-           
+            
             <div class="card">
                 <h2>Merge Photo & Sign</h2>
                 <form method="POST" enctype="multipart/form-data">
@@ -486,7 +484,7 @@ HTML = '''
                     <li><i class="fas fa-check-circle"></i> Keeps your data completely private</li>
                 </ul>
             </div>
-           
+            
             <div class="card">
                 <h2>Extract Text</h2>
                 <div class="upload-zone" onclick="document.getElementById('f-ocr').click()">
@@ -494,7 +492,7 @@ HTML = '''
                     <div id="t-ocr"><i class="fas fa-font" style="font-size:3rem; color:var(--accent);"></i><p>Upload Image with Text</p></div>
                     <img id="p-ocr" class="preview-img">
                 </div>
-               
+                
                 <div id="ocr-loading" style="display:none; text-align:center; margin-top:15px; color:var(--accent); font-weight:bold;">
                     Extracting Text... <span id="ocr-percent">0%</span>
                     <div class="progress-bar-container" style="display:block;"><div class="progress-bar" id="ocr-bar"></div></div>
@@ -539,7 +537,7 @@ HTML = '''
                     <li><i class="fas fa-check-circle"></i> Superfast Client-Side PDF Creation</li>
                 </ul>
             </div>
-           
+            
             <div class="card" style="max-width: 100%;">
                 <h2>Document Editor</h2>
                 <div style="margin-bottom: 20px;">
@@ -600,7 +598,7 @@ HTML = '''
                     <li><i class="fas fa-check-circle"></i> Magic Scan (Cleans dark shadows)</li>
                 </ul>
             </div>
-           
+            
             <div class="card">
                 <h2>Select Files</h2>
                 <form method="POST" enctype="multipart/form-data">
@@ -648,7 +646,7 @@ HTML = '''
                 <h1>Manual Crop Studio</h1>
                 <p>Cut unwanted parts from your photo with full control online.</p>
             </div>
-           
+            
             <div class="card">
                 <form method="POST" enctype="multipart/form-data" id="cropForm">
                     <input type="hidden" name="tool_type" value="crop">
@@ -688,14 +686,14 @@ HTML = '''
         </div>
         <div class="tool-wrapper" id="tool-compress">
             <div class="tool-content">
-                <h1>Smart Image Compressor</h1>
-                <p>Reduce photo size accurately for online form uploads without losing visual quality.</p>
+                <h1>{{ compress_h1 | default('Smart Image Compressor') }}</h1>
+                <p>{{ compress_p | default('Reduce photo size accurately for online form uploads without losing visual quality.') }}</p>
                 <ul class="feature-list">
                     <li><i class="fas fa-check-circle"></i> Auto-Target Size (Just type desired KB)</li>
                     <li><i class="fas fa-check-circle"></i> Best for SSC, UPSC, IBPS Forms</li>
                 </ul>
             </div>
-           
+            
             <div class="card">
                 <form method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="tool_type" value="compress">
@@ -707,7 +705,7 @@ HTML = '''
                     <div class="row">
                         <div class="group">
                             <label>Target File Size (In KB)</label>
-                            <input type="number" name="target_kb" value="50" placeholder="E.g., 50">
+                            <input type="number" name="target_kb" value="{{ compress_val | default('50') }}" placeholder="E.g., 50">
                         </div>
                     </div>
                     <button class="btn">Smart Compress</button>
@@ -744,7 +742,7 @@ HTML = '''
                 <h1>Social Media Resizer</h1>
                 <p>Perfect size for YouTube Thumbnails, Instagram or FB.</p>
             </div>
-           
+            
             <div class="card">
                 <form method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="tool_type" value="social">
@@ -785,10 +783,10 @@ HTML = '''
         </div>
         <div class="tool-wrapper" id="tool-format">
             <div class="tool-content">
-                <h1>Format Converter</h1>
-                <p>Convert any image format instantly. Supports JPG, PNG, WEBP, BMP, and TIFF.</p>
+                <h1>{{ format_h1 | default('Format Converter') }}</h1>
+                <p>{{ format_p | default('Convert any image format instantly. Supports JPG, PNG, WEBP, BMP, and TIFF.') }}</p>
             </div>
-           
+            
             <div class="card">
                 <form method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="tool_type" value="format">
@@ -814,7 +812,7 @@ HTML = '''
                     </div>
                     <button type="submit" class="btn">Convert & Download</button>
                 </form>
-               
+                
                 <div class="seo-links">
                     <p style="margin-bottom:5px;">Popular Searches:</p>
                     <a href="/jpg-to-png" onclick="switchTool('format', event, 'png')">JPG to PNG</a> |
@@ -947,7 +945,7 @@ HTML = '''
             placeholder: 'Start typing your document here...',
             theme: 'snow'
         });
-        // 🟢 ADDED NEW PAGES TO ROUTEMAP 🟢
+        
         const routeMap = {
             'passport': 'passport-maker',
             'idcard': 'id-card-print',
@@ -965,7 +963,7 @@ HTML = '''
             'privacy': 'privacy',
             'terms': 'terms'
         };
-        // 🟢 ADDED NEW PAGES TO PATHMAP 🟢
+        
         const pathMap = {
             '/passport-maker': 'passport',
             '/id-card-print': 'idcard',
@@ -982,7 +980,7 @@ HTML = '''
             '/contact': 'contact',
             '/privacy': 'privacy',
             '/terms': 'terms',
-           
+            
             '/jpg-to-png': 'format',
             '/png-to-jpg': 'format',
             '/webp-to-jpg': 'format',
@@ -997,7 +995,12 @@ HTML = '''
             '/reduce-image-size': 'compress',
             '/compress-image-to-50kb': 'compress',
             '/youtube-thumbnail-resizer': 'social',
-            '/instagram-photo-resizer': 'social'
+            '/instagram-photo-resizer': 'social',
+            
+            // --- NEW GLOBAL HIDDEN PAGES IN JS ---
+            '/us-visa-photo-maker': 'passport',
+            '/heic-to-jpg': 'format',
+            '/compress-image-to-100kb': 'compress'
         };
         function startOCR(input) {
             if (input.files && input.files[0]) {
@@ -1063,7 +1066,6 @@ HTML = '''
         }
         function switchTool(name, event, autoFormat = null) {
             if(event) event.preventDefault();
-            // 🟢 ADDED NEW PAGES TO SWITCH ARRAY 🟢
             const tools = ['passport', 'idcard', 'sign', 'joiner', 'img2text', 'textpdf', 'pdf', 'crop', 'compress', 'social', 'format', 'about', 'contact', 'privacy', 'terms'];
             tools.forEach(t => {
                 const el = document.getElementById('tool-'+t);
@@ -1077,9 +1079,9 @@ HTML = '''
                 let dropdown = document.querySelector('select[name="out_format"]');
                 if(dropdown) dropdown.value = autoFormat;
             }
-           
+            
             window.scrollTo({ top: 0, behavior: 'smooth' });
-           
+            
             let targetPath = window.location.pathname;
             if(event && !autoFormat) {
                 if(event.target.getAttribute('href') && event.target.getAttribute('href').startsWith('/')) {
@@ -1094,7 +1096,7 @@ HTML = '''
                  targetPath = event.target.getAttribute('href');
                  window.history.pushState(null, null, targetPath);
             }
-           
+            
             if(window.innerWidth <= 900) {
                 document.getElementById('sidebar').classList.remove('active');
                 document.getElementById('overlay').classList.remove('active');
@@ -1161,7 +1163,6 @@ HTML = '''
 '''
 # --- FLASK BACKEND LOGIC ---
 
-
 def strict_passport_crop(img):
     h, w = img.shape[:2]
     target_ratio = 0.777
@@ -1173,8 +1174,6 @@ def strict_passport_crop(img):
         new_h = int(w / target_ratio)
         offset = int((h - new_h) * 0.15)
         return img[offset:offset+new_h, :]
-# 🟢 ADDED NEW ROUTES FOR PAGES 🟢
-
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/passport-maker', methods=['GET', 'POST'])
@@ -1207,6 +1206,10 @@ def strict_passport_crop(img):
 @app.route('/compress-image-to-50kb', methods=['GET', 'POST'])
 @app.route('/youtube-thumbnail-resizer', methods=['GET', 'POST'])
 @app.route('/instagram-photo-resizer', methods=['GET', 'POST'])
+# --- NEW HIDDEN GLOBAL ROUTES ADDED HERE ---
+@app.route('/us-visa-photo-maker', methods=['GET', 'POST'])
+@app.route('/heic-to-jpg', methods=['GET', 'POST'])
+@app.route('/compress-image-to-100kb', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
         try:
@@ -1489,10 +1492,36 @@ def home():
         '/reduce-image-size': ('Reduce Image Size Online | Snapzo Pro', 'Reduce image file size quickly without losing quality. Best for online form uploads.'),
         '/compress-image-to-50kb': ('Compress Image to 50KB | Snapzo Pro', 'Compress your photos to exactly 50KB or any specific size for government form uploads.'),
         '/youtube-thumbnail-resizer': ('YouTube Thumbnail Resizer | Snapzo Pro', 'Resize images perfectly for YouTube thumbnails (1280x720) in one click.'),
-        '/instagram-photo-resizer': ('Instagram Photo Resizer | Snapzo Pro', 'Resize images perfectly for Instagram Posts (1080x1080) for free.')
+        '/instagram-photo-resizer': ('Instagram Photo Resizer | Snapzo Pro', 'Resize images perfectly for Instagram Posts (1080x1080) for free.'),
+        
+        # --- NEW HIDDEN GLOBAL SEO DATA ADDED HERE ---
+        '/us-visa-photo-maker': ('US Visa Photo Maker (2x2 inch) | Snapzo Pro', 'Create perfect 2x2 inch photos for US Visa and Green Card applications online for free. AI-powered and secure.'),
+        '/heic-to-jpg': ('HEIC to JPG Converter Online | Snapzo Pro', 'Convert iPhone HEIC photos to standard JPG format online for free. Fast and no quality loss.'),
+        '/compress-image-to-100kb': ('Compress Image to Exactly 100KB | Snapzo Pro', 'Reduce heavy photos file size to exactly 100KB online. Perfect for forms and uploads without losing quality.')
     }
 
     page_title, page_desc = seo_data.get(path, seo_data['/'])
+    
+    # --- DYNAMIC CONTENT VARIABLES ---
+    p_h1 = 'Strict AI Passport Maker'
+    p_p = 'Turn a regular photo into an official passport photo fast. Hamara AI strictly 3.5x4.5 ratio use karta hai taaki SSC/RRB forms me koi galti na ho.'
+    f_h1 = 'Format Converter'
+    f_p = 'Convert any image format instantly. Supports JPG, PNG, WEBP, BMP, and TIFF.'
+    c_h1 = 'Smart Image Compressor'
+    c_p = 'Reduce photo size accurately for online form uploads without losing visual quality.'
+    c_val = '50'
+
+    if path == '/us-visa-photo-maker':
+        p_h1 = 'US Visa Photo Maker (2x2 inch)'
+        p_p = 'Create perfect 2x2 inch photos for US Visa and Green Card applications in 1 click. AI automatically resizes to official US standards.'
+    elif path == '/heic-to-jpg':
+        f_h1 = 'HEIC to JPG Converter'
+        f_p = 'Convert iPhone HEIC photos to standard JPG format online instantly for free without losing quality.'
+    elif path == '/compress-image-to-100kb':
+        c_h1 = 'Compress Image to 100KB'
+        c_p = 'Reduce heavy photo file size to exactly 100KB online. Perfect for official form uploads.'
+        c_val = '100'
+
 
     breadcrumb_schema = ""
     if path != '/':
@@ -1517,7 +1546,8 @@ def home():
         </script>
         '''
 
-    return render_template_string(HTML, page_title=page_title, page_desc=page_desc, request_path=path, breadcrumb_schema=breadcrumb_schema)
+    # Passed all new dynamic variables to HTML
+    return render_template_string(HTML, page_title=page_title, page_desc=page_desc, request_path=path, breadcrumb_schema=breadcrumb_schema, passport_h1=p_h1, passport_p=p_p, format_h1=f_h1, format_p=f_p, compress_h1=c_h1, compress_p=c_p, compress_val=c_val)
 
 # --- SEO: SITEMAP & ROBOTS.TXT ---
 
@@ -1541,7 +1571,9 @@ def sitemap():
         '/rrb-photo-maker', '/extract-text-from-image', '/picture-to-text',
         '/text-to-pdf-converter', '/jpg-to-pdf', '/png-to-pdf', '/crop-photo-online',
         '/reduce-image-size', '/compress-image-to-50kb', '/youtube-thumbnail-resizer',
-        '/instagram-photo-resizer'
+        '/instagram-photo-resizer',
+        # --- NEW HIDDEN PAGES ADDED TO SITEMAP ---
+        '/us-visa-photo-maker', '/heic-to-jpg', '/compress-image-to-100kb'
     ]
     
     xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -1564,5 +1596,6 @@ def sitemap():
     
     xml += '</urlset>'
     return Response(xml, mimetype="application/xml")
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
