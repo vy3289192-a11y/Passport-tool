@@ -1231,16 +1231,18 @@ def home():
                 pdf_io.seek(0)
                 return send_file(pdf_io, mimetype='application/pdf', as_attachment=True, download_name='id_card_print.pdf')
             if tool_type == 'sign':
-                file = request.files.get('file')
-                img = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
-                gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-                _, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-                coords = cv2.findNonZero(255 - thresh)
-                x, y, w, h = cv2.boundingRect(coords)
-                cropped = thresh[y:y+h, x:x+w]
-                cropped = cv2.copyMakeBorder(cropped, 20, 20, 20, 20, cv2.BORDER_CONSTANT, value=[255, 255, 255])
-                _, buf = cv2.imencode('.png', cropped)
-                return send_file(io.BytesIO(buf), mimetype='image/png', as_attachment=True, download_name='clean_signature.png')
+    file = request.files.get('file')
+    img = cv2.imdecode(np.frombuffer(file.read(), np.uint8), cv2.IMREAD_COLOR)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    _, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    coords = cv2.findNonZero(255 - thresh)
+    if coords is None:
+        return "Signature nahi detect hui. Clearer photo upload karein.", 400
+    x, y, w, h = cv2.boundingRect(coords)
+    cropped = thresh[y:y+h, x:x+w]
+    cropped = cv2.copyMakeBorder(cropped, 30, 30, 30, 30, cv2.BORDER_CONSTANT, value=[255,255,255])
+    _, buf = cv2.imencode('.png', cropped)
+    return send_file(io.BytesIO(buf), mimetype='image/png', as_attachment=True, download_name='clean_signature.png')
             if tool_type == 'joiner':
                 f_photo = request.files.get('photo')
                 f_sign = request.files.get('sign')
