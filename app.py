@@ -30,7 +30,7 @@ HTML = '''
       gtag('js', new Date());
       gtag('config', 'G-TJ3VTE8QJE');
     </script>
-    <title>{{ page_title }}</title>
+    <title>Snapzo Pro - Free AI Passport Photo Maker & Exam Tools</title>
     <meta name="description" content="{{ page_desc }}">
    
     <meta property="og:site_name" content="Snapzo Pro" />
@@ -224,8 +224,8 @@ HTML = '''
 </head>
 <body>
     <div class="privacy-banner">
-        <i class="fas fa-shield-alt"></i> 100% SECURE & PRIVATE - FILES AUTO-DELETE AFTER PROCESSING
-    </div>
+    <i class="fas fa-shield-alt"></i> 100% Secure & Private • Files are automatically deleted after processing
+</div>
     <div class="nav">
         <a href="/" class="nav-brand"><img src="''' + LOGO_URL + '''"><span>Snapzo Pro</span></a>
         <div class="nav-right" style="display:flex; align-items:center; gap:15px;">
@@ -1462,8 +1462,9 @@ def home():
                 _, buffer = cv2.imencode(f'.{f}', img)
                 mime = f'image/{f}' if f != 'jpg' else 'image/jpeg'
                 return send_file(io.BytesIO(buffer), mimetype=mime, as_attachment=True, download_name=f'converted.{f}')
-        except Exception:
-            return "Server Error", 500
+                except Exception as e:
+            print("Error:", str(e))
+            return "Some error occurred. Please try again with a smaller or clearer image.", 500
     path = request.path
     seo_data = {
         '/': ('Snapzo Pro | Free AI Passport Photo Maker & Image Tools', 'Free online AI passport size photo maker, image to PDF converter, Text to PDF, Image to Text (OCR), and compressor.'),
