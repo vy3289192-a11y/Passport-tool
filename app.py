@@ -1279,6 +1279,7 @@ def home():
 
             if tool_type == 'textpdf':
                 return "Use Client-Side PDF Generator", 400
+                
             if tool_type == 'idcard':
                 f_front = request.files.get('front')
                 f_back = request.files.get('back')
@@ -1294,9 +1295,6 @@ def home():
                 if img_f is None or img_b is None:
                     return "Invalid image files", 400
                     
-                    img_f = smart_crop_document(img_f)
-                img_b = smart_crop_document(img_b)
-
                 pdf_io = io.BytesIO()
                 c = pdf_canvas.Canvas(pdf_io, pagesize=A4)
 
