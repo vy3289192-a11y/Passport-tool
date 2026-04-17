@@ -284,7 +284,7 @@ HTML = '''
                         <img id="p-pass" class="preview-img">
                     </div>
                     <div class="row" style="margin-bottom:0;">
-                        <div class="group"><label>Print Name (Optional)</label><input type="text" name="print_name" placeholder="E.g., VISHAL YADAV"></div>
+                        <div class="group"><label>Print Name (Optional)</label><input type="text" name="print_name" placeholder="E.g., NAME"></div>
                         <div class="group"><label>Print Date (Optional)</label><input type="text" name="print_date" placeholder="E.g., 10/04/2026"></div>
                     </div>
                     <div class="row">
