@@ -858,7 +858,7 @@ HTML = '''
                 <h2>Get in Touch</h2>
                 <ul>
                     <li><b>Email Support:</b> For all general inquiries, please email us directly at <i>contact@snapzopro.online</i>. We aim to respond within 24-48 hours.</li>
-                    <li><b>Social Media:</b> You can also reach out to the founder directly via Instagram. Send a direct message to <a href="https://www.instagram.com/rry.vishal?igsh=YnhweDR6eDhoNXV3" target="_blank">@rry.vishal</a>.</li>
+                    <li><b>Social Media:</b> You can also reach out to the founder directly via Instagram. Send a direct message to <a href="https://www.instagram.com/snapzo.pro?igsh=YnhweDR6eDhoNXV3" target="_blank">@snapzo.pro</a>.</li>
                 </ul>
                 <p>We are constantly working to improve Snapzo Pro. If you want to suggest a new tool or feature, your ideas are always welcome!</p>
             </div>
@@ -923,8 +923,8 @@ HTML = '''
                     Free AI tools for SSC, RRB, UPSC, PAN, Aadhaar and other government forms
                 </p>
                 
-                <a href="https://www.instagram.com/rry.vishal" target="_blank" class="insta-btn">
-                    <i class="fab fa-instagram"></i> Follow on Instagram @rry.vishal
+                <a href="https://www.instagram.com/snapzo.pro" target="_blank" class="insta-btn">
+                    <i class="fab fa-instagram"></i> Follow on Instagram @snapzo.pro
                 </a>
             </div>
             
