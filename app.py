@@ -1175,6 +1175,68 @@ def strict_passport_crop(img):
         offset = int((h - new_h) * 0.15)
         return img[offset:offset+new_h, :]
 
+# --- 🟢 SMART DOCUMENT SCANNER LOGIC 🟢 ---
+def order_points(pts):
+    import numpy as np
+    rect = np.zeros((4, 2), dtype="float32")
+    s = pts.sum(axis=1)
+    rect[0] = pts[np.argmin(s)]
+    rect[2] = pts[np.argmax(s)]
+    diff = np.diff(pts, axis=1)
+    rect[1] = pts[np.argmin(diff)]
+    rect[3] = pts[np.argmax(diff)]
+    return rect
+
+def smart_crop_document(img):
+    import cv2
+    import numpy as np
+    
+    # इमेज को प्रोसेस करने के लिए छोटा करें
+    ratio = img.shape[0] / 500.0
+    orig = img.copy()
+    image = cv2.resize(img, (int(img.shape[1] / ratio), 500))
+
+    # इमेज को ग्रेस्केल करके किनारे (edges) ढूंढें
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    gray = cv2.GaussianBlur(gray, (5, 5), 0)
+    edged = cv2.Canny(gray, 75, 200)
+
+    # कंटूर (Contours) ढूंढें
+    contours, _ = cv2.findContours(edged.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    contours = sorted(contours, key=cv2.contourArea, reverse=True)[:5]
+
+    screenCnt = None
+    for c in contours:
+        peri = cv2.arcLength(c, True)
+        approx = cv2.approxPolyDP(c, 0.02 * peri, True)
+        # अगर 4 कोने मिल गए, तो वह हमारा डॉक्यूमेंट (ID Card) है
+        if len(approx) == 4:
+            screenCnt = approx
+            break
+
+    # अगर टूल को 4 कोने नहीं मिलते (खराब फोटो), तो वह पुरानी फोटो ही रिटर्न कर देगा (Error नहीं आएगा)
+    if screenCnt is None:
+        return orig 
+
+    # 4 कोनों को सीधा करने का जादू (Perspective Transform)
+    pts = screenCnt.reshape(4, 2) * ratio
+    rect = order_points(pts)
+    (tl, tr, br, bl) = rect
+
+    maxWidth = max(int(np.linalg.norm(br - bl)), int(np.linalg.norm(tr - tl)))
+    maxHeight = max(int(np.linalg.norm(tr - br)), int(np.linalg.norm(tl - bl)))
+
+    dst = np.array([
+        [0, 0],
+        [maxWidth - 1, 0],
+        [maxWidth - 1, maxHeight - 1],
+        [0, maxHeight - 1]], dtype="float32")
+
+    M = cv2.getPerspectiveTransform(rect, dst)
+    warped = cv2.warpPerspective(orig, M, (maxWidth, maxHeight))
+
+    return warped
+    
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/passport-maker', methods=['GET', 'POST'])
 @app.route('/id-card-print', methods=['GET', 'POST'])
@@ -1231,6 +1293,9 @@ def home():
 
                 if img_f is None or img_b is None:
                     return "Invalid image files", 400
+                    
+                    img_f = smart_crop_document(img_f)
+                img_b = smart_crop_document(img_b)
 
                 pdf_io = io.BytesIO()
                 c = pdf_canvas.Canvas(pdf_io, pagesize=A4)
@@ -1249,6 +1314,7 @@ def home():
                 c.save()
                 pdf_io.seek(0)
                 return send_file(pdf_io, mimetype='application/pdf', as_attachment=True, download_name='id_card_print.pdf')
+                
             if tool_type == 'sign':
                 file = request.files.get('file')
                 if not file or not allowed_file(file.filename):
@@ -1287,6 +1353,7 @@ def home():
                 merged = np.vstack((face, sign_resized))
                 _, buf = cv2.imencode('.jpg', merged)
                 return send_file(io.BytesIO(buf), mimetype='image/jpeg', as_attachment=True, download_name='photo_sign_merged.jpg')
+                
             if tool_type == 'pdf':
                 files = request.files.getlist('file')
                 if len(files) > 10:
@@ -1323,6 +1390,7 @@ def home():
 
             img = cv2.imdecode(np.frombuffer(
                 file.read(), np.uint8), cv2.IMREAD_COLOR)
+            
             if tool_type == 'passport':
                 face = cv2.resize(strict_passport_crop(img), (413, 531))
                 print_name = request.form.get("print_name", "").strip().upper()
