@@ -7,6 +7,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.utils import ImageReader
 import json
 import requests
+
 HF_API_TOKEN = "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"
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
@@ -92,16 +93,6 @@ HTML = '''
             --border: #e2e8f0;
             --box-bg: #f1f5f9;
             --input-bg: #ffffff;
-        }
-        .typing-link {
-            background: #ffde59 !important;
-            color: #000 !important;
-            font-weight: bold;
-            border: 2px solid #eab308;
-        }
-        .typing-link:hover {
-            background: #facc15 !important;
-            transform: scale(1.05);
         }
         body.dark-mode {
             --bg: #0f172a;
@@ -230,10 +221,8 @@ HTML = '''
         <a href="/" class="nav-brand"><img src="''' + LOGO_URL + '''"><span>Snapzo Pro</span></a>
         <div class="nav-right" style="display:flex; align-items:center; gap:15px;">
             <div class="desktop-menu">
-            <a href="/remove-background" class="menu-btn" onclick="switchTool('removebg', event)" id="d-removebg"><i class="fas fa-eraser"></i> Remove BG <span style="background:red;color:white;padding:2px 5px;border-radius:4px;font-size:10px;">AI</span></a>
-                <a href="https://typing.snapzopro.online" class="menu-btn typing-link"><i class="fas fa-keyboard"></i> Hindi Typing</a>
+                <a href="/remove-background" class="menu-btn" onclick="switchTool('removebg', event)" id="d-removebg"><i class="fas fa-eraser"></i> Remove BG <span style="background:red;color:white;padding:2px 5px;border-radius:4px;font-size:10px;">AI</span></a>
                 <a href="/passport-maker" class="menu-btn active-menu" onclick="switchTool('passport', event)" id="d-passport">Passport Maker</a>
-                <a href="/id-card-print" class="menu-btn" onclick="switchTool('idcard', event)" id="d-idcard">ID Card Print</a>
                 <a href="/signature-cleaner" class="menu-btn" onclick="switchTool('sign', event)" id="d-sign">Sign Cleaner</a>
                 <a href="/photo-sign-joiner" class="menu-btn" onclick="switchTool('joiner', event)" id="d-joiner">Photo+Sign Join</a>
                 <a href="/image-to-text" class="menu-btn" onclick="switchTool('img2text', event)" id="d-img2text">Image to Text</a>
@@ -250,10 +239,8 @@ HTML = '''
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
     <div class="sidebar" id="sidebar">
         <h3 style="color:var(--accent); margin-top:0;">Snapzo Menu</h3>
-        <a href="https://typing.snapzopro.online" class="menu-btn typing-link"><i class="fas fa-keyboard"></i> Hindi Typing</a>
         <a href="/remove-background" class="menu-btn" onclick="switchTool('removebg', event)" id="m-removebg"><i class="fas fa-eraser"></i> Remove BG <span style="background:red;color:white;padding:2px 5px;border-radius:4px;font-size:10px;">AI</span></a>
         <a href="/passport-maker" class="menu-btn active-menu" onclick="switchTool('passport', event)" id="m-passport"><i class="fas fa-id-badge"></i> Passport Maker</a>
-        <a href="/id-card-print" class="menu-btn" onclick="switchTool('idcard', event)" id="m-idcard"><i class="fas fa-address-card"></i> ID Card Print</a>
         <a href="/signature-cleaner" class="menu-btn" onclick="switchTool('sign', event)" id="m-sign"><i class="fas fa-signature"></i> Signature Cleaner</a>
         <a href="/photo-sign-joiner" class="menu-btn" onclick="switchTool('joiner', event)" id="m-joiner"><i class="fas fa-object-group"></i> Photo + Sign Joiner</a>
         <a href="/image-to-text" class="menu-btn" onclick="switchTool('img2text', event)" id="m-img2text"><i class="fas fa-file-word"></i> Image to Text (OCR)</a>
@@ -342,62 +329,7 @@ HTML = '''
                 </div>
             </div>
         </div>
-        <div class="tool-wrapper" id="tool-idcard">
-            <div class="tool-content">
-                <h1>ID Card Print Studio</h1>
-                <p>Aadhar Card ya PAN Card ki Front aur Back photo ko ek perfect A4 size PDF mein merge karein. Cyber cafe jane ki zarurat nahi!</p>
-                <ul class="feature-list">
-                    <li><i class="fas fa-check-circle"></i> Perfect standard size alignment</li>
-                    <li><i class="fas fa-check-circle"></i> High Quality PDF output</li>
-                </ul>
-            </div>
-            
-            <div class="card">
-                <h2>Aadhar/PAN Joiner</h2>
-                <form method="POST" enctype="multipart/form-data">
-                    <input type="hidden" name="tool_type" value="idcard">
-                    <div class="row">
-                        <div class="group">
-                            <label>Front Side</label>
-                            <div class="upload-zone small" onclick="document.getElementById('f-id-front').click()">
-                                <input type="file" id="f-id-front" name="front" hidden required onchange="handlePreview(this, 'p-id-front', 't-id-front')">
-                                <div id="t-id-front"><i class="fas fa-id-card" style="font-size:2rem; color:var(--accent);"></i><p style="margin:5px 0 0; font-size:0.8rem;">Upload Front</p></div>
-                                <img id="p-id-front" class="preview-img" style="margin-top:5px;">
-                            </div>
-                        </div>
-                        <div class="group">
-                            <label>Back Side</label>
-                            <div class="upload-zone small" onclick="document.getElementById('f-id-back').click()">
-                                <input type="file" id="f-id-back" name="back" hidden required onchange="handlePreview(this, 'p-id-back', 't-id-back')">
-                                <div id="t-id-back"><i class="fas fa-id-card-alt" style="font-size:2rem; color:var(--accent);"></i><p style="margin:5px 0 0; font-size:0.8rem;">Upload Back</p></div>
-                                <img id="p-id-back" class="preview-img" style="margin-top:5px;">
-                            </div>
-                        </div>
-                    </div>
-                    <button class="btn"><i class="fas fa-print"></i> Generate Print PDF</button>
-                </form>
-            </div>
-            <div class="how-to-use">
-                <h3><i class="fas fa-question-circle"></i> How to Use ID Card Joiner?</h3>
-                <div class="step-grid">
-                    <div class="step-card">
-                        <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=300&q=80" alt="Upload Front and Back">
-                        <h4>1. Upload 2 Photos</h4>
-                        <p>Upload the Front side and Back side of your Aadhar/PAN card.</p>
-                    </div>
-                    <div class="step-card">
-                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&q=80" alt="AI Align">
-                        <h4>2. AI Processing</h4>
-                        <p>Our tool will automatically resize and align them like a Cyber Cafe print.</p>
-                    </div>
-                    <div class="step-card">
-                        <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=300&q=80" alt="Download">
-                        <h4>3. Get A4 PDF</h4>
-                        <p>Download the final A4 size PDF and print it directly anywhere.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+
         <div class="tool-wrapper" id="tool-sign">
             <div class="tool-content">
                 <h1>Auto-Signature Cleaner</h1>
@@ -971,7 +903,6 @@ HTML = '''
         const routeMap = {
             'removebg': 'remove-background',
             'passport': 'passport-maker',
-            'idcard': 'id-card-print',
             'sign': 'signature-cleaner',
             'joiner': 'photo-sign-joiner',
             'img2text': 'image-to-text',
@@ -990,7 +921,6 @@ HTML = '''
         const pathMap = {
             '/remove-background': 'removebg',
             '/passport-maker': 'passport',
-            '/id-card-print': 'idcard',
             '/signature-cleaner': 'sign',
             '/photo-sign-joiner': 'joiner',
             '/image-to-text': 'img2text',
@@ -1026,6 +956,7 @@ HTML = '''
             '/heic-to-jpg': 'format',
             '/compress-image-to-100kb': 'compress'
         };
+        
         function startOCR(input) {
             if (input.files && input.files[0]) {
                 const file = input.files[0];
@@ -1088,9 +1019,12 @@ HTML = '''
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('overlay').classList.toggle('active');
         }
+        
         function switchTool(name, event, autoFormat = null) {
             if(event) event.preventDefault();
-            const tools = ['passport', 'idcard', 'sign', 'joiner', 'img2text', 'textpdf', 'pdf', 'crop', 'compress', 'social', 'format', 'about', 'contact', 'privacy', 'terms'];
+            // ID card removed and Remove BG perfectly added here:
+            const tools = ['removebg', 'passport', 'sign', 'joiner', 'img2text', 'textpdf', 'pdf', 'crop', 'compress', 'social', 'format', 'about', 'contact', 'privacy', 'terms'];
+            
             tools.forEach(t => {
                 const el = document.getElementById('tool-'+t);
                 if(el) { if (t === name) el.classList.add('active'); else el.classList.remove('active'); }
@@ -1199,7 +1133,6 @@ def strict_passport_crop(img):
         offset = int((h - new_h) * 0.15)
         return img[offset:offset+new_h, :]
 
-# --- 🟢 SMART DOCUMENT SCANNER LOGIC 🟢 ---
 def order_points(pts):
     import numpy as np
     rect = np.zeros((4, 2), dtype="float32")
@@ -1214,56 +1147,40 @@ def order_points(pts):
 def smart_crop_document(img):
     import cv2
     import numpy as np
-    
-    # इमेज को प्रोसेस करने के लिए छोटा करें
     ratio = img.shape[0] / 500.0
     orig = img.copy()
     image = cv2.resize(img, (int(img.shape[1] / ratio), 500))
-
-    # इमेज को ग्रेस्केल करके किनारे (edges) ढूंढें
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     gray = cv2.GaussianBlur(gray, (5, 5), 0)
     edged = cv2.Canny(gray, 75, 200)
-
-    # कंटूर (Contours) ढूंढें
     contours, _ = cv2.findContours(edged.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     contours = sorted(contours, key=cv2.contourArea, reverse=True)[:5]
-
     screenCnt = None
     for c in contours:
         peri = cv2.arcLength(c, True)
         approx = cv2.approxPolyDP(c, 0.02 * peri, True)
-        # अगर 4 कोने मिल गए, तो वह हमारा डॉक्यूमेंट (ID Card) है
         if len(approx) == 4:
             screenCnt = approx
             break
-
-    # अगर टूल को 4 कोने नहीं मिलते (खराब फोटो), तो वह पुरानी फोटो ही रिटर्न कर देगा (Error नहीं आएगा)
     if screenCnt is None:
         return orig 
-
-    # 4 कोनों को सीधा करने का जादू (Perspective Transform)
     pts = screenCnt.reshape(4, 2) * ratio
     rect = order_points(pts)
     (tl, tr, br, bl) = rect
-
     maxWidth = max(int(np.linalg.norm(br - bl)), int(np.linalg.norm(tr - tl)))
     maxHeight = max(int(np.linalg.norm(tr - br)), int(np.linalg.norm(tl - bl)))
-
     dst = np.array([
         [0, 0],
         [maxWidth - 1, 0],
         [maxWidth - 1, maxHeight - 1],
         [0, maxHeight - 1]], dtype="float32")
-
     M = cv2.getPerspectiveTransform(rect, dst)
     warped = cv2.warpPerspective(orig, M, (maxWidth, maxHeight))
-
     return warped
     
 @app.route('/', methods=['GET', 'POST'])
+@app.route('/remove-background', methods=['GET', 'POST'])
 @app.route('/passport-maker', methods=['GET', 'POST'])
-@app.route('/id-card-print', methods=['GET', 'POST'])
 @app.route('/signature-cleaner', methods=['GET', 'POST'])
 @app.route('/photo-sign-joiner', methods=['GET', 'POST'])
 @app.route('/image-to-text', methods=['GET', 'POST'])
@@ -1300,6 +1217,7 @@ def home():
     if request.method == 'POST':
         try:
             tool_type = request.form.get('tool_type')
+            
             if tool_type == 'removebg':
                 file = request.files.get('file')
                 if not file: return "Upload a photo.", 400
@@ -1319,39 +1237,6 @@ def home():
 
             if tool_type == 'textpdf':
                 return "Use Client-Side PDF Generator", 400
-                
-            if tool_type == 'idcard':
-                f_front = request.files.get('front')
-                f_back = request.files.get('back')
-
-                if not f_front or not f_back:
-                    return "Both front and back sides are required", 400
-
-                img_f = cv2.imdecode(np.frombuffer(
-                    f_front.read(), np.uint8), cv2.IMREAD_COLOR)
-                img_b = cv2.imdecode(np.frombuffer(
-                    f_back.read(), np.uint8), cv2.IMREAD_COLOR)
-
-                if img_f is None or img_b is None:
-                    return "Invalid image files", 400
-                    
-                pdf_io = io.BytesIO()
-                c = pdf_canvas.Canvas(pdf_io, pagesize=A4)
-
-                # Front Side - better positioning
-                _, buf_f = cv2.imencode('.jpg', img_f)
-                c.drawImage(ImageReader(io.BytesIO(buf_f)),
-                            120, 520, width=340, height=210)
-
-                # Back Side - better spacing
-                _, buf_b = cv2.imencode('.jpg', img_b)
-                c.drawImage(ImageReader(io.BytesIO(buf_b)),
-                            120, 280, width=340, height=210)
-
-                c.showPage()
-                c.save()
-                pdf_io.seek(0)
-                return send_file(pdf_io, mimetype='application/pdf', as_attachment=True, download_name='id_card_print.pdf')
                 
             if tool_type == 'sign':
                 file = request.files.get('file')
@@ -1422,6 +1307,7 @@ def home():
                 c.save()
                 pdf_io.seek(0)
                 return send_file(pdf_io, mimetype='application/pdf', as_attachment=True, download_name='snapzo_scanned.pdf')
+            
             file = request.files.get('file')
             if file and not allowed_file(file.filename):
                 return "Invalid file type", 400
@@ -1491,27 +1377,6 @@ def home():
 
                 return send_file(io.BytesIO(buf), mimetype='image/jpeg', as_attachment=True, download_name='passport_ready.jpg')
 
-                bordered = cv2.copyMakeBorder(
-                    face, 10, 10, 10, 10, cv2.BORDER_CONSTANT, value=[245, 245, 245])
-                bh, bw = bordered.shape[:2]
-                canvas = np.ones((2500, 1800, 3), dtype=np.uint8) * 255
-                count = int(request.form.get("count", 8))
-                for i in range(min(count, 12)):
-                    r, c = i // 3, i % 3
-                    canvas[r*(bh+40)+70:r*(bh+40)+70+bh, c *
-                           (bw+30)+70:c*(bw+30)+70+bw] = bordered
-                final = canvas[:((count-1)//3+1)*(bh+40)+100,
-                               :(3 if count >= 3 else count)*(bw+30)+100]
-                _, buf = cv2.imencode('.jpg', final)
-                if request.form.get("type") == "pdf":
-                    pdf_io = io.BytesIO()
-                    c = pdf_canvas.Canvas(pdf_io, pagesize=A4)
-                    c.drawImage(ImageReader(io.BytesIO(buf)),
-                                50, 100, width=500, height=650)
-                    c.save()
-                    pdf_io.seek(0)
-                    return send_file(pdf_io, mimetype='application/pdf', as_attachment=True, download_name='passport_ready.pdf')
-                return send_file(io.BytesIO(buf), mimetype='image/jpeg', as_attachment=True, download_name='passport_ready.jpg')
             elif tool_type == 'crop':
                 x = int(request.form.get('x'))
                 y = int(request.form.get('y'))
@@ -1525,22 +1390,20 @@ def home():
                 cropped = img[y:y+h, x:x+w]
                 _, buffer = cv2.imencode('.jpg', cropped)
                 return send_file(io.BytesIO(buffer), mimetype='image/jpeg', as_attachment=True, download_name='cropped.jpg')
+                
             elif tool_type == 'compress':
                 target_kb = int(request.form.get("target_kb", 50))
                 target_bytes = target_kb * 1024
                 quality = 92
 
-                # First try with quality reduction
                 encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), quality]
                 _, buffer = cv2.imencode('.jpg', img, encode_param)
 
-                # Reduce quality gradually
                 while len(buffer) > target_bytes and quality > 20:
                     quality -= 5
                     encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), quality]
                     _, buffer = cv2.imencode('.jpg', img, encode_param)
 
-                # If still bigger, then resize + quality
                 if len(buffer) > target_bytes:
                     scale = 0.95
                     while len(buffer) > target_bytes and scale > 0.4:
@@ -1552,6 +1415,7 @@ def home():
                         _, buffer = cv2.imencode('.jpg', resized, encode_param)
 
                 return send_file(io.BytesIO(buffer), mimetype='image/jpeg', as_attachment=True, download_name=f'compressed_{target_kb}kb.jpg')
+                
             elif tool_type == 'social':
                 p = request.form.get('platform')
                 dim = (1280, 720) if p == 'yt' else (
@@ -1559,6 +1423,7 @@ def home():
                 res = cv2.resize(img, dim)
                 _, buffer = cv2.imencode('.jpg', res)
                 return send_file(io.BytesIO(buffer), mimetype='image/jpeg', as_attachment=True, download_name='social_resized.jpg')
+                
             elif tool_type == 'format':
                 f = request.form.get('out_format', 'png')
                 _, buffer = cv2.imencode(f'.{f}', img)
@@ -1566,11 +1431,11 @@ def home():
                 return send_file(io.BytesIO(buffer), mimetype=mime, as_attachment=True, download_name=f'converted.{f}')
         except Exception:
             return "Server Error", 500
+            
     path = request.path
     seo_data = {
-       '/': ('Snapzo Pro - Free AI Tools for SSC, RRB, UPSC | Passport Photo, Signature & Documents', 'Snapzo Pro - Free AI tools for SSC, RRB, UPSC & government exams. Passport size photo maker, signature cleaner, ID card joiner, image to PDF, compress and more. 100% Free & Private.'),
+       '/': ('Snapzo Pro - Free AI Tools for SSC, RRB, UPSC | Passport Photo, Signature & Documents', 'Snapzo Pro - Free AI tools for SSC, RRB, UPSC & government exams. Passport size photo maker, signature cleaner, image to PDF, compress and more. 100% Free & Private.'),
         '/passport-maker': ('Strict AI Passport Photo Maker | Snapzo Pro', 'Create exact 3.5x4.5 passport photos for SSC, RRB, and NTPC forms automatically.'),
-        '/id-card-print': ('Aadhar & PAN Card Front Back PDF Joiner | Snapzo Pro', 'Merge Front and Back side of Aadhar or PAN card into a perfect A4 size PDF for printing.'),
         '/signature-cleaner': ('Auto-Signature Cleaner & Resizer | Snapzo Pro', 'Clean signature background automatically for official government forms.'),
         '/photo-sign-joiner': ('Merge Photo and Signature Online | Snapzo Pro', 'Combine passport size photo and signature into a single image vertically for state exams.'),
         '/image-to-text': ('Image to Text (OCR) Converter | Snapzo Pro', 'Extract text from images, notes, and screenshots instantly for free.'),
@@ -1652,7 +1517,6 @@ def home():
         </script>
         '''
 
-    # Passed all new dynamic variables to HTML
     return render_template_string(HTML, page_title=page_title, page_desc=page_desc, request_path=path, breadcrumb_schema=breadcrumb_schema, passport_h1=p_h1, passport_p=p_p, format_h1=f_h1, format_p=f_p, compress_h1=c_h1, compress_p=c_p, compress_val=c_val)
 
 # --- SEO: SITEMAP & ROBOTS.TXT ---
@@ -1669,7 +1533,7 @@ def robots():
 @app.route('/sitemap.xml')
 def sitemap():
     pages = [
-        '/', '/passport-maker', '/id-card-print', '/signature-cleaner',
+        '/', '/passport-maker', '/signature-cleaner',
         '/photo-sign-joiner', '/image-to-text', '/text-to-pdf', '/image-to-pdf',
         '/image-crop', '/compress', '/social-size', '/convert-format',
         '/about', '/contact', '/privacy', '/terms',
@@ -1685,7 +1549,6 @@ def sitemap():
     xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
     xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     
-    # Main website pages
     for page in pages:
         xml += '  <url>\n'
         xml += f'    <loc>https://snapzopro.online{page}</loc>\n'
@@ -1693,13 +1556,6 @@ def sitemap():
         xml += '    <priority>0.8</priority>\n'
         xml += '  </url>\n'
         
-    # Typing sub-domain
-    xml += '  <url>\n'
-    xml += '    <loc>https://typing.snapzopro.online/</loc>\n'
-    xml += '    <changefreq>weekly</changefreq>\n'
-    xml += '    <priority>0.9</priority>\n'
-    xml += '  </url>\n'
-    
     xml += '</urlset>'
     return Response(xml, mimetype="application/xml")
 
