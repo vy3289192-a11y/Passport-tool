@@ -6,9 +6,7 @@ from reportlab.pdfgen import canvas as pdf_canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.utils import ImageReader
 import json
-import requests
 
-HF_API_TOKEN = "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"
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
 LOGO_URL = "https://i.ibb.co/Q73xvDmw/46658.jpg"
@@ -175,13 +173,6 @@ HTML = '''
         .stat-item { display: flex; flex-direction: column; align-items: center; }
         .stat-value { font-size: 2.5rem; font-weight: bold; color: var(--text); }
         .stat-label { font-size: 0.9rem; color: var(--text-muted); margin-top: 5px; }
-        .testimonials { width: 100%; max-width: 1100px; margin: 40px auto; padding: 0 10px; }
-        .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
-        .testi-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 30px; }
-        .testi-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
-        .testi-avatar { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); }
-        .testi-info h4 { margin: 0; color: var(--text); }
-        .testi-info p { margin: 3px 0 0; color: var(--text-muted); font-size: 0.9rem; }
         .footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--border); width: 100%; max-width: 1100px; color: var(--text); margin: 20px auto 0 auto;}
         .insta-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: bold; margin-top: 15px; }
         .seo-links { margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border); text-align: center; font-size: 0.85rem; color: var(--text-muted); line-height: 1.8; }
@@ -190,14 +181,6 @@ HTML = '''
         .check-container { display: flex; align-items: center; gap: 10px; margin-top: 15px; background: rgba(59,130,246,0.1); padding: 10px 15px; border-radius: 8px; }
         .check-container input { width: 20px; height: 20px; cursor: pointer; }
         .check-container label { margin-bottom: 0; cursor: pointer; opacity: 1; color: var(--accent); font-weight: bold; }
-        .footer-links { text-align: center; margin-bottom: 30px; }
-        .footer-links h4 { color: var(--text); margin-bottom: 20px; font-size: 1.2rem; }
-        .f-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
-        .f-grid a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: 0.2s; background: var(--box-bg); padding: 10px 18px; border-radius: 8px; border: 1px solid var(--border); font-weight: 500; }
-        .f-grid a:hover { background: var(--accent); color: white; border-color: var(--accent); transform: translateY(-2px); }
-        .tool-card { border: 1px solid var(--border); background: var(--box-bg); padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: center; }
-        .tool-card h3 { color: var(--text); margin: 10px 0; }
-        .tool-card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px; }
         @media (max-width: 900px) {
             .tool-wrapper.active { flex-direction: column; align-items: center; gap: 30px; }
             .card { order: 1; width: 100%; max-width: 100%; padding: 30px 20px; margin-bottom: 0; }
@@ -221,7 +204,6 @@ HTML = '''
         <a href="/" class="nav-brand"><img src="''' + LOGO_URL + '''"><span>Snapzo Pro</span></a>
         <div class="nav-right" style="display:flex; align-items:center; gap:15px;">
             <div class="desktop-menu">
-                <a href="/remove-background" class="menu-btn" onclick="switchTool('removebg', event)" id="d-removebg"><i class="fas fa-eraser"></i> Remove BG <span style="background:red;color:white;padding:2px 5px;border-radius:4px;font-size:10px;">AI</span></a>
                 <a href="/passport-maker" class="menu-btn active-menu" onclick="switchTool('passport', event)" id="d-passport">Passport Maker</a>
                 <a href="/signature-cleaner" class="menu-btn" onclick="switchTool('sign', event)" id="d-sign">Sign Cleaner</a>
                 <a href="/photo-sign-joiner" class="menu-btn" onclick="switchTool('joiner', event)" id="d-joiner">Photo+Sign Join</a>
@@ -239,7 +221,6 @@ HTML = '''
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
     <div class="sidebar" id="sidebar">
         <h3 style="color:var(--accent); margin-top:0;">Snapzo Menu</h3>
-        <a href="/remove-background" class="menu-btn" onclick="switchTool('removebg', event)" id="m-removebg"><i class="fas fa-eraser"></i> Remove BG <span style="background:red;color:white;padding:2px 5px;border-radius:4px;font-size:10px;">AI</span></a>
         <a href="/passport-maker" class="menu-btn active-menu" onclick="switchTool('passport', event)" id="m-passport"><i class="fas fa-id-badge"></i> Passport Maker</a>
         <a href="/signature-cleaner" class="menu-btn" onclick="switchTool('sign', event)" id="m-sign"><i class="fas fa-signature"></i> Signature Cleaner</a>
         <a href="/photo-sign-joiner" class="menu-btn" onclick="switchTool('joiner', event)" id="m-joiner"><i class="fas fa-object-group"></i> Photo + Sign Joiner</a>
@@ -252,25 +233,6 @@ HTML = '''
         <a href="/convert-format" class="menu-btn" onclick="switchTool('format', event)" id="m-format"><i class="fas fa-exchange-alt"></i> Convert Format</a>
     </div>
     <div class="main">
-        <div class="tool-wrapper" id="tool-removebg">
-            <div class="tool-content">
-                <h1>AI Background Remover</h1>
-                <p>Upload any photo and our deep-learning AI will automatically detect the subject and remove the background in seconds. 100% Free.</p>
-            </div>
-            <div class="card">
-                <h2>Remove Background</h2>
-                <form method="POST" enctype="multipart/form-data" id="bgForm" onsubmit="document.getElementById('bgBtn').style.display='none'; document.getElementById('bgLoading').style.display='block';">
-                    <input type="hidden" name="tool_type" value="removebg">
-                    <div class="upload-zone" onclick="document.getElementById('f-rmbg').click()">
-                        <input type="file" id="f-rmbg" name="file" hidden required onchange="handlePreview(this, 'p-rmbg', 't-rmbg')">
-                        <div id="t-rmbg"><i class="fas fa-magic" style="font-size:3rem; color:var(--accent);"></i><p>Upload Photo</p></div>
-                        <img id="p-rmbg" class="preview-img">
-                    </div>
-                    <button class="btn" id="bgBtn"><i class="fas fa-eraser"></i> Remove Background</button>
-                    <p id="bgLoading" style="display:none; color:var(--accent); font-weight:bold; text-align:center; margin-top:10px;"><i class="fas fa-spinner fa-spin"></i> AI is processing... wait 5-10 sec.</p>
-                </form>
-            </div>
-        </div>
         
         <div class="tool-wrapper active" id="tool-passport">
             <div class="tool-content">
@@ -901,7 +863,6 @@ HTML = '''
         });
         
         const routeMap = {
-            'removebg': 'remove-background',
             'passport': 'passport-maker',
             'sign': 'signature-cleaner',
             'joiner': 'photo-sign-joiner',
@@ -919,7 +880,6 @@ HTML = '''
         };
         
         const pathMap = {
-            '/remove-background': 'removebg',
             '/passport-maker': 'passport',
             '/signature-cleaner': 'sign',
             '/photo-sign-joiner': 'joiner',
@@ -1022,8 +982,7 @@ HTML = '''
         
         function switchTool(name, event, autoFormat = null) {
             if(event) event.preventDefault();
-            // ID card removed and Remove BG perfectly added here:
-            const tools = ['removebg', 'passport', 'sign', 'joiner', 'img2text', 'textpdf', 'pdf', 'crop', 'compress', 'social', 'format', 'about', 'contact', 'privacy', 'terms'];
+            const tools = ['passport', 'sign', 'joiner', 'img2text', 'textpdf', 'pdf', 'crop', 'compress', 'social', 'format', 'about', 'contact', 'privacy', 'terms'];
             
             tools.forEach(t => {
                 const el = document.getElementById('tool-'+t);
@@ -1133,53 +1092,7 @@ def strict_passport_crop(img):
         offset = int((h - new_h) * 0.15)
         return img[offset:offset+new_h, :]
 
-def order_points(pts):
-    import numpy as np
-    rect = np.zeros((4, 2), dtype="float32")
-    s = pts.sum(axis=1)
-    rect[0] = pts[np.argmin(s)]
-    rect[2] = pts[np.argmax(s)]
-    diff = np.diff(pts, axis=1)
-    rect[1] = pts[np.argmin(diff)]
-    rect[3] = pts[np.argmax(diff)]
-    return rect
-
-def smart_crop_document(img):
-    import cv2
-    import numpy as np
-    ratio = img.shape[0] / 500.0
-    orig = img.copy()
-    image = cv2.resize(img, (int(img.shape[1] / ratio), 500))
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    gray = cv2.GaussianBlur(gray, (5, 5), 0)
-    edged = cv2.Canny(gray, 75, 200)
-    contours, _ = cv2.findContours(edged.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-    contours = sorted(contours, key=cv2.contourArea, reverse=True)[:5]
-    screenCnt = None
-    for c in contours:
-        peri = cv2.arcLength(c, True)
-        approx = cv2.approxPolyDP(c, 0.02 * peri, True)
-        if len(approx) == 4:
-            screenCnt = approx
-            break
-    if screenCnt is None:
-        return orig 
-    pts = screenCnt.reshape(4, 2) * ratio
-    rect = order_points(pts)
-    (tl, tr, br, bl) = rect
-    maxWidth = max(int(np.linalg.norm(br - bl)), int(np.linalg.norm(tr - tl)))
-    maxHeight = max(int(np.linalg.norm(tr - br)), int(np.linalg.norm(tl - bl)))
-    dst = np.array([
-        [0, 0],
-        [maxWidth - 1, 0],
-        [maxWidth - 1, maxHeight - 1],
-        [0, maxHeight - 1]], dtype="float32")
-    M = cv2.getPerspectiveTransform(rect, dst)
-    warped = cv2.warpPerspective(orig, M, (maxWidth, maxHeight))
-    return warped
-    
 @app.route('/', methods=['GET', 'POST'])
-@app.route('/remove-background', methods=['GET', 'POST'])
 @app.route('/passport-maker', methods=['GET', 'POST'])
 @app.route('/signature-cleaner', methods=['GET', 'POST'])
 @app.route('/photo-sign-joiner', methods=['GET', 'POST'])
@@ -1217,23 +1130,6 @@ def home():
     if request.method == 'POST':
         try:
             tool_type = request.form.get('tool_type')
-            
-            if tool_type == 'removebg':
-                file = request.files.get('file')
-                if not file: return "Upload a photo.", 400
-                
-                api_url = "https://api-inference.huggingface.co/models/briaai/RMBG-1.4"
-                headers = {"Authorization": f"Bearer {HF_API_TOKEN}"}
-                
-                try:
-                    img_bytes = file.read()
-                    response = requests.post(api_url, headers=headers, data=img_bytes)
-                    if response.status_code == 200:
-                        return send_file(io.BytesIO(response.content), mimetype='image/png', as_attachment=True, download_name='snapzopro_no_bg.png')
-                    else:
-                        return "AI Server busy, try again later.", 500
-                except Exception as e:
-                    return "Error connecting to AI", 500
 
             if tool_type == 'textpdf':
                 return "Use Client-Side PDF Generator", 400
