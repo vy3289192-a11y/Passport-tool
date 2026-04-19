@@ -5,7 +5,6 @@ import io
 from reportlab.pdfgen import canvas as pdf_canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.utils import ImageReader
-import json
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
@@ -132,8 +131,6 @@ HTML = '''
         .feature-list li { margin-bottom: 12px; display: flex; align-items: center; gap: 10px; color: var(--text); }
         .feature-list i { color: #10b981; }
         
-        .visual-box { background: var(--box-bg); border: 1px solid var(--border); border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 20px; color: var(--text); }
-        
         .how-to-use { width: 100%; margin-top: 40px; border-top: 1px solid var(--border); padding-top: 25px; order: 3; }
         .how-to-use h3 { color: var(--text); font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 10px;}
         .step-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
@@ -187,7 +184,6 @@ HTML = '''
             .tool-content { order: 2; text-align: center; width: 100%; margin-bottom: 10px; flex: auto;}
             .how-to-use { order: 3; margin-top: 20px; text-align: center;}
             .feature-list li { justify-content: center; }
-            .visual-box { margin: 0 auto 25px auto; }
             .how-to-use h3 { justify-content: center; }
             .step-grid { grid-template-columns: 1fr; gap: 10px; }
             .text-page-card { padding: 30px 20px; }
@@ -240,8 +236,8 @@ HTML = '''
                 <p>{{ passport_p | default('Turn a regular photo into an official passport photo fast. Hamara AI strictly 3.5x4.5 ratio use karta hai taaki SSC/RRB forms me koi galti na ho.') }}</p>
                 <ul class="feature-list">
                     <li><i class="fas fa-check-circle"></i> Permanent 413x531 Pixels (Official Size)</li>
+                    <li><i class="fas fa-check-circle"></i> AI Face Detection (Keeps Neck & Shoulders)</li>
                     <li><i class="fas fa-check-circle"></i> Auto-Print Name & Date on Photo</li>
-                    <li><i class="fas fa-check-circle"></i> Multiple Copies Ready to Print</li>
                 </ul>
             </div>
             
@@ -281,7 +277,7 @@ HTML = '''
                     <div class="step-card">
                         <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&q=80" alt="Enter Details">
                         <h4>2. Add Name & Date</h4>
-                        <p>Type your Name and Date. Our AI will print it perfectly on the photo.</p>
+                        <p>Type your Name and Date. Our AI will align your shoulders and print text perfectly.</p>
                     </div>
                     <div class="step-card">
                         <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=300&q=80" alt="Download">
@@ -397,7 +393,7 @@ HTML = '''
                 <p>Kisi bhi photo (Notes, Books, Screenshots) mein likha hua text instantly extract karein. Copy karein aur kahin bhi use karein.</p>
                 <ul class="feature-list">
                     <li><i class="fas fa-check-circle"></i> 100% Free Client-Side Processing</li>
-                    <li><i class="fas fa-check-circle"></i> Keeps your data completely private</li>
+                    <li><i class="fas fa-check-circle"></i> Auto High-Contrast Filter for Accuracy</li>
                 </ul>
             </div>
             
@@ -410,7 +406,7 @@ HTML = '''
                 </div>
                 
                 <div id="ocr-loading" style="display:none; text-align:center; margin-top:15px; color:var(--accent); font-weight:bold;">
-                    Extracting Text... <span id="ocr-percent">0%</span>
+                    Applying Filters & Extracting... <span id="ocr-percent">0%</span>
                     <div class="progress-bar-container" style="display:block;"><div class="progress-bar" id="ocr-bar"></div></div>
                 </div>
                 <textarea id="ocr-result" placeholder="Extracted text will appear here..." style="margin-top:20px; height:150px; display:none;" readonly></textarea>
@@ -433,8 +429,8 @@ HTML = '''
                     </div>
                     <div class="step-card">
                         <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&q=80" alt="OCR Scan">
-                        <h4>2. Automatic Scan</h4>
-                        <p>Our advanced OCR scanner will read and extract characters securely in browser.</p>
+                        <h4>2. AI Filtering</h4>
+                        <p>Our tool makes the background white and text pitch black before scanning for maximum accuracy.</p>
                     </div>
                     <div class="step-card">
                         <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=300&q=80" alt="Copy Text">
@@ -925,37 +921,64 @@ HTML = '''
                     document.getElementById('p-ocr').src = e.target.result;
                     document.getElementById('p-ocr').style.display = 'block';
                     document.getElementById('t-ocr').style.display = 'none';
+                    
                     const loadDiv = document.getElementById('ocr-loading');
                     const resultArea = document.getElementById('ocr-result');
                     const copyBtn = document.getElementById('btn-copy-ocr');
                     const percentText = document.getElementById('ocr-percent');
                     const bar = document.getElementById('ocr-bar');
+                    
                     loadDiv.style.display = 'block';
                     resultArea.style.display = 'none';
                     copyBtn.style.display = 'none';
                     bar.style.width = '0%';
                     percentText.innerText = '0%';
-                    Tesseract.recognize(
-                      file, 'eng',
-                      { logger: m => {
-                          if(m.status === 'recognizing text'){
-                              let p = Math.round(m.progress * 100);
-                              percentText.innerText = p + '%';
-                              bar.style.width = p + '%';
-                          }
-                      }}
-                    ).then(({ data: { text } }) => {
-                        loadDiv.style.display = 'none';
-                        resultArea.style.display = 'block';
-                        resultArea.value = text;
-                        if(text.trim().length > 0) copyBtn.style.display = 'block';
-                    }).catch(err => {
-                        loadDiv.innerHTML = "<span style='color:red;'>Error extracting text. Try a clearer image!</span>";
-                    });
+                    
+                    // 🟢 MAGIC OCR FILTER: Makes text black & background white 🟢
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0);
+                        
+                        let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        let data = imgData.data;
+                        for (let i = 0; i < data.length; i += 4) {
+                            let avg = (data[i] + data[i+1] + data[i+2]) / 3;
+                            let color = avg < 140 ? 0 : 255; 
+                            data[i] = color;
+                            data[i+1] = color;
+                            data[i+2] = color;
+                        }
+                        ctx.putImageData(imgData, 0, 0);
+                        
+                        // Pass the Magic Canvas to Tesseract instead of raw file
+                        Tesseract.recognize(
+                          canvas, 'eng',
+                          { logger: m => {
+                              if(m.status === 'recognizing text'){
+                                  let p = Math.round(m.progress * 100);
+                                  percentText.innerText = p + '%';
+                                  bar.style.width = p + '%';
+                              }
+                          }}
+                        ).then(({ data: { text } }) => {
+                            loadDiv.style.display = 'none';
+                            resultArea.style.display = 'block';
+                            resultArea.value = text;
+                            if(text.trim().length > 0) copyBtn.style.display = 'block';
+                        }).catch(err => {
+                            loadDiv.innerHTML = "<span style='color:red;'>Error extracting text. Try a clearer image!</span>";
+                        });
+                    };
+                    img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             }
         }
+        
         function copyOCRText() {
             const text = document.getElementById('ocr-result').value;
             navigator.clipboard.writeText(text).then(() => alert("Extracted Text Copied Successfully!"));
@@ -1081,6 +1104,47 @@ HTML = '''
 # --- FLASK BACKEND LOGIC ---
 
 def strict_passport_crop(img):
+    # 🟢 NEW: AI FACE DETECTION CROP 🟢
+    try:
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+        faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(50, 50))
+        
+        target_ratio = 3.5 / 4.5
+        h_img, w_img = img.shape[:2]
+        
+        if len(faces) > 0:
+            # Get the largest face (main person)
+            faces = sorted(faces, key=lambda x: x[2]*x[3], reverse=True)
+            x, y, w, h = faces[0]
+            
+            # Find center of face
+            cx = x + w // 2
+            cy = y + h // 2
+            
+            # Smart Framing: Neck and Shoulders calculation
+            crop_h = int(h * 2.2) 
+            crop_w = int(crop_h * target_ratio)
+            
+            # Prevent going out of bounds
+            if crop_h > h_img or crop_w > w_img:
+                crop_h = min(h_img, int(w_img / target_ratio))
+                crop_w = min(w_img, int(h_img * target_ratio))
+            
+            # Set boundaries (leaving space above head)
+            y1 = max(0, cy - int(crop_h * 0.45))
+            y2 = min(h_img, y1 + crop_h)
+            y1 = max(0, y2 - crop_h) # Readjust top if bottom hits edge
+            
+            x1 = max(0, cx - crop_w // 2)
+            x2 = min(w_img, x1 + crop_w)
+            x1 = max(0, x2 - crop_w) # Readjust left if right hits edge
+            
+            return img[y1:y2, x1:x2]
+    except Exception as e:
+        pass
+    
+    # 🟠 Fallback (if face is not detected clearly) 🟠
     h, w = img.shape[:2]
     target_ratio = 0.777
     if (w/h) > target_ratio:
@@ -1122,7 +1186,6 @@ def strict_passport_crop(img):
 @app.route('/compress-image-to-50kb', methods=['GET', 'POST'])
 @app.route('/youtube-thumbnail-resizer', methods=['GET', 'POST'])
 @app.route('/instagram-photo-resizer', methods=['GET', 'POST'])
-# --- NEW HIDDEN GLOBAL ROUTES ADDED HERE ---
 @app.route('/us-visa-photo-maker', methods=['GET', 'POST'])
 @app.route('/heic-to-jpg', methods=['GET', 'POST'])
 @app.route('/compress-image-to-100kb', methods=['GET', 'POST'])
@@ -1151,7 +1214,6 @@ def home():
 
                 x, y, w, h = cv2.boundingRect(coords)
                 cropped = thresh[y:y+h, x:x+w]
-                # Better border for official use
                 cropped = cv2.copyMakeBorder(
                     cropped, 40, 40, 40, 40, cv2.BORDER_CONSTANT, value=[255, 255, 255])
                 _, buf = cv2.imencode('.png', cropped)
@@ -1217,17 +1279,14 @@ def home():
                 print_date = request.form.get("print_date", "").strip()
 
                 if print_name or print_date:
-                    # Bottom white bar for text
                     cv2.rectangle(face, (0, 531-90), (413, 531),
                                   (255, 255, 255), -1)
                     font = cv2.FONT_HERSHEY_SIMPLEX
 
                     if print_name and print_date:
-                        # Name
                         n_size = cv2.getTextSize(print_name, font, 0.78, 2)[0]
                         cv2.putText(face, print_name, ((
                             413 - n_size[0])//2, 531-58), font, 0.78, (0, 0, 0), 2, cv2.LINE_AA)
-                        # Date
                         d_size = cv2.getTextSize(print_date, font, 0.62, 2)[0]
                         cv2.putText(face, print_date, ((
                             413 - d_size[0])//2, 531-28), font, 0.62, (0, 0, 0), 2, cv2.LINE_AA)
@@ -1242,7 +1301,6 @@ def home():
                         cv2.putText(face, print_date, ((
                             413 - d_size[0])//2, 531-38), font, 0.72, (0, 0, 0), 2, cv2.LINE_AA)
 
-                # Nice border for better printing
                 bordered = cv2.copyMakeBorder(
                     face, 12, 12, 12, 12, cv2.BORDER_CONSTANT, value=[245, 245, 245])
 
@@ -1360,8 +1418,6 @@ def home():
         '/compress-image-to-50kb': ('Compress Image to 50KB | Snapzo Pro', 'Compress your photos to exactly 50KB or any specific size for government form uploads.'),
         '/youtube-thumbnail-resizer': ('YouTube Thumbnail Resizer | Snapzo Pro', 'Resize images perfectly for YouTube thumbnails (1280x720) in one click.'),
         '/instagram-photo-resizer': ('Instagram Photo Resizer | Snapzo Pro', 'Resize images perfectly for Instagram Posts (1080x1080) for free.'),
-        
-        # --- NEW HIDDEN GLOBAL SEO DATA ADDED HERE ---
         '/us-visa-photo-maker': ('US Visa Photo Maker (2x2 inch) | Snapzo Pro', 'Create perfect 2x2 inch photos for US Visa and Green Card applications online for free. AI-powered and secure.'),
         '/heic-to-jpg': ('HEIC to JPG Converter Online | Snapzo Pro', 'Convert iPhone HEIC photos to standard JPG format online for free. Fast and no quality loss.'),
         '/compress-image-to-100kb': ('Compress Image to Exactly 100KB | Snapzo Pro', 'Reduce heavy photos file size to exactly 100KB online. Perfect for forms and uploads without losing quality.')
@@ -1369,7 +1425,6 @@ def home():
 
     page_title, page_desc = seo_data.get(path, seo_data['/'])
     
-    # --- DYNAMIC CONTENT VARIABLES ---
     p_h1 = 'Strict AI Passport Maker'
     p_p = 'Turn a regular photo into an official passport photo fast. Hamara AI strictly 3.5x4.5 ratio use karta hai taaki SSC/RRB forms me koi galti na ho.'
     f_h1 = 'Format Converter'
@@ -1388,7 +1443,6 @@ def home():
         c_h1 = 'Compress Image to 100KB'
         c_p = 'Reduce heavy photo file size to exactly 100KB online. Perfect for official form uploads.'
         c_val = '100'
-
 
     breadcrumb_schema = ""
     if path != '/':
@@ -1415,8 +1469,6 @@ def home():
 
     return render_template_string(HTML, page_title=page_title, page_desc=page_desc, request_path=path, breadcrumb_schema=breadcrumb_schema, passport_h1=p_h1, passport_p=p_p, format_h1=f_h1, format_p=f_p, compress_h1=c_h1, compress_p=c_p, compress_val=c_val)
 
-# --- SEO: SITEMAP & ROBOTS.TXT ---
-
 @app.route('/robots.txt')
 def robots():
     lines = [
@@ -1438,7 +1490,6 @@ def sitemap():
         '/text-to-pdf-converter', '/jpg-to-pdf', '/png-to-pdf', '/crop-photo-online',
         '/reduce-image-size', '/compress-image-to-50kb', '/youtube-thumbnail-resizer',
         '/instagram-photo-resizer',
-        # --- NEW HIDDEN PAGES ADDED TO SITEMAP ---
         '/us-visa-photo-maker', '/heic-to-jpg', '/compress-image-to-100kb'
     ]
     
